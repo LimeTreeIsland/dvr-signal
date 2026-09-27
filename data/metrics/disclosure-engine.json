@@ -1,0 +1,10 @@
+{
+  "id": "aggregate-disclosure",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "enabled": false,
+  "policy_source": "data/metrics/disclosure-policy-review.json",
+  "accepts_raw_rows": false,
+  "input_contract": "preaggregated synthetic_or_private_counts_only",
+  "public_export_enabled": false
+}
