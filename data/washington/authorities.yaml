@@ -6,8 +6,8 @@
       "type": "federal_regulation",
       "citation": "34 CFR Part 361",
       "url": "https://www.ecfr.gov/current/title-34/subtitle-B/chapter-III/part-361",
-      "verification_status": "snapshot_partially_checked",
-      "notes": "Supplied snapshot dated 2026-09-24; selected IPE and record-access sections inspected; live eCFR unavailable."
+      "verification_status": "partially_live_checked",
+      "notes": "34 CFR 361.38 live-checked against eCFR on 2026-09-27; eCFR displayed Title 34 up to date as of 2026-09-24. Other Part 361 sections remain separately reviewed/pending."
     },
     {
       "id": "WAC-891A",
@@ -15,7 +15,7 @@
       "citation": "WAC 388-891A",
       "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A",
       "verification_status": "partially_live_checked",
-      "notes": "Only 388-891A-0211 live-checked 2026-09-26; chapter-wide review pending. Supplied PDF certified 2023."
+      "notes": "WAC 388-891A-0120, -0140 and -0211 live-checked against the Washington Code Reviser on 2026-09-27/2026-09-26. Chapter-wide review remains incomplete."
     },
     {
       "id": "RCW-7429",
@@ -38,8 +38,16 @@
       "type": "state_statute",
       "citation": "Chapter 42.56 RCW",
       "url": "https://app.leg.wa.gov/rcw/default.aspx?cite=42.56",
-      "verification_status": "pending",
-      "notes": "Missing from supplied PDFs; official current review needed before PRA routing."
+      "verification_status": "partially_live_checked",
+      "notes": "RCW 42.56.520 live-checked against the Washington Code Reviser on 2026-09-27 for the Public Records Act initial-response rule. Chapter-wide review remains incomplete."
+    },
+    {
+      "id": "WAC-388-01",
+      "type": "state_regulation",
+      "citation": "WAC 388-01",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-01",
+      "verification_status": "partially_live_checked",
+      "notes": "WAC 388-01-060 and -090 live-checked on 2026-09-27 for DSHS public-record request destination and initial-response procedure; additional cited exemptions/fee provisions reviewed in V1B-01."
     },
     {
       "id": "DVR-MANUAL",
