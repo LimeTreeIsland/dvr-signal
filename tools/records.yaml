@@ -1,9 +1,9 @@
 {
   "id": "records",
   "title": "Get My DVR Records",
-  "version": "0.1.0",
-  "status": "scaffold",
-  "enabled": false,
+  "version": "0.2.0",
+  "status": "active",
+  "enabled": true,
   "input_fields": [
     "scope",
     "format",
@@ -16,7 +16,10 @@
     "unsure"
   ],
   "rule_ids": [
-    "FED-RECORDS-01"
+    "FED-RECORDS-01",
+    "WA-RECORDS-ACCESS-01",
+    "WA-PRA-REQUEST-01",
+    "WA-PRA-RESPONSE-01"
   ],
   "storage": "memory_only",
   "transmit_answers": false,
