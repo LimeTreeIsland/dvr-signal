@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const evidence = [
+  ["Verified legal requirement", "Current statute or regulation reviewed at a pinpoint section."],
+  ["Agency policy", "DVR or DSHS operational policy or manual guidance; not automatically a statute or regulation."],
+  ["Participant report", "What a participant says happened; not independently verified by the report alone."],
+  ["Document-verified fact", "A document verifies the fact it establishes, not every allegation or interpretation around it."],
+  ["Agency response", "A response or position taken by the agency."],
+  ["Adjudicated finding", "A finding made in an applicable adjudicative process, within the scope of that decision."],
+];
+---
+
+<BaseLayout
+  title="Methods — DVR Signal"
+  description="How DVR Signal separates legal authority, evidence, uncertainty, and participant reports."
+>
+  <div class="container page">
+    <header>
+      <p class="eyebrow">Methods</p>
+      <h1>Separate authority, evidence, and uncertainty.</h1>
+      <p>
+        DVR Signal is designed to compare an accurately sourced process baseline with reported experiences
+        without turning every disagreement or delay into an automatic legal conclusion.
+      </p>
+    </header>
+
+    <section aria-labelledby="evidence-title">
+      <h2 id="evidence-title">Evidence classes</h2>
+      <dl class="evidence-list">
+        {evidence.map(([term, definition]) => (
+          <div>
+            <dt>{term}</dt>
+            <dd>{definition}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>Survey representativeness</h2>
+      <p>
+        Any future survey will be a voluntary respondent sample. DVR Signal will not imply that
+        percentages from that sample represent all Washington DVR participants.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  h1 {
+    max-width: 18ch;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+  }
+
+  .evidence-list {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .evidence-list div {
+    padding: var(--space-5, 1.25rem) var(--space-6);
+    border-inline-start: 0.4rem solid var(--color-neutral);
+    background: #fff;
+  }
+
+  dt {
+    font-weight: 800;
+  }
+
+  dd {
+    margin: var(--space-2) 0 0;
+  }
+</style>

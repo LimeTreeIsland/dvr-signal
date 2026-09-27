@@ -1,0 +1,80 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Privacy — DVR Signal"
+  description="DVR Signal Phase 1 privacy model and current collection status."
+>
+  <div class="container page">
+    <header>
+      <p class="eyebrow">Privacy</p>
+      <h1>Help locally. Collect separately. Publish aggregates only.</h1>
+      <p>
+        DVR Signal is designed to minimize collection and keep participant-help activity separate
+        from any future research survey.
+      </p>
+    </header>
+
+    <section class="privacy-grid" aria-label="Privacy model">
+      <article>
+        <h2>Help tools</h2>
+        <p>Inputs remain in browser memory. Local copy, print, or download happens only when you choose it.</p>
+      </article>
+      <article>
+        <h2>Survey</h2>
+        <p>No survey collection is active. Any future survey requires separate consent, provider, retention, and access decisions.</p>
+      </article>
+      <article>
+        <h2>Contact information</h2>
+        <p>Any optional contact or waitlist function must be stored separately from research responses.</p>
+      </article>
+      <article>
+        <h2>Public data</h2>
+        <p>Phase 1 publication is aggregate-only, with low-count suppression and review against reconstruction risk.</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Current status</h2>
+      <p>
+        DVR Signal does not currently collect anonymous survey responses, participant accounts,
+        medical records, or uploaded case documents.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  h1 {
+    max-width: 19ch;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+  }
+
+  .privacy-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .privacy-grid article {
+    padding: var(--space-6);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 30%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .privacy-grid h2 {
+    margin-top: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .privacy-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

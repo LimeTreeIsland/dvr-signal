@@ -1,0 +1,105 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const stages = [
+  ["Application", "Recognize an application and identify information needed.", "34 CFR 361.41(b)", "Application trigger still requires careful distinction from referral."],
+  ["Eligibility", "Determine eligibility and priority for services.", "34 CFR 361.41(b), 361.42", "Federal timing framework includes exceptions; rule activation remains under review."],
+  ["Assessment", "Use existing information and obtain additional assessment when needed.", "34 CFR 361.45(b), (f)", "No universal standalone assessment deadline is asserted."],
+  ["IPE", "Develop the individualized written employment plan with informed choice.", "34 CFR 361.45–361.46", "Timing and order-of-selection applicability remain review-sensitive."],
+  ["Services", "Provide agreed services and evaluate progress.", "34 CFR 361.45(a), 361.46, 361.48", "Individual plan timelines matter; there is no universal time-to-employment promise."],
+  ["Employment", "Evaluate the chosen outcome and ongoing support needs.", "34 CFR 361.56", "Employment alone is not the same as successful closure."],
+  ["Closure", "Apply the relevant closure conditions and notices.", "34 CFR 361.43–361.44, 361.56", "Closure type determines the applicable conditions."],
+];
+---
+
+<BaseLayout
+  title="Healthy DVR Process — DVR Signal"
+  description="Research map of the intended Washington DVR process and its current source status."
+>
+  <div class="container page">
+    <header>
+      <p class="eyebrow">Healthy-process guide · research map</p>
+      <h1>The intended process is a reference line, not a promise that every case is linear.</h1>
+      <p>
+        This page summarizes the current research map. It does not treat every elapsed-time difference
+        as a legal violation, and it keeps unresolved timing or branching questions visible.
+      </p>
+    </header>
+
+    <section aria-labelledby="stages-title">
+      <h2 id="stages-title">Process stages</h2>
+      <ol class="stage-list">
+        {stages.map(([stage, purpose, source, note], index) => (
+          <li>
+            <div class="stage-number" aria-hidden="true">{index + 1}</div>
+            <div>
+              <h3>{stage}</h3>
+              <p>{purpose}</p>
+              <p><strong>Research anchor:</strong> {source}</p>
+              <p class="note"><strong>Current treatment:</strong> {note}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <aside class="panel">
+      <h2>Important branches</h2>
+      <p>
+        Assessment can occur before eligibility and during plan development. Order of selection,
+        annual IPE review, amendments, appeals, ineligibility, withdrawal, and different closure routes
+        can change the path. DVR Signal will show those branches rather than forcing every case into one sequence.
+      </p>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  h1 {
+    max-width: 22ch;
+    font-size: clamp(2.1rem, 5.5vw, 4.25rem);
+  }
+
+  .stage-list {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .stage-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 30%, transparent);
+    border-inline-start: 0.45rem solid var(--color-healthy);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .stage-list h3,
+  .stage-list p {
+    margin-top: 0;
+  }
+
+  .stage-number {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: var(--color-healthy);
+    color: var(--color-ink);
+    font-weight: 800;
+  }
+
+  .note {
+    color: var(--color-neutral);
+  }
+</style>

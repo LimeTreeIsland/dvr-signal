@@ -1,21 +1,53 @@
-<footer class="container">
-  <div class="site-footer">
-    <p>
-      DVR Signal is an independent civic-data project. It is not Washington State DVR
-      and does not provide legal representation.
-    </p>
+<footer class="site-footer-wrap">
+  <div class="container site-footer">
+    <div>
+      <strong>DVR Signal</strong>
+      <p>
+        Independent civic-tech about the Washington vocational rehabilitation process.
+        Not Washington State DVR and not legal representation.
+      </p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="/process/">Healthy process</a>
+      <a href="/tools/">Tools</a>
+      <a href="/methods/">Methods</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
   </div>
 </footer>
 
 <style>
-  .site-footer {
-    padding-block: 2rem;
+  .site-footer-wrap {
     border-top: 1px solid color-mix(in srgb, var(--color-neutral) 35%, transparent);
+  }
+
+  .site-footer {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-8);
     color: var(--color-neutral);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .site-footer strong {
+    color: var(--color-ink);
   }
 
   .site-footer p {
-    margin: 0;
+    margin-block: var(--space-2) 0;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    align-content: start;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
   }
 </style>

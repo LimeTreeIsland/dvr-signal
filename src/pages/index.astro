@@ -1,50 +1,119 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const phases = [
-  ["Understand", "Learn the sourced Washington DVR process and where uncertainty remains."],
-  ["Act", "Use participant tools that generate editable requests without automatic submission."],
-  ["Document", "Keep entered facts separate from rule-derived information and unknowns."],
-  ["Contribute", "A future approved survey will collect structured anonymous experience data."],
-  ["Measure", "Public reporting will use aggregate, disclosure-reviewed data only."],
+const paths = [
+  {
+    href: "/process/",
+    title: "Understand the healthy process",
+    body: "See the sourced Washington DVR process map, including where timing or branching still needs review.",
+    status: "Research map published",
+  },
+  {
+    href: "/tools/",
+    title: "Use participant tools",
+    body: "Prepare local-only drafts and questions. Tools never submit to DVR automatically.",
+    status: "Records Router implemented; activation pending",
+  },
+  {
+    href: "/methods/",
+    title: "See how evidence is classified",
+    body: "Separate legal requirements, agency policy, participant reports, document-verified facts, and unresolved questions.",
+    status: "Methods available",
+  },
+  {
+    href: "/privacy/",
+    title: "Review the privacy model",
+    body: "Help-tool inputs stay local. Survey collection remains off until separate privacy and consent decisions are approved.",
+    status: "Collection not active",
+  },
 ];
 ---
 
 <BaseLayout
   title="DVR Signal — Washington Vocational Rehabilitation Process Watch"
-  description="Independent, evidence-forward tools and data about the Washington DVR process."
+  description="Independent, evidence-forward tools and process information about Washington DVR."
 >
   <div class="container">
     <section class="hero" aria-labelledby="hero-title">
-      <p class="eyebrow">Application shell · V1A foundation</p>
+      <p class="eyebrow">Independent · participant-centered · evidence-forward</p>
       <h1 id="hero-title">DVR Signal</h1>
       <p class="hero-copy">
-        Understand the process. Act on your rights. Document what happened.
-        Contribute anonymous evidence. See systemic patterns.
+        Understand the process. Prepare useful requests. Document what happened.
+        Build a clearer picture of where Washington DVR works and where participants report breakdowns.
       </p>
-      <div class="status-strip" aria-label="DVR Signal status palette">
-        <span title="Healthy / baseline"></span>
+      <div class="status-strip" aria-label="DVR Signal process-status palette">
+        <span title="Healthy / legal baseline"></span>
         <span title="Needs review"></span>
         <span title="Delay / warning"></span>
         <span title="Serious breakdown"></span>
         <span title="Neutral / unknown"></span>
       </div>
       <p class="muted">
-        This scaffold does not activate participant tools, surveys, deadlines, or legal classifications.
+        The site is under active construction. No survey collection is active, and no tool automatically submits information to DVR.
       </p>
     </section>
 
-    <section id="phase-one" class="panel" aria-labelledby="phase-one-title">
-      <p class="eyebrow">Phase 1 architecture</p>
-      <h2 id="phase-one-title">Help first, then measure.</h2>
-      <ul class="phase-grid">
-        {phases.map(([label, description]) => (
-          <li>
-            <strong>{label}</strong>
-            <p>{description}</p>
-          </li>
+    <section class="panel" aria-labelledby="start-title">
+      <p class="eyebrow">Start here</p>
+      <h2 id="start-title">Choose what you need.</h2>
+      <div class="path-grid">
+        {paths.map((path) => (
+          <article class="path-card">
+            <p class="status-label">{path.status}</p>
+            <h3><a href={path.href}>{path.title}</a></h3>
+            <p>{path.body}</p>
+          </article>
         ))}
-      </ul>
+      </div>
+    </section>
+
+    <section class="principles" aria-labelledby="principles-title">
+      <p class="eyebrow">How to read this project</p>
+      <h2 id="principles-title">Evidence and legal authority are not the same thing.</h2>
+      <p>
+        DVR Signal distinguishes official legal requirements and agency policy from participant reports,
+        document-verified events, agency responses, and adjudicated findings. Unknown information remains unknown.
+      </p>
     </section>
   </div>
 </BaseLayout>
+
+<style>
+  .path-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .path-card {
+    padding: var(--space-6);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 30%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .path-card h3 {
+    margin-block: var(--space-2);
+  }
+
+  .path-card p {
+    margin-block: 0;
+  }
+
+  .status-label {
+    color: var(--color-neutral);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .principles {
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  @media (min-width: 48rem) {
+    .path-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

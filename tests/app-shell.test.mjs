@@ -19,6 +19,8 @@ test("base layout provides core landmarks and skip navigation", () => {
   assert.match(layout, /<SiteFooter \/>/);
 });
 
-test("scaffold explicitly leaves legal automation inactive", () => {
-  assert.match(home, /does not activate participant tools, surveys, deadlines, or legal classifications/i);
+test("homepage preserves current launch gates", () => {
+  assert.match(home, /No survey collection is active/i);
+  assert.match(home, /no tool automatically submits information to DVR/i);
+  assert.match(home, /Records Router implemented; activation pending/i);
 });
