@@ -118,7 +118,7 @@
       "authority_id": "CFR-361",
       "citation": "34 CFR 361.38(c)(1)-(4)",
       "url": "https://www.ecfr.gov/current/title-34/section-361.38",
-      "summary": "Written requests for own service record and requests to amend inaccurate/misleading information require distinct routing from PRA requests.",
+      "summary": "A written request for an individual's own record of services requires timely access/release, subject to harmful-information, originating-entity, and court-appointed-representative conditions; amendment requests are separately recognized.",
       "trigger_event": "written_request_for_own_record",
       "required_inputs": [
         "record_scope",
@@ -126,18 +126,123 @@
         "requested_format"
       ],
       "exceptions": [
-        "Potentially harmful information via chosen third party; originating-agency conditions; verify applicable Washington rules."
+        "Medical, psychological, or other information DVR determines may be harmful is released through a participant-chosen third party, unless a court-appointed representative must receive it.",
+        "Information obtained from another agency or organization may be released only by, or under conditions established by, that originating entity."
       ],
       "timeframe": null,
-      "source_status": "snapshot_text_checked",
-      "source_checked_on": "2026-09-26",
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
-      "last_reviewed": null,
-      "reviewer": null,
-      "approval_reference": null,
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
+      "enabled": true
+    },
+    {
+      "id": "WA-RECORDS-ACCESS-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0140(1)-(2)",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0140",
+      "summary": "A participant may request access to or copies of the DVR case-service record. DVR provides access or copies within five business days after receiving the request, or sends written notice explaining the delay and the date access or copies will be provided.",
+      "trigger_event": "case_service_record_request_received_by_dvr",
+      "required_inputs": [
+        "record_scope",
+        "request_received_by_dvr",
+        "requested_format"
+      ],
+      "exceptions": [
+        "Potentially harmful information is released only through a participant-chosen third party as provided by the rule.",
+        "Information received from another agency or service provider is subject to that originating entity's release conditions.",
+        "If a court-appointed representative exists, the information must be released to that representative."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
+      "enabled": true
+    },
+    {
+      "id": "WA-RECORDS-CORRECTION-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0120",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0120",
+      "summary": "A participant may ask DVR to correct information believed to be incorrect. If DVR declines, it must notify the participant, document the decision, and place the participant's written summary of the disputed information in the case-service record.",
+      "trigger_event": "case_record_correction_requested",
+      "required_inputs": [
+        "disputed_information",
+        "requested_correction"
+      ],
+      "exceptions": [],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
       "enabled": false
+    },
+    {
+      "id": "WA-PRA-REQUEST-01",
+      "authority_id": "WAC-388-01",
+      "citation": "WAC 388-01-060",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-01-060",
+      "summary": "A DSHS public-record request may be verbal or written and may be directed to the DSHS Public Records Officer. DSHS prefers form 17-041 but does not make that form mandatory.",
+      "trigger_event": "public_record_request",
+      "required_inputs": [
+        "record_scope",
+        "request_destination",
+        "requested_format"
+      ],
+      "exceptions": [
+        "Third-party requests for confidential client records require valid authorization as provided by WAC 388-01-150.",
+        "DSHS may request identification where law makes a record disclosable only to a specific person."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
+      "enabled": true
+    },
+    {
+      "id": "WA-PRA-RESPONSE-01",
+      "authority_id": "RCW-4256",
+      "citation": "RCW 42.56.520; WAC 388-01-090",
+      "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=42.56.520",
+      "summary": "Within five business days of receiving a public-record request, the agency must take an allowed initial-response action. The five-business-day rule is not a guaranteed production deadline.",
+      "trigger_event": "public_record_request_received",
+      "required_inputs": [
+        "request_received_event"
+      ],
+      "exceptions": [
+        "DSHS may acknowledge the request and provide a reasonable estimate rather than producing all records within five business days.",
+        "DSHS may seek clarification, provide records in installments, or deny the request in writing with reasons.",
+        "Under WAC 388-01-090(3), a request received after office hours is considered received on the following business day; exact calendar calculation remains disabled."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
+      "enabled": true
     }
   ]
 }
