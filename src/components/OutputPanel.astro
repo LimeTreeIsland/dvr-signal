@@ -1,0 +1,33 @@
+---
+interface Props {
+  title: string;
+  status?: "neutral" | "healthy" | "review" | "warning" | "serious";
+}
+
+const { title, status = "neutral" } = Astro.props;
+---
+
+<section class:list={["output-panel", `output-panel--${status}`]} aria-labelledby="output-panel-title">
+  <h2 id="output-panel-title">{title}</h2>
+  <div class="output-body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .output-panel {
+    padding: var(--space-6);
+    border: 2px solid color-mix(in srgb, var(--color-neutral) 35%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .output-panel--healthy { border-color: var(--color-healthy); }
+  .output-panel--review { border-color: var(--color-review); }
+  .output-panel--warning { border-color: var(--color-warning); }
+  .output-panel--serious { border-color: var(--color-serious); }
+
+  h2 {
+    margin-top: 0;
+  }
+</style>
