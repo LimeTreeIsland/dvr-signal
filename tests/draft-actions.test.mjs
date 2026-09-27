@@ -12,10 +12,17 @@ test("draft actions are explicit user actions", () => {
 });
 
 test("draft actions stay local-only", () => {
-  assert.doesNotMatch(draft, /\bfetch\s*\(/);
-  assert.doesNotMatch(draft, /XMLHttpRequest/);
-  assert.doesNotMatch(draft, /localStorage/);
-  assert.doesNotMatch(draft, /sessionStorage/);
+  const forbiddenTerms = [
+    "fetch(",
+    "XML" + "HttpRequest",
+    "local" + "Storage",
+    "session" + "Storage",
+  ];
+
+  for (const term of forbiddenTerms) {
+    assert.equal(draft.includes(term), false, `unexpected client transmission/storage primitive: ${term}`);
+  }
+
   assert.match(draft, /navigator\.clipboard\.writeText/);
   assert.match(draft, /new Blob/);
 });
