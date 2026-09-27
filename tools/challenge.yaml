@@ -5,13 +5,21 @@
   "status": "scaffold",
   "enabled": false,
   "input_fields": [
-    "decision_type",
-    "notice_received_date",
-    "desired_outcome"
+    "problem_type",
+    "written_decision_status",
+    "desired_outcome",
+    "decision_description_optional",
+    "decision_issue_date_optional",
+    "hearing_requested_status"
   ],
   "output_routes": [
-    "options_and_questions",
-    "deadline_unavailable_until_review"
+    "informal_dvr",
+    "cap",
+    "mediation",
+    "fair_hearing",
+    "general_complaint",
+    "discrimination_complaint",
+    "unsure"
   ],
   "rule_ids": [],
   "storage": "memory_only",
