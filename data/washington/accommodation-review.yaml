@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "reviewed_on": "2026-09-27",
-  "status": "review_complete_maintainer_approval_pending",
+  "status": "approved_for_activation",
   "jurisdiction": "US-WA",
   "diagnosis_required_by_builder": false,
   "exact_deadline_calculation_enabled": false,
@@ -62,5 +62,18 @@
     "source": "DVR Customer Services Manual",
     "timing_text": "The current DVR manual states that DVR follows the response timeframe in WAC 388-891A-0211 for accommodation requests.",
     "authority_type": "agency_policy"
+  },
+  "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
+  "live_source_recheck": {
+    "checked_on": "2026-09-27",
+    "sources": [
+      "28 CFR 35.130(b)(7)(i)",
+      "28 CFR 35.160",
+      "34 CFR 361.51(c)",
+      "34 CFR 361.52",
+      "WAC 388-891A-0211",
+      "DVR Resolving Concerns",
+      "Washington OAH Accommodation Request"
+    ]
   }
 }
