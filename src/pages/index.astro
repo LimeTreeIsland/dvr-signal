@@ -1,0 +1,50 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const phases = [
+  ["Understand", "Learn the sourced Washington DVR process and where uncertainty remains."],
+  ["Act", "Use participant tools that generate editable requests without automatic submission."],
+  ["Document", "Keep entered facts separate from rule-derived information and unknowns."],
+  ["Contribute", "A future approved survey will collect structured anonymous experience data."],
+  ["Measure", "Public reporting will use aggregate, disclosure-reviewed data only."],
+];
+---
+
+<BaseLayout
+  title="DVR Signal — Washington Vocational Rehabilitation Process Watch"
+  description="Independent, evidence-forward tools and data about the Washington DVR process."
+>
+  <div class="container">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">Application shell · V1A foundation</p>
+      <h1 id="hero-title">DVR Signal</h1>
+      <p class="hero-copy">
+        Understand the process. Act on your rights. Document what happened.
+        Contribute anonymous evidence. See systemic patterns.
+      </p>
+      <div class="status-strip" aria-label="DVR Signal status palette">
+        <span title="Healthy / baseline"></span>
+        <span title="Needs review"></span>
+        <span title="Delay / warning"></span>
+        <span title="Serious breakdown"></span>
+        <span title="Neutral / unknown"></span>
+      </div>
+      <p class="muted">
+        This scaffold does not activate participant tools, surveys, deadlines, or legal classifications.
+      </p>
+    </section>
+
+    <section id="phase-one" class="panel" aria-labelledby="phase-one-title">
+      <p class="eyebrow">Phase 1 architecture</p>
+      <h2 id="phase-one-title">Help first, then measure.</h2>
+      <ul class="phase-grid">
+        {phases.map(([label, description]) => (
+          <li>
+            <strong>{label}</strong>
+            <p>{description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

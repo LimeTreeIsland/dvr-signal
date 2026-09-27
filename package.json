@@ -1,0 +1,25 @@
+{
+  "name": "dvr-signal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "npm@10.9.2",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "node scripts/lint-app.mjs",
+    "test": "node --test tests/app-shell.test.mjs",
+    "validate": "npm run typecheck && npm run lint && npm test && npm run build"
+  },
+  "dependencies": {
+    "astro": "5.13.4"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2"
+  }
+}
