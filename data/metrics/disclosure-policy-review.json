@@ -1,0 +1,57 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "public_metrics_enabled": false,
+  "population_label": "DVR Signal survey respondents",
+  "minimum_public_cell_n": 10,
+  "primary_suppression": {
+    "exact_value_below_n": false,
+    "proposed_display": "Suppressed — fewer than 10 survey responses"
+  },
+  "binary_percentage_proposal": {
+    "denominator_min": 20,
+    "numerator_min": 10,
+    "complement_min": 10
+  },
+  "stability_thresholds_proposal": {
+    "count_percentage_min_usable_n": 10,
+    "median_min_usable_n": 10,
+    "p75_min_usable_n": 20,
+    "p90_min_usable_n": 30,
+    "survival_tail_min_risk_set": 10
+  },
+  "geography": {
+    "office_public_v1": false,
+    "city_zip_county_public_v1": false
+  },
+  "dates": {
+    "exact_day_research_metrics": false,
+    "month_only_exact_compliance_classification": false,
+    "allowed_initial_outputs": [
+      "elapsed_month_bands",
+      "interval_ranges"
+    ]
+  },
+  "release": {
+    "mode_proposal": "batch_after_disclosure_review",
+    "live_exact_counter": false,
+    "versioned_snapshots": true,
+    "differencing_review_required": true
+  },
+  "public_export": {
+    "raw_rows": false,
+    "allowlisted_aggregates_only": true,
+    "same_suppression_for_download_api_tooltip": true
+  },
+  "approval_decisions": [
+    "complementary_suppression",
+    "binary_complement_rule",
+    "percentile_thresholds",
+    "low_cell_wording",
+    "batch_release_cadence",
+    "interval_duration_method",
+    "regional_grouping",
+    "era_maturity_thresholds"
+  ]
+}
