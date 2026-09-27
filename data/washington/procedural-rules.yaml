@@ -6,7 +6,7 @@
       "authority_id": "WAC-891A",
       "citation": "WAC 388-891A-0211(1)-(2)",
       "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0211",
-      "summary": "Covered denial response: clock anchored to receipt of request; oral and written response; reasons/appeal rights or explanation of additional time and supplemental information.",
+      "summary": "If a DVR counselor makes a decision to deny a request for a VR service, reasonable accommodation, or another request affecting participation, the counselor responds orally and in writing within ten working days of receiving the request. The written response states reasons and appeal rights, or explains additional time and supplemental information needed.",
       "trigger_event": "request_received_by_dvr",
       "required_inputs": [
         "covered_request",
@@ -15,22 +15,18 @@
         "supplemental_information_response"
       ],
       "exceptions": [
-        "Review applicability and supplemental-information explanation under subsection (2)(b)."
+        "This is not treated as a universal final-decision deadline for every accommodation request; subsection (2)(b) expressly contemplates additional time for supplemental information."
       ],
-      "timeframe": {
-        "amount": 10,
-        "unit": "working_days",
-        "counting_rule_status": "pending_review"
-      },
+      "timeframe": null,
       "source_status": "live_text_checked",
-      "source_checked_on": "2026-09-26",
+      "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
-      "last_reviewed": null,
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-ELIGIBILITY-01",
@@ -242,6 +238,83 @@
       "last_reviewed": "2026-09-27",
       "reviewer": "LimeTreeIsland",
       "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
+      "enabled": true
+    },
+    {
+      "id": "ADA-MODIFICATION-01",
+      "authority_id": "ADA-TITLE-II",
+      "citation": "28 CFR 35.130(b)(7)(i)",
+      "url": "https://www.ecfr.gov/current/title-28/chapter-I/part-35/subpart-B/section-35.130",
+      "summary": "A public entity must make reasonable modifications in policies, practices, or procedures when necessary to avoid disability discrimination, unless it demonstrates that the modification would fundamentally alter the nature of the service, program, or activity.",
+      "trigger_event": "disability_related_modification_requested",
+      "required_inputs": [
+        "barrier",
+        "requested_change",
+        "program_or_activity"
+      ],
+      "exceptions": [
+        "The tool does not determine whether a requested modification is reasonable, necessary, or a fundamental alteration in a particular case."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
+      "enabled": true
+    },
+    {
+      "id": "ADA-COMMUNICATION-01",
+      "authority_id": "ADA-TITLE-II",
+      "citation": "28 CFR 35.160(a)-(b)",
+      "url": "https://www.ecfr.gov/current/title-28/chapter-I/part-35/subpart-E/section-35.160",
+      "summary": "A public entity must take appropriate steps to ensure effective communication and furnish appropriate auxiliary aids/services when necessary for equal participation, giving primary consideration to the individual's requested aid or service.",
+      "trigger_event": "effective_communication_support_requested",
+      "required_inputs": [
+        "communication_barrier",
+        "requested_aid_or_service",
+        "communication_context"
+      ],
+      "exceptions": [
+        "Primary consideration does not guarantee that every requested method must be provided; effectiveness and applicable legal limitations remain case-specific."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
+      "enabled": true
+    },
+    {
+      "id": "FED-VR-COMMUNICATION-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.51(c); 361.52",
+      "url": "https://www.ecfr.gov/current/title-34/part-361/section-361.51",
+      "summary": "VR service providers must be able to communicate using appropriate modes of communication used by applicants and eligible individuals; informed-choice information and support must likewise be provided through appropriate modes of communication.",
+      "trigger_event": "vr_communication_support_needed",
+      "required_inputs": [
+        "communication_mode",
+        "vr_participation_context"
+      ],
+      "exceptions": [
+        "This rule supports communication access but does not by itself decide the specific auxiliary aid or accommodation required in an individual case."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
       "enabled": true
     }
   ]
