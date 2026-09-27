@@ -1,7 +1,7 @@
 {
   "id": "decisions",
   "title": "Written Decision + Deadline Checker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "scaffold",
   "enabled": false,
   "input_fields": [
@@ -12,10 +12,19 @@
   ],
   "output_routes": [
     "written_decision_request",
-    "deadline_unavailable_until_review"
+    "fair_hearing_rule_summary",
+    "deadline_unavailable_until_source_archive",
+    "post_hearing_request_timeline"
   ],
   "rule_ids": [
-    "WA-WRITTEN-RESPONSE-01"
+    "WA-WRITTEN-RESPONSE-01",
+    "WA-FAIR-HEARING-FILING-01",
+    "WA-HEARING-TIMING-01",
+    "FED-HEARING-TIMING-01",
+    "WA-HEARING-DECISION-01",
+    "FED-HEARING-DECISION-01",
+    "WA-CONTINUATION-OF-SERVICES-01",
+    "FED-CONTINUATION-OF-SERVICES-01"
   ],
   "storage": "memory_only",
   "transmit_answers": false,
