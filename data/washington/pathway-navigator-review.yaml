@@ -1,0 +1,96 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "jurisdiction": "US-WA",
+  "deadline_calculation_enabled": false,
+  "stages": {
+    "application": {
+      "citations": [
+        "WAC 388-891A-0410",
+        "34 CFR 361.41"
+      ],
+      "reference": "Completed application requires a qualifying request/application, information needed to begin eligibility assessment, and availability to complete the assessment process.",
+      "unknowns": [
+        "application/request form status",
+        "information sufficient to initiate assessment",
+        "availability for assessment"
+      ],
+      "must_not_assume": [
+        "referral_equals_application"
+      ]
+    },
+    "eligibility": {
+      "citations": [
+        "WAC 388-891A-0510",
+        "34 CFR 361.41(b)",
+        "34 CFR 361.42"
+      ],
+      "reference": "Eligibility determination uses the 60-day framework with stated extension/trial-work exceptions.",
+      "textual_timeframe": "60 days subject to applicable extension or trial-work/exploration provisions",
+      "exact_calculation_enabled": false,
+      "unknowns": [
+        "application completion date",
+        "eligibility date",
+        "specific extension agreement",
+        "trial work/exploration status"
+      ]
+    },
+    "assessment": {
+      "citations": [
+        "WAC 388-891A-0900",
+        "34 CFR 361.45(b),(f)"
+      ],
+      "reference": "Identify VR needs, employment outcome, and services using existing information to the extent possible and additional assessment when needed.",
+      "universal_standalone_deadline": false,
+      "comprehensive_assessment_always_required": false
+    },
+    "ipe": {
+      "citations": [
+        "WAC 388-891A-0916",
+        "34 CFR 361.45",
+        "34 CFR 361.46"
+      ],
+      "reference": "Develop a written, signed IPE with employment outcome, services, timelines, providers and progress criteria.",
+      "textual_timeframe": "90 days after eligibility, or after release from an order-of-selection waiting list when that branch applies, unless a specific-date extension is agreed",
+      "exact_calculation_enabled": false,
+      "order_of_selection_branch_required": true
+    },
+    "ipe_review": {
+      "citations": [
+        "WAC 388-891A-0950",
+        "34 CFR 361.45(d)(5)-(7)"
+      ],
+      "reference": "Review the IPE at least annually and amend it when substantive changes require an amendment.",
+      "exact_calculation_enabled": false
+    },
+    "services": {
+      "citations": [
+        "34 CFR 361.45(a)(2)",
+        "34 CFR 361.46(a)(2),(4)-(5)"
+      ],
+      "reference": "Provide services in accordance with the IPE and its individualized timelines/providers.",
+      "universal_service_start_deadline": false
+    },
+    "employment": {
+      "citations": [
+        "34 CFR 361.56"
+      ],
+      "reference": "Employment alone is not successful closure; successful closure requires the regulatory conditions, including at least 90 days of maintained employment outcome."
+    },
+    "closure": {
+      "citations": [
+        "WAC 388-891A-1320",
+        "34 CFR 361.56"
+      ],
+      "reference": "Closure type matters. Participant involvement/notice and appeal/CAP information apply under Washington closure rule; successful-employment closure has separate federal conditions.",
+      "successful_employment_test_applies_to_all_closures": false
+    }
+  },
+  "handoffs": {
+    "records": "/tools/records/",
+    "accommodations": "/tools/accommodations/",
+    "decisions": "/tools/decisions/",
+    "challenge": "/tools/challenge/"
+  }
+}
