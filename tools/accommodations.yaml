@@ -1,18 +1,31 @@
 {
   "id": "accommodations",
   "title": "Accommodation Builder",
-  "version": "0.1.0",
-  "status": "scaffold",
-  "enabled": false,
+  "version": "0.2.0",
+  "status": "active",
+  "enabled": true,
   "input_fields": [
+    "context",
+    "need",
     "barrier",
     "requested_change",
-    "communication_preference"
+    "participation_support_optional",
+    "communication_preference",
+    "disability_context_optional",
+    "oah_details_optional"
   ],
   "output_routes": [
-    "editable_accommodation_request"
+    "dvr_effective_communication",
+    "dvr_modification",
+    "oah_accommodation",
+    "unsure"
   ],
-  "rule_ids": [],
+  "rule_ids": [
+    "ADA-MODIFICATION-01",
+    "ADA-COMMUNICATION-01",
+    "FED-VR-COMMUNICATION-01",
+    "WA-WRITTEN-RESPONSE-01"
+  ],
   "storage": "memory_only",
   "transmit_answers": false,
   "requires_verified_contacts": true
