@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "reviewed_on": "2026-09-27",
   "status": "review_complete_maintainer_approval_pending",
   "jurisdiction": "US-WA",
@@ -8,7 +8,13 @@
       "citation": "WAC 388-891A-0211",
       "amount": 10,
       "unit": "working_days",
-      "trigger": "DVR receipt of covered request",
+      "applies_when": "counselor_decides_to_deny_covered_request",
+      "clock_start": "DVR_receipt_of_request",
+      "covered_request_types": [
+        "VR service",
+        "reasonable accommodation",
+        "other request affecting participation in the VR program"
+      ],
       "exact_calculation_enabled": false,
       "reason": "Chapter 388-891A does not define working-day counting, and chapter 388-02 hearing-process counting is not silently imported."
     },
@@ -24,6 +30,16 @@
         "move_final_weekend_or_legal_holiday_to_next_business_day": true,
         "cutoff_local_time": "17:00",
         "timezone": "America/Los_Angeles"
+      },
+      "exact_calculation_enabled": false,
+      "source_archive_gate": {
+        "required": true,
+        "status": "blocked_missing_primary_source_files",
+        "required_files": [
+          "WAC 388-02 current primary-source PDF",
+          "RCW 1.16 current primary-source PDF"
+        ],
+        "note": "Live official text was reviewed, but exact production calculation remains disabled until both current primary-source files are archived in the repository legal corpus and rechecked."
       }
     },
     "hearing_after_request": {
@@ -33,17 +49,20 @@
       "exact_calculation_enabled": false,
       "participant_filing_deadline": false,
       "exceptions": [
-        "later hearing date for reasonable cause under WAC",
-        "informal resolution or mediation",
-        "specific extension under federal rule"
+        "later hearing date requested by the participant or DVR and OAH finds reasonable cause under WAC 388-891A-0260",
+        "informal resolution resolves the dispute before day 60 under 34 CFR 361.57(e)(1)",
+        "a mediation agreement resolves the dispute before day 60 under 34 CFR 361.57(e)(1)",
+        "the parties agree to a specific extension of time under 34 CFR 361.57(e)(1)"
       ]
     },
     "written_hearing_decision": {
       "citation": "WAC 388-891A-0270; 34 CFR 361.57(e)(3)(ii)",
       "amount": 30,
-      "unit": "days_after_hearing",
+      "unit": "calendar_days",
+      "trigger": "completion_of_hearing",
       "exact_calculation_enabled": false,
-      "participant_filing_deadline": false
+      "participant_filing_deadline": false,
+      "note": "Use completion of the hearing as the federal trigger; do not assume the first hearing session is the completion date when a hearing spans multiple sessions."
     }
   },
   "routes": {
@@ -63,7 +82,41 @@
     }
   },
   "continuation_of_services": {
-    "citation": "WAC 388-891A-0295; 34 CFR 361.57(b)(4)",
-    "automated_applicability_decision": false
+    "state": {
+      "citation": "WAC 388-891A-0295",
+      "trigger": "fair_hearing_requested",
+      "scope": [
+        "agreed_upon_services"
+      ],
+      "exceptions": [
+        "DVR provides evidence that the participant provided false information related to receipt of VR services",
+        "DVR provides evidence of fraud related to receipt of VR services",
+        "DVR provides evidence of other criminal acts related to receipt of VR services"
+      ],
+      "automated_applicability_decision": false
+    },
+    "federal": {
+      "citation": "34 CFR 361.57(b)(4)",
+      "triggers": [
+        "pending_resolution_through_mediation",
+        "pending_hearing_officer_decision",
+        "pending_reviewing_official_decision",
+        "pending_informal_resolution"
+      ],
+      "scope": [
+        "vocational_rehabilitation_services_being_provided",
+        "evaluation_and_assessment_services",
+        "individualized_plan_for_employment_development"
+      ],
+      "exceptions": [
+        "the individual or representative requests suspension, reduction, or termination",
+        "the State agency has evidence services were obtained through misrepresentation",
+        "the State agency has evidence services were obtained through fraud",
+        "the State agency has evidence services were obtained through collusion",
+        "the State agency has evidence services were obtained through criminal conduct"
+      ],
+      "automated_applicability_decision": false
+    },
+    "do_not_collapse_state_and_federal_scopes": true
   }
 }
