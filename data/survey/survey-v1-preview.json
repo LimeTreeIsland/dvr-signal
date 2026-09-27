@@ -1,0 +1,436 @@
+{
+  "id": "dvr-signal-survey",
+  "version": "0.1.0-preview",
+  "status": "preview_maintainer_approval_pending",
+  "collection_enabled": false,
+  "target_minutes": "3–5",
+  "consent": {
+    "id": "CONSENT-001",
+    "text": "DVR Signal is an independent project, not Washington DVR or DSHS. This voluntary survey asks about one Washington DVR experience for research and aggregate reporting. Do not enter identifying or medical information. Raw participant-level responses will not be published. Because the survey uses no response identifier, a particular anonymous response may be impossible to locate or delete after submission.",
+    "required_affirmation": "I am 18 or older, understand this notice, and voluntarily agree to participate."
+  },
+  "sections": [
+    {
+      "id": "entry",
+      "title": "Your DVR episode",
+      "core": [
+        {
+          "id": "RESP-001",
+          "question": "Are you answering about your own Washington DVR experience?",
+          "type": "single",
+          "options": [
+            "Yes",
+            "No — I am an authorized representative"
+          ]
+        },
+        {
+          "id": "RESP-002",
+          "question": "Which best describes this DVR episode?",
+          "type": "single",
+          "options": [
+            "Current participant",
+            "Former participant",
+            "Applied but did not receive services",
+            "Authorized representative",
+            "Other/unsure"
+          ]
+        },
+        {
+          "id": "CASE-001",
+          "question": "Where is this DVR case now?",
+          "type": "single",
+          "options": [
+            "Application/intake",
+            "Eligibility determination",
+            "Eligible — waiting list",
+            "Vocational assessment/employment planning",
+            "Developing IPE",
+            "Signed IPE/receiving services",
+            "Employment services/job search",
+            "Employed",
+            "Case closed",
+            "Disputing/appealing a decision",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "APP-001",
+          "question": "Approximately when did you submit or sign the DVR application?",
+          "type": "month_or_unknown"
+        },
+        {
+          "id": "APP-002",
+          "question": "Did DVR tell you additional application materials were needed before eligibility could be determined?",
+          "type": "yes_no_unsure"
+        }
+      ]
+    },
+    {
+      "id": "eligibility",
+      "title": "Eligibility and waiting list",
+      "core": [
+        {
+          "id": "ELIG-001",
+          "question": "Were you determined eligible for DVR services?",
+          "type": "single",
+          "options": [
+            "Yes",
+            "No",
+            "Still waiting",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "ELIG-002",
+          "question": "Approximately when were you determined eligible?",
+          "type": "month_or_unknown",
+          "show_when": "ELIG-001=Yes"
+        },
+        {
+          "id": "ELIG-003",
+          "question": "Did you and DVR agree to extend the eligibility determination period?",
+          "type": "yes_no_unsure",
+          "show_when": "eligible_or_pending"
+        },
+        {
+          "id": "OOS-001",
+          "question": "Were you placed on DVR's Order of Selection waiting list?",
+          "type": "yes_no_unsure"
+        },
+        {
+          "id": "OOS-004",
+          "question": "Has DVR released your case from the waiting list?",
+          "type": "yes_no_unsure",
+          "show_when": "OOS-001=Yes"
+        },
+        {
+          "id": "OOS-005",
+          "question": "Approximately when were you released from the waiting list?",
+          "type": "month_or_unknown",
+          "show_when": "OOS-004=Yes"
+        }
+      ]
+    },
+    {
+      "id": "planning",
+      "title": "Counselor continuity, assessment, and IPE",
+      "core": [
+        {
+          "id": "CONT-001",
+          "question": "How many different DVR counselors have been assigned to this case?",
+          "type": "single",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4+",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "CONT-002",
+          "question": "After a counselor change, which of these occurred?",
+          "type": "multi",
+          "show_when": "CONT-001>1",
+          "options": [
+            "Repeated explanation",
+            "Repeated work",
+            "Missing information",
+            "Case stalled",
+            "Unclear responsibility",
+            "Prior decisions changed",
+            "No significant problem",
+            "Other/unsure"
+          ]
+        },
+        {
+          "id": "ASSESS-001",
+          "question": "What is the status of your vocational assessment?",
+          "type": "single",
+          "options": [
+            "DVR told me it was complete",
+            "DVR told me it is still underway",
+            "Some assessment occurred but status is unclear",
+            "I do not remember an assessment",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "ASSESS-004",
+          "question": "Was an important employment-goal or service decision made while an assessment you were waiting for was still incomplete?",
+          "type": "yes_no_unsure_na"
+        },
+        {
+          "id": "IPE-001",
+          "question": "Do or did you have a signed IPE?",
+          "type": "single",
+          "options": [
+            "Yes",
+            "No",
+            "Being developed",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "IPE-002",
+          "question": "Approximately when did the IPE become effective or get signed?",
+          "type": "month_or_unknown",
+          "show_when": "IPE-001=Yes"
+        },
+        {
+          "id": "IPE-003",
+          "question": "Did you and DVR agree to extend IPE development to a specific later completion date?",
+          "type": "yes_no_unsure_na"
+        },
+        {
+          "id": "IPE-005",
+          "question": "Did DVR give you a copy of the signed IPE?",
+          "type": "yes_no_unsure",
+          "show_when": "IPE-001=Yes"
+        },
+        {
+          "id": "IPE-006",
+          "question": "If the IPE has been active at least 12 months, has DVR reviewed it with you during the last 12 months?",
+          "type": "yes_no_unsure_na",
+          "show_when": "IPE_active_12_months"
+        }
+      ]
+    },
+    {
+      "id": "choice_services",
+      "title": "Employment goal and services",
+      "core": [
+        {
+          "id": "CHOICE-001",
+          "question": "How was your employment goal selected?",
+          "type": "single",
+          "options": [
+            "Participant-led",
+            "Jointly developed",
+            "DVR strongly recommended another goal",
+            "Preferred goal not supported",
+            "No meaningful choices",
+            "No goal yet",
+            "Other/unsure"
+          ]
+        },
+        {
+          "id": "SELF-001",
+          "question": "Did you propose self-employment as an employment outcome?",
+          "type": "yes_no_unsure"
+        },
+        {
+          "id": "SELF-002",
+          "question": "What happened with feasibility analysis?",
+          "type": "single",
+          "show_when": "SELF-001=Yes",
+          "options": [
+            "Completed",
+            "Started",
+            "Requested but not started",
+            "DVR decided without one",
+            "Not requested",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "SERV-001",
+          "question": "Which DVR services did you need or request?",
+          "type": "multi_service_categories"
+        },
+        {
+          "id": "SERV-002",
+          "question": "Which one was most important to your employment goal?",
+          "type": "single_from_SERV-001",
+          "show_when": "SERV-001_has_selection"
+        },
+        {
+          "id": "SERV-003",
+          "question": "What happened with that service?",
+          "type": "multi_stage",
+          "show_when": "SERV-002_answered",
+          "options": [
+            "Requested",
+            "Discussed",
+            "Included in IPE",
+            "Approved",
+            "Authorized",
+            "Received",
+            "Completed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "safeguards",
+      "title": "Decisions, access, records, and disputes",
+      "core": [
+        {
+          "id": "DEC-001",
+          "question": "Did DVR deny or refuse a service, accommodation, or other request affecting your participation?",
+          "type": "yes_no_unsure"
+        },
+        {
+          "id": "DEC-004",
+          "question": "Did you receive the response in writing?",
+          "type": "yes_no_unsure",
+          "show_when": "DEC-001=Yes"
+        },
+        {
+          "id": "DEC-005",
+          "question": "Did the written response explain the reason?",
+          "type": "yes_no_unsure_na",
+          "show_when": "DEC-004=Yes"
+        },
+        {
+          "id": "DEC-006",
+          "question": "Did it explain your appeal or dispute rights?",
+          "type": "yes_no_unsure_na",
+          "show_when": "DEC-004=Yes"
+        },
+        {
+          "id": "ACC-001",
+          "question": "Did you request a disability-related accommodation from DVR?",
+          "type": "yes_no_unsure"
+        },
+        {
+          "id": "ACC-003",
+          "question": "What happened with the accommodation request?",
+          "type": "single",
+          "show_when": "ACC-001=Yes",
+          "options": [
+            "Implemented",
+            "Partly implemented",
+            "Alternative offered",
+            "Denied in writing",
+            "Denied verbally",
+            "No response",
+            "Pending",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "REC-001",
+          "question": "Have you asked DVR for your case-service record?",
+          "type": "yes_no_unsure"
+        },
+        {
+          "id": "REC-003",
+          "question": "What happened with that record request?",
+          "type": "single",
+          "show_when": "REC-001=Yes",
+          "options": [
+            "Received",
+            "Written delay notice",
+            "Still waiting",
+            "Restricted/denied",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "CORR-001",
+          "question": "Have you found information in your DVR record that you believe was materially inaccurate?",
+          "type": "yes_no_unsure"
+        },
+        {
+          "id": "COMM-001",
+          "question": "During this case, which communication or continuity experiences occurred?",
+          "type": "multi",
+          "options": [
+            "Unanswered messages",
+            "Unclear case status",
+            "Unclear DVR requirements",
+            "Disputed missing information",
+            "Important verbal-only decisions",
+            "Conflicting instructions",
+            "Inaccurate meeting/action records",
+            "Communication generally clear/case progressed consistently",
+            "No significant problem",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "APPEAL-001",
+          "question": "Which dispute-resolution routes have you used?",
+          "type": "multi",
+          "options": [
+            "Counselor/supervisor review",
+            "DVR leadership/case review",
+            "CAP",
+            "Mediation",
+            "Fair hearing/OAH",
+            "Discrimination complaint",
+            "Other",
+            "None"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "outcome",
+      "title": "Outcome and evidence",
+      "core": [
+        {
+          "id": "IMPACT-001",
+          "question": "While experiencing the DVR issues described above, which associated impacts did you experience?",
+          "type": "multi",
+          "options": [
+            "Delayed employment",
+            "Lost employment opportunity",
+            "Reduced earnings/lost income",
+            "Increased debt/financial hardship",
+            "Housing instability/loss of housing",
+            "Education/training interruption",
+            "Increased reliance on family/community help",
+            "Reduced ability to participate in DVR",
+            "Withdrew from DVR",
+            "No significant negative impact",
+            "Prefer not to answer",
+            "Other"
+          ]
+        },
+        {
+          "id": "OUT-001",
+          "question": "What is the current outcome/status of this DVR episode?",
+          "type": "single",
+          "options": [
+            "Still active",
+            "Waiting for services",
+            "Employed consistent with IPE",
+            "Employed in another occupation",
+            "Self-employed",
+            "Unemployed",
+            "Withdrew from DVR",
+            "DVR closed the case",
+            "Appealing",
+            "Other/unsure"
+          ]
+        },
+        {
+          "id": "OUT-002",
+          "question": "If employed, how much do you believe DVR services contributed to obtaining or maintaining the employment?",
+          "type": "single",
+          "show_when": "employed",
+          "options": [
+            "A lot",
+            "Somewhat",
+            "Very little",
+            "Not at all",
+            "Unsure"
+          ]
+        },
+        {
+          "id": "EVID-001",
+          "question": "Do you have records that could support some or all of the events you reported?",
+          "type": "single",
+          "options": [
+            "Yes",
+            "Probably",
+            "No",
+            "Unsure"
+          ]
+        }
+      ]
+    }
+  ]
+}
