@@ -1,0 +1,447 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ChoiceGroup from "../../components/ChoiceGroup.astro";
+import FormField from "../../components/FormField.astro";
+import TextAreaField from "../../components/TextAreaField.astro";
+import ToolStatus from "../../components/ToolStatus.astro";
+import EditableDraft from "../../components/EditableDraft.astro";
+import { readJsonSubset } from "../../lib/foundation-data";
+
+interface ToolConfig {
+  enabled: boolean;
+  status: "scaffold" | "review" | "active";
+}
+
+interface ReviewData {
+  reviewed_on: string;
+  status: string;
+  diagnosis_required_by_builder: boolean;
+  exact_deadline_calculation_enabled: boolean;
+  routes: {
+    dvr_modification: {
+      participant_destination: string;
+      citations: string[];
+    };
+    dvr_effective_communication: {
+      participant_destination: string;
+      citations: string[];
+    };
+    oah_accommodation: {
+      participant_destination: string;
+      alternate_contacts: string[];
+      citations: string[];
+    };
+  };
+  denial_response: {
+    timing_text: string;
+    is_universal_approval_deadline: boolean;
+  };
+}
+
+const tool = await readJsonSubset<ToolConfig>(
+  new URL("../../../tools/accommodations.yaml", import.meta.url),
+);
+const review = await readJsonSubset<ReviewData>(
+  new URL("../../../data/washington/accommodation-review.yaml", import.meta.url),
+);
+const toolEnabled = tool.enabled && tool.status === "active";
+
+const contextOptions = [
+  {
+    value: "dvr",
+    label: "A DVR program, service, meeting, or communication",
+    description: "Use this for access to DVR itself.",
+  },
+  {
+    value: "oah",
+    label: "An OAH hearing or prehearing conference",
+    description: "OAH has a separate accommodation process from DVR.",
+  },
+  {
+    value: "unsure",
+    label: "I am not sure",
+    description: "The finished tool will explain the distinction instead of guessing.",
+  },
+];
+
+const needOptions = [
+  {
+    value: "effective_communication",
+    label: "Communication access",
+    description: "Examples: accessible electronic documents, alternate format, captioning, interpreter, communication aid, or another way to communicate effectively.",
+  },
+  {
+    value: "meeting_participation",
+    label: "Meeting participation",
+    description: "Examples: remote participation, shorter meetings, breaks, written follow-up, or a support person.",
+  },
+  {
+    value: "physical_sensory",
+    label: "Physical or sensory access",
+    description: "An access barrier involving the environment or sensory conditions.",
+  },
+  {
+    value: "processing_language",
+    label: "Processing, comprehension, or communication format",
+    description: "Examples: plain/direct language, written instructions, additional processing time, or structured summaries.",
+  },
+  {
+    value: "policy_procedure",
+    label: "Modification of a policy, practice, or procedure",
+    description: "A disability-related change to the usual way DVR does something.",
+  },
+  {
+    value: "other",
+    label: "Something else",
+    description: "Describe the barrier and the change that would help.",
+  },
+];
+
+const preferenceOptions = [
+  { value: "written_email", label: "Written / email" },
+  { value: "phone", label: "Phone" },
+  { value: "video", label: "Video meeting" },
+  { value: "mail", label: "Mail" },
+  { value: "no_preference", label: "No preference" },
+];
+---
+
+<BaseLayout
+  title="Accommodation Builder — DVR Signal"
+  description="Local-only Accommodation Builder for Washington DVR participation."
+>
+  <div class="container tool-page" data-accommodation-builder data-enabled={String(toolEnabled)}>
+    <header class="tool-intro">
+      <p class="eyebrow">Participant tool · Accommodation Builder</p>
+      <h1>Start with the barrier, not a diagnosis.</h1>
+      <p>
+        Describe what is making participation difficult and what change, aid, or service would help.
+        The builder does not require a diagnosis narrative and does not decide whether a particular request must be approved.
+      </p>
+    </header>
+
+    {toolEnabled ? (
+      <ToolStatus
+        state="available"
+        title="Accommodation Builder is available"
+        message={`Sources last reviewed ${review.reviewed_on}. The tool creates an editable request and does not submit it for you.`}
+      />
+    ) : (
+      <ToolStatus
+        state="review"
+        title="Implementation preview; legal activation requires maintainer approval"
+        message="The source review and local-only builder are implemented, but participant-facing legal routing remains disabled until the reviewed scope is explicitly approved."
+      />
+    )}
+
+    <form class="tool-form" data-accommodation-form aria-describedby="accommodation-privacy">
+      <ChoiceGroup
+        legend="Where do you need the accommodation?"
+        name="context"
+        options={contextOptions}
+        required={true}
+      />
+
+      <ChoiceGroup
+        legend="What kind of barrier or access need is closest?"
+        name="need"
+        options={needOptions}
+        required={true}
+        hint="This choice helps route the request. You can explain the actual barrier in your own words below."
+      />
+
+      <TextAreaField
+        id="barrier"
+        name="barrier"
+        label="What barrier are you experiencing?"
+        required={true}
+        hint="Describe what makes it hard to access, understand, communicate, attend, or participate. You do not have to write a detailed diagnosis here."
+      />
+
+      <TextAreaField
+        id="requested-change"
+        name="requested_change"
+        label="What change, aid, service, or modification are you asking for?"
+        required={true}
+        hint="Be concrete about what would help."
+      />
+
+      <TextAreaField
+        id="participation-support"
+        name="participation_support"
+        label="How would this help you participate? (optional)"
+        rows={4}
+      />
+
+      <ChoiceGroup
+        legend="How do you prefer to communicate about this request?"
+        name="preferred_communication"
+        options={preferenceOptions}
+        required={true}
+      />
+
+      <TextAreaField
+        id="disability-context"
+        name="disability_context"
+        label="Optional disability-related context"
+        rows={4}
+        hint="Include only what you want to share. DVR may request documentation in some circumstances; this builder does not force medical detail."
+      />
+
+      <div class="oah-details" data-oah-details hidden>
+        <FormField
+          id="docket-number"
+          name="docket_number"
+          label="OAH docket number (optional)"
+          hint="If you already have one."
+        />
+        <FormField
+          id="hearing-date"
+          name="hearing_date"
+          label="Hearing or prehearing date (optional)"
+          type="date"
+        />
+      </div>
+
+      <p id="accommodation-privacy" class="privacy-note">
+        Local-only: DVR Signal does not submit, transmit, or persist your answers.
+      </p>
+
+      <button
+        class="primary-action"
+        type="submit"
+        disabled={!toolEnabled}
+        aria-disabled={String(!toolEnabled)}
+      >
+        {toolEnabled ? "Build my request" : "Activation pending maintainer approval"}
+      </button>
+    </form>
+
+    <section class="result-region" data-result-region hidden aria-live="polite">
+      <div data-needs-information hidden>
+        <ToolStatus
+          state="review"
+          title="Choose the organization that controls the accommodation"
+          message="DVR program access and OAH hearing access use different routes. The tool will not guess which entity controls your request."
+        />
+      </div>
+
+      <div data-dvr-communication-result hidden>
+        <section class="source-card" aria-labelledby="dvr-communication-title">
+          <h2 id="dvr-communication-title">DVR effective communication route</h2>
+          <p><strong>Current public contact:</strong> {review.routes.dvr_effective_communication.participant_destination}</p>
+          <p><strong>Sources:</strong> {review.routes.dvr_effective_communication.citations.join("; ")}</p>
+          <p>
+            Title II requires effective communication and primary consideration to the requested auxiliary aid or service,
+            subject to applicable limitations. This tool does not guarantee that a specific requested method must be approved.
+          </p>
+        </section>
+        <EditableDraft
+          id="dvr-communication-draft"
+          label="Editable DVR communication-access request"
+          filename="dvr-effective-communication-request.txt"
+        />
+      </div>
+
+      <div data-dvr-modification-result hidden>
+        <section class="source-card" aria-labelledby="dvr-modification-title">
+          <h2 id="dvr-modification-title">DVR accommodation / modification route</h2>
+          <p><strong>Current public contact:</strong> {review.routes.dvr_modification.participant_destination}</p>
+          <p><strong>Sources:</strong> {review.routes.dvr_modification.citations.join("; ")}</p>
+          <p>
+            A requested modification is evaluated case by case. The tool does not decide that the requested change is legally required.
+          </p>
+        </section>
+        <EditableDraft
+          id="dvr-modification-draft"
+          label="Editable DVR accommodation request"
+          filename="dvr-accommodation-request.txt"
+        />
+      </div>
+
+      <div data-oah-result hidden>
+        <section class="source-card" aria-labelledby="oah-route-title">
+          <h2 id="oah-route-title">OAH accommodation route</h2>
+          <p><strong>Online request:</strong> {review.routes.oah_accommodation.participant_destination}</p>
+          <p><strong>Other contacts:</strong> {review.routes.oah_accommodation.alternate_contacts.join(" · ")}</p>
+          <p>
+            OAH controls accommodations for its hearings and prehearing conferences. DVR Signal keeps this separate from a DVR program accommodation request.
+          </p>
+        </section>
+        <EditableDraft
+          id="oah-accommodation-draft"
+          label="Editable OAH accommodation request"
+          filename="oah-accommodation-request.txt"
+        />
+      </div>
+
+      <aside class="timing-note">
+        <h2>If DVR denies the request</h2>
+        <p>{review.denial_response.timing_text}</p>
+        <p>
+          This is not presented as a universal ten-working-day final-approval deadline, and DVR Signal does not calculate an exact calendar due date here.
+        </p>
+      </aside>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  import {
+    buildDvrAccommodationDraft,
+    buildOahAccommodationDraft,
+    routeAccommodationRequest,
+    type AccommodationAnswers,
+    type AccommodationContext,
+    type AccommodationNeed,
+  } from "../../lib/accommodation-builder";
+
+  const root = document.querySelector<HTMLElement>("[data-accommodation-builder]");
+  const form = root?.querySelector<HTMLFormElement>("[data-accommodation-form]");
+  const resultRegion = root?.querySelector<HTMLElement>("[data-result-region]");
+  const needsInformation = root?.querySelector<HTMLElement>("[data-needs-information]");
+  const dvrCommunication = root?.querySelector<HTMLElement>("[data-dvr-communication-result]");
+  const dvrModification = root?.querySelector<HTMLElement>("[data-dvr-modification-result]");
+  const oahResult = root?.querySelector<HTMLElement>("[data-oah-result]");
+  const oahDetails = root?.querySelector<HTMLElement>("[data-oah-details]");
+  const dvrCommunicationDraft = root?.querySelector<HTMLTextAreaElement>("#dvr-communication-draft");
+  const dvrModificationDraft = root?.querySelector<HTMLTextAreaElement>("#dvr-modification-draft");
+  const oahDraft = root?.querySelector<HTMLTextAreaElement>("#oah-accommodation-draft");
+  const toolEnabled = root?.dataset.enabled === "true";
+
+  form?.addEventListener("change", () => {
+    const context = new FormData(form).get("context");
+    if (oahDetails) oahDetails.hidden = context !== "oah";
+  });
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!toolEnabled || !resultRegion || !needsInformation || !dvrCommunication || !dvrModification || !oahResult) return;
+
+    const data = new FormData(form);
+    const answers: AccommodationAnswers = {
+      context: String(data.get("context")) as AccommodationContext,
+      need: String(data.get("need")) as AccommodationNeed,
+      barrier: String(data.get("barrier") || ""),
+      requestedChange: String(data.get("requested_change") || ""),
+      participationSupport: String(data.get("participation_support") || "") || undefined,
+      preferredCommunication: String(data.get("preferred_communication") || "") || undefined,
+      disabilityContext: String(data.get("disability_context") || "") || undefined,
+      docketNumber: String(data.get("docket_number") || "") || undefined,
+      hearingDate: String(data.get("hearing_date") || "") || undefined,
+    };
+
+    const result = routeAccommodationRequest(answers, toolEnabled);
+
+    needsInformation.hidden = true;
+    dvrCommunication.hidden = true;
+    dvrModification.hidden = true;
+    oahResult.hidden = true;
+
+    if (result.applicability === "needs_information") {
+      needsInformation.hidden = false;
+    } else if (result.route === "dvr_effective_communication") {
+      dvrCommunication.hidden = false;
+      if (dvrCommunicationDraft) dvrCommunicationDraft.value = buildDvrAccommodationDraft(answers, true);
+    } else if (result.route === "dvr_modification") {
+      dvrModification.hidden = false;
+      if (dvrModificationDraft) dvrModificationDraft.value = buildDvrAccommodationDraft(answers, false);
+    } else if (result.route === "oah_accommodation") {
+      oahResult.hidden = false;
+      if (oahDraft) oahDraft.value = buildOahAccommodationDraft(answers);
+    }
+
+    resultRegion.hidden = false;
+    resultRegion.scrollIntoView({ block: "start" });
+  });
+</script>
+
+<style>
+  .tool-page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 58rem;
+  }
+
+  .tool-intro {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tool-intro h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+
+  .tool-intro p {
+    margin: 0;
+  }
+
+  .tool-form {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-4);
+  }
+
+  .oah-details {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .privacy-note {
+    margin: 0;
+    color: var(--color-neutral);
+    font-size: 0.95rem;
+  }
+
+  .primary-action {
+    min-height: 2.9rem;
+    justify-self: start;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--color-ink);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .primary-action:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .result-region {
+    display: grid;
+    gap: var(--space-8);
+    padding-block: var(--space-4) var(--space-12);
+    scroll-margin-top: var(--space-8);
+  }
+
+  .source-card,
+  .timing-note {
+    padding: var(--space-6);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .source-card {
+    margin-bottom: var(--space-4);
+    border-inline-start: 0.45rem solid var(--color-healthy);
+  }
+
+  .timing-note {
+    border-inline-start: 0.45rem solid var(--color-review);
+  }
+
+  .source-card h2,
+  .timing-note h2 {
+    margin-top: 0;
+  }
+
+  @media (min-width: 42rem) {
+    .oah-details {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
