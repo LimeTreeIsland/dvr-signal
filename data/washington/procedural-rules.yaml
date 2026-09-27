@@ -7,25 +7,25 @@
       "citation": "WAC 388-891A-0211(1)-(2)",
       "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0211",
       "summary": "If a DVR counselor makes a decision to deny a request for a VR service, reasonable accommodation, or another request affecting participation, the counselor responds orally and in writing within ten working days of receiving the request. The written response states reasons and appeal rights, or explains additional time and supplemental information needed.",
-      "trigger_event": "request_received_by_dvr",
+      "trigger_event": "counselor_decides_to_deny_covered_request",
       "required_inputs": [
         "covered_request",
         "request_received_date",
-        "denial_decision",
-        "supplemental_information_response"
+        "denial_decision"
       ],
       "exceptions": [
-        "This is not treated as a universal final-decision deadline for every accommodation request; subsection (2)(b) expressly contemplates additional time for supplemental information."
+        "The rule is triggered by a counselor decision to deny a covered request; it is not a universal ten-working-day response requirement for every request made to DVR.",
+        "Subsection (2)(b) expressly allows the written response to explain additional time and the supplemental information needed."
       ],
       "timeframe": null,
       "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "jurisdiction": "US-WA",
       "review_status": "approved",
       "last_reviewed": "2026-09-27",
       "reviewer": "LimeTreeIsland",
-      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27; trigger encoding corrected by maintainer-directed V1B-04 audit",
       "enabled": true
     },
     {
@@ -316,6 +316,197 @@
       "reviewer": "LimeTreeIsland",
       "approval_reference": "PR #11; maintainer approval recorded 2026-09-27",
       "enabled": true
+    },
+    {
+      "id": "WA-FAIR-HEARING-FILING-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0255(2)",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0255",
+      "summary": "A fair-hearing request must be submitted within forty-five calendar days of the date the DVR counselor issues the decision with which the participant disagrees.",
+      "trigger_event": "dvr_counselor_issues_decision",
+      "required_inputs": [
+        "decision_issue_date"
+      ],
+      "exceptions": [
+        "Exact calendar calculation remains disabled until WAC 388-02 and RCW 1.16 primary-source files are archived and approved for calculator use."
+      ],
+      "timeframe": {
+        "amount": 45,
+        "unit": "calendar_days",
+        "counting_rule_status": "source_archive_pending"
+      },
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "WA-HEARING-TIMING-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0260",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0260",
+      "summary": "OAH holds a fair hearing within sixty days of receipt of the written hearing request unless the participant or DVR asks for a later hearing date and OAH determines there is reasonable cause for delay.",
+      "trigger_event": "oah_receives_written_hearing_request",
+      "required_inputs": [
+        "hearing_request_received_date"
+      ],
+      "exceptions": [
+        "The participant or DVR asks for a later hearing date and OAH determines there is reasonable cause for the delay."
+      ],
+      "timeframe": {
+        "amount": 60,
+        "unit": "days",
+        "counting_rule_status": "not_activated"
+      },
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-HEARING-TIMING-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.57(e)(1)",
+      "url": "https://www.ecfr.gov/current/title-34/part-361/section-361.57",
+      "summary": "An impartial due process hearing must be held within sixty days of the request for review unless informal resolution or a mediation agreement is achieved before day 60, or the parties agree to a specific extension of time.",
+      "trigger_event": "request_for_review",
+      "required_inputs": [
+        "request_for_review_date"
+      ],
+      "exceptions": [
+        "Informal resolution resolves the dispute before day 60.",
+        "A mediation agreement resolves the dispute before day 60.",
+        "The parties agree to a specific extension of time."
+      ],
+      "timeframe": {
+        "amount": 60,
+        "unit": "days",
+        "counting_rule_status": "not_activated"
+      },
+      "source_status": "snapshot_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "WA-HEARING-DECISION-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0270",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0270",
+      "summary": "OAH sends a written report of findings and decision within thirty days of the fair hearing.",
+      "trigger_event": "fair_hearing_completed",
+      "required_inputs": [
+        "hearing_completion_date"
+      ],
+      "exceptions": [],
+      "timeframe": {
+        "amount": 30,
+        "unit": "calendar_days",
+        "counting_rule_status": "not_activated"
+      },
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-HEARING-DECISION-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.57(e)(3)(ii)",
+      "url": "https://www.ecfr.gov/current/title-34/part-361/section-361.57",
+      "summary": "The impartial hearing officer must provide a full written report of findings and grounds for the decision within thirty days of completion of the hearing.",
+      "trigger_event": "hearing_completed",
+      "required_inputs": [
+        "hearing_completion_date"
+      ],
+      "exceptions": [],
+      "timeframe": {
+        "amount": 30,
+        "unit": "calendar_days",
+        "counting_rule_status": "not_activated"
+      },
+      "source_status": "snapshot_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "WA-CONTINUATION-OF-SERVICES-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0295",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0295",
+      "summary": "After a fair hearing is requested, DVR must not suspend, reduce, or terminate agreed-upon services unless DVR provides evidence of false information, fraud, or other criminal acts related to receipt of VR services.",
+      "trigger_event": "fair_hearing_requested",
+      "required_inputs": [
+        "fair_hearing_requested",
+        "agreed_upon_service_status"
+      ],
+      "exceptions": [
+        "DVR provides evidence of false information related to receipt of VR services.",
+        "DVR provides evidence of fraud related to receipt of VR services.",
+        "DVR provides evidence of other criminal acts related to receipt of VR services."
+      ],
+      "timeframe": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-CONTINUATION-OF-SERVICES-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.57(b)(4)",
+      "url": "https://www.ecfr.gov/current/title-34/part-361/section-361.57",
+      "summary": "The State unit may not suspend, reduce, or terminate VR services being provided, including evaluation and assessment services and IPE development, while specified review processes are pending, subject to the federal exceptions.",
+      "trigger_event": "specified_review_process_pending",
+      "required_inputs": [
+        "service_being_provided",
+        "review_process_status"
+      ],
+      "exceptions": [
+        "The individual or representative requests suspension, reduction, or termination.",
+        "The State agency has evidence the services were obtained through misrepresentation, fraud, collusion, or criminal conduct."
+      ],
+      "timeframe": null,
+      "source_status": "snapshot_text_checked",
+      "source_checked_on": "2026-09-27",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": "2026-09-27",
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
     }
   ]
 }
