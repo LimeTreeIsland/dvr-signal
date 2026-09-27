@@ -1,17 +1,27 @@
 {
   "id": "navigator",
   "title": "Pathway Navigator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "scaffold",
   "enabled": false,
   "input_fields": [
     "episode_stage",
+    "application_status",
+    "eligibility_status",
     "waiting_status",
+    "ipe_status",
+    "service_issue",
+    "closure_status",
     "main_question"
   ],
   "output_routes": [
+    "stage_context",
     "stage_questions",
-    "baseline_context"
+    "unknowns",
+    "handoff_records",
+    "handoff_accommodations",
+    "handoff_decisions",
+    "handoff_challenge"
   ],
   "rule_ids": [
     "FED-ELIGIBILITY-01",
