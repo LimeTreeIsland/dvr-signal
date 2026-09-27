@@ -22,5 +22,5 @@ test("base layout provides core landmarks and skip navigation", () => {
 test("homepage preserves current launch gates", () => {
   assert.match(home, /No survey collection is active/i);
   assert.match(home, /no tool automatically submits information to DVR/i);
-  assert.match(home, /Records Router implemented; activation pending/i);
+  assert.match(home, /Records Router available/i);
 });
