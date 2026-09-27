@@ -53,9 +53,9 @@
       "id": "DVR-MANUAL",
       "type": "agency_policy",
       "citation": "DVR Customer Services Manual",
-      "url": "https://www.dshs.wa.gov/dvr",
-      "verification_status": "pending",
-      "notes": "Entry point only; resolve current manual URL, edition and sections before reliance."
+      "url": "https://www.dshs.wa.gov/sites/default/files/dvr/documents/CustomerServicesManual.pdf",
+      "verification_status": "partially_live_checked",
+      "notes": "Current DSHS-hosted Customer Services Manual checked 2026-09-27 for accommodation procedures and response-time policy; other manual sections require separate review."
     },
     {
       "id": "DVR-PLAN",
@@ -70,8 +70,8 @@
       "type": "federal_regulation",
       "citation": "28 CFR Part 35",
       "url": "https://www.ecfr.gov/current/title-28/chapter-I/part-35",
-      "verification_status": "pending",
-      "notes": "Supplied regulations; pinpoint and current verification pending."
+      "verification_status": "partially_live_checked",
+      "notes": "28 CFR 35.130(b)(7)(i) and 35.160 live-checked against eCFR on 2026-09-27; Title 28 displayed up to date as of 2026-09-24. Other Part 35 sections remain separately reviewed/pending."
     },
     {
       "id": "SECTION-504",
@@ -80,6 +80,14 @@
       "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section794&num=0&edition=prelim",
       "verification_status": "pending",
       "notes": "Supplied DOL summary is guidance; verify statute and applicable agency regulations separately."
+    },
+    {
+      "id": "WA-OAH-ACCESS",
+      "type": "official_guidance",
+      "citation": "Washington OAH Accommodation Request / Equal Access guidance",
+      "url": "https://oah.wa.gov/resources/forms/accommodation-request",
+      "verification_status": "live_checked",
+      "notes": "Current OAH accommodation request and equal-access contact guidance checked 2026-09-27 for routing only."
     }
   ]
 }
