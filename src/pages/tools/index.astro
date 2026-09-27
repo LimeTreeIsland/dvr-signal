@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const tools = [
+  {
+    name: "Get My DVR Records",
+    href: "/tools/records/",
+    status: "Implemented · activation pending source approval",
+    description: "Separate your own case-service record from Public Records Act requests and prepare editable drafts.",
+  },
+  {
+    name: "Accommodation Builder",
+    status: "Planned",
+    description: "Describe a barrier, requested change, and communication preference without requiring unnecessary diagnosis detail.",
+  },
+  {
+    name: "Written Decision + Deadline Checker",
+    status: "Planned",
+    description: "Organize a request for written reasons and appeal rights, with deadline calculations only where verified.",
+  },
+  {
+    name: "Challenge a DVR Decision",
+    status: "Planned",
+    description: "Compare distinct challenge routes and prepare organized questions or a draft without predicting merits.",
+  },
+  {
+    name: "Pathway Navigator",
+    status: "Planned",
+    description: "Identify the current process stage, expected next steps, useful unknowns, and source-based questions.",
+  },
+];
+---
+
+<BaseLayout
+  title="Participant Tools — DVR Signal"
+  description="Local-only participant tools for navigating the Washington DVR process."
+>
+  <div class="container page">
+    <header>
+      <p class="eyebrow">Participant tools</p>
+      <h1>Prepare. Review. Decide what to send.</h1>
+      <p>
+        Phase 1 tools are designed to run locally in your browser, create editable text,
+        and leave submission under your control.
+      </p>
+    </header>
+
+    <div class="tool-list">
+      {tools.map((tool) => (
+        <article class="tool-card">
+          <p class="status">{tool.status}</p>
+          <h2>{tool.href ? <a href={tool.href}>{tool.name}</a> : tool.name}</h2>
+          <p>{tool.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  h1 {
+    max-width: 18ch;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+  }
+
+  .tool-list {
+    display: grid;
+    gap: var(--space-4);
+    padding-bottom: var(--space-12);
+  }
+
+  .tool-card {
+    padding: var(--space-6);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 30%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .tool-card h2 {
+    margin-block: var(--space-2);
+  }
+
+  .tool-card p {
+    margin-block: 0;
+  }
+
+  .status {
+    color: var(--color-neutral);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+</style>
