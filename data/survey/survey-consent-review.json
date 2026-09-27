@@ -1,0 +1,73 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "collection_enabled": false,
+  "target_minutes": {
+    "min": 3,
+    "max": 5
+  },
+  "primary_unit": "one_Washington_DVR_service_episode_per_response",
+  "consent": {
+    "required": true,
+    "minimum_age_proposal": 18,
+    "no_consent_no_submission": true,
+    "anonymous_withdrawal_limitation_disclosed": true
+  },
+  "cohorts": {
+    "first_person": [
+      "current_participant",
+      "former_participant",
+      "applied_no_services"
+    ],
+    "authorized_representative": {
+      "allowed_proposal": true,
+      "analytically_separate": true
+    },
+    "direct_minor_collection": {
+      "allowed_proposal": false,
+      "status": "deferred_pending_separate_review"
+    }
+  },
+  "privacy": {
+    "collect_exact_day_dates": false,
+    "date_precision": [
+      "month",
+      "unknown"
+    ],
+    "collect_diagnosis": false,
+    "collect_demographics_sensitive": false,
+    "collect_case_numbers": false,
+    "collect_staff_names": false,
+    "collect_address_location": false,
+    "collect_contact_in_research_table": false,
+    "collect_document_uploads": false,
+    "collect_free_text_narrative": false,
+    "separate_unlinked_contact_store_required": true
+  },
+  "analysis": {
+    "voluntary_sample_caveat_required": true,
+    "public_population_label": "DVR Signal survey respondents",
+    "minimum_public_cell_n": 10,
+    "raw_rows_public": false,
+    "live_exact_counter": false,
+    "release_mode": "batch_after_disclosure_review"
+  },
+  "retention_proposal": {
+    "raw_rows": "while V1 collection active plus 24 months after final V1 public aggregate release",
+    "aggregate_methodology_records": "retain after raw deletion",
+    "provider_backup_behavior_requires_verification": true
+  },
+  "approval_decisions": [
+    "age_scope",
+    "representative_cohort",
+    "date_precision",
+    "narrative_policy",
+    "geography_policy",
+    "contact_separation",
+    "retention_period",
+    "controller_and_operators",
+    "public_update_cadence",
+    "duplicate_handling"
+  ]
+}
