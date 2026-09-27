@@ -12,10 +12,10 @@ test("choice groups use semantic fieldset and legend", () => {
   assert.match(choices, /type="radio"/);
 });
 
-test("records tool remains visibly fail-closed pending maintainer approval", () => {
-  assert.match(records, /legal activation still requires maintainer approval/i);
+test("records page is data-gated rather than hard-coded open", () => {
+  assert.match(records, /const toolEnabled = tool.enabled && tool.status === "active"/);
   assert.match(records, /disabled={!toolEnabled}/);
-  assert.match(records, /Activation pending maintainer approval/);
+  assert.match(records, /Records routing is available/);
 });
 
 test("status component always includes text labels in addition to color", () => {
