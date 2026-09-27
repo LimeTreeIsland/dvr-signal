@@ -1,0 +1,69 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "jurisdiction": "US-WA",
+  "clocks": {
+    "written_denial_response": {
+      "citation": "WAC 388-891A-0211",
+      "amount": 10,
+      "unit": "working_days",
+      "trigger": "DVR receipt of covered request",
+      "exact_calculation_enabled": false,
+      "reason": "Chapter 388-891A does not define working-day counting, and chapter 388-02 hearing-process counting is not silently imported."
+    },
+    "fair_hearing_filing": {
+      "citation": "WAC 388-891A-0255(2); WAC 388-02-0035; RCW 1.16.050",
+      "amount": 45,
+      "unit": "calendar_days",
+      "trigger": "date DVR counselor issues the decision",
+      "exact_calculation_proposed": true,
+      "counting": {
+        "exclude_trigger_day": true,
+        "count_weekends_and_holidays": true,
+        "move_final_weekend_or_legal_holiday_to_next_business_day": true,
+        "cutoff_local_time": "17:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    "hearing_after_request": {
+      "citation": "WAC 388-891A-0260; 34 CFR 361.57(e)(1)",
+      "amount": 60,
+      "unit": "days",
+      "exact_calculation_enabled": false,
+      "participant_filing_deadline": false,
+      "exceptions": [
+        "later hearing date for reasonable cause under WAC",
+        "informal resolution or mediation",
+        "specific extension under federal rule"
+      ]
+    },
+    "written_hearing_decision": {
+      "citation": "WAC 388-891A-0270; 34 CFR 361.57(e)(3)(ii)",
+      "amount": 30,
+      "unit": "days_after_hearing",
+      "exact_calculation_enabled": false,
+      "participant_filing_deadline": false
+    }
+  },
+  "routes": {
+    "fair_hearing": {
+      "destination": "Washington Office of Administrative Hearings",
+      "online_form": "https://oah.wa.gov/resources/forms/hearing-request-public-assistance-form",
+      "phone": [
+        "360-407-2700",
+        "800-583-8271"
+      ],
+      "filing_note": "OAH states submissions after 5:00 p.m. Pacific Time are not considered filed until the following business day."
+    },
+    "mediation": {
+      "citation": "WAC 388-891A-0230; 34 CFR 361.57(d)",
+      "tolling_claim_allowed": false,
+      "text": "Mediation is voluntary and may be requested with a fair hearing; it must not be used to deny or delay hearing rights."
+    }
+  },
+  "continuation_of_services": {
+    "citation": "WAC 388-891A-0295; 34 CFR 361.57(b)(4)",
+    "automated_applicability_decision": false
+  }
+}
