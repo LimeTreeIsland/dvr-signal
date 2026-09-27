@@ -1,0 +1,66 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "jurisdiction": "US-WA",
+  "diagnosis_required_by_builder": false,
+  "exact_deadline_calculation_enabled": false,
+  "routes": {
+    "dvr_modification": {
+      "label": "DVR accommodation or policy/procedure modification",
+      "participant_destination": "dvradacoordinator@dshs.wa.gov",
+      "counselor_copy_optional": true,
+      "citations": [
+        "28 CFR 35.130(b)(7)(i)",
+        "WAC 388-891A-0211",
+        "DVR Customer Services Manual"
+      ],
+      "limitations": [
+        "The tool does not decide that a requested modification is reasonable or legally required.",
+        "Fundamental-alteration and other applicable legal limitations remain case-specific.",
+        "DVR may request medical documentation in some circumstances."
+      ]
+    },
+    "dvr_effective_communication": {
+      "label": "DVR effective communication / auxiliary aid or service",
+      "participant_destination": "dvr.languageaccess@dshs.wa.gov",
+      "counselor_copy_optional": true,
+      "citations": [
+        "28 CFR 35.160",
+        "34 CFR 361.51(c)",
+        "DVR Customer Services Manual"
+      ],
+      "limitations": [
+        "Primary consideration applies to the participant's requested auxiliary aid/service under Title II, but does not guarantee every requested method.",
+        "The type of aid/service depends on the communication context and effectiveness."
+      ]
+    },
+    "oah_accommodation": {
+      "label": "OAH hearing or prehearing accommodation",
+      "participant_destination": "https://oah.wa.gov/resources/forms/accommodation-request",
+      "alternate_contacts": [
+        "360-407-2700",
+        "800-583-8271",
+        "OAH_ADACoordinator@oah.wa.gov"
+      ],
+      "citations": [
+        "Washington OAH Accommodation Request",
+        "Washington OAH Equal Access & Nondiscrimination"
+      ],
+      "limitations": [
+        "OAH is separate from DVR; the tool must not route an OAH accommodation as though DVR controls the hearing accommodation process."
+      ]
+    }
+  },
+  "denial_response": {
+    "citation": "WAC 388-891A-0211",
+    "timing_text": "If a DVR counselor makes a decision to deny a reasonable-accommodation request or another request affecting participation, the counselor responds orally and in writing within ten working days of receiving the request.",
+    "is_universal_approval_deadline": false,
+    "calendar_due_date_calculation_enabled": false
+  },
+  "policy_response": {
+    "source": "DVR Customer Services Manual",
+    "timing_text": "The current DVR manual states that DVR follows the response timeframe in WAC 388-891A-0211 for accommodation requests.",
+    "authority_type": "agency_policy"
+  }
+}
