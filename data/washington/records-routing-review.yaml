@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "reviewed_on": "2026-09-27",
-  "status": "review_complete_maintainer_approval_pending",
+  "status": "approved_for_activation",
   "jurisdiction": "US-WA",
   "routes": {
     "case_record": {
@@ -50,5 +50,18 @@
         "If DVR declines to amend, Washington's rule provides for notice, documentation of the decision, and placement of the participant's written summary in the record."
       ]
     }
+  },
+  "approval_reference": "PR #8; maintainer approval recorded 2026-09-27",
+  "calendar_due_date_calculation_enabled": false,
+  "live_source_recheck": {
+    "checked_on": "2026-09-27",
+    "sources": [
+      "34 CFR 361.38(c)(1)-(4)",
+      "WAC 388-891A-0120",
+      "WAC 388-891A-0140",
+      "RCW 42.56.520",
+      "WAC 388-01-060",
+      "WAC 388-01-090"
+    ]
   }
 }
