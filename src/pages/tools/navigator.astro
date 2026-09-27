@@ -1,0 +1,323 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ChoiceGroup from "../../components/ChoiceGroup.astro";
+import ToolStatus from "../../components/ToolStatus.astro";
+import EditableDraft from "../../components/EditableDraft.astro";
+import { readJsonSubset } from "../../lib/foundation-data";
+
+interface ToolConfig {
+  enabled: boolean;
+  status: "scaffold" | "review" | "active";
+}
+
+interface StageData {
+  citations: string[];
+  reference: string;
+  textual_timeframe?: string;
+  exact_calculation_enabled?: boolean;
+}
+
+interface ReviewData {
+  reviewed_on: string;
+  status: string;
+  deadline_calculation_enabled: boolean;
+  stages: Record<string, StageData>;
+  handoffs: {
+    records: string;
+    accommodations: string;
+    decisions: string;
+    challenge: string;
+  };
+}
+
+const tool = await readJsonSubset<ToolConfig>(
+  new URL("../../../tools/navigator.yaml", import.meta.url),
+);
+const review = await readJsonSubset<ReviewData>(
+  new URL("../../../data/washington/pathway-navigator-review.yaml", import.meta.url),
+);
+const toolEnabled = tool.enabled && tool.status === "active";
+
+const stageOptions = [
+  { value: "application", label: "Application", description: "You are applying or trying to confirm whether DVR considers the application complete." },
+  { value: "eligibility", label: "Eligibility", description: "DVR is determining whether you are eligible for VR services." },
+  { value: "assessment", label: "Vocational assessment / VR-needs development", description: "DVR is identifying your employment outcome, VR needs, or additional information needed for planning." },
+  { value: "ipe", label: "IPE development", description: "You are developing the individualized plan for employment." },
+  { value: "ipe_review", label: "IPE review or amendment", description: "You already have an IPE and are reviewing progress or possible changes." },
+  { value: "services", label: "Services under the IPE", description: "An IPE exists and you are working on obtaining or using planned services." },
+  { value: "employment", label: "Employment / stabilization", description: "You are employed and DVR is evaluating ongoing support or closure." },
+  { value: "closure", label: "Closure", description: "DVR is considering or has completed case closure." },
+  { value: "unsure", label: "I am not sure", description: "The Navigator will preserve the uncertainty and help you ask DVR to identify the stage." },
+];
+
+const waitingOptions = [
+  { value: "yes", label: "Yes — DVR told me I am or was on a waiting list / order of selection" },
+  { value: "no", label: "No" },
+  { value: "unsure", label: "I am not sure" },
+  { value: "not_applicable", label: "Not applicable to where I am now" },
+];
+
+const questionOptions = [
+  { value: "next_step", label: "What should happen next?" },
+  { value: "delay", label: "I am trying to understand a delay" },
+  { value: "denial_or_disagreement", label: "Something was denied or I disagree with a decision" },
+  { value: "missing_records", label: "I am missing records or cannot tell what DVR decided" },
+  { value: "access_barrier", label: "A disability-related communication or participation barrier is interfering" },
+];
+---
+
+<BaseLayout
+  title="Pathway Navigator — DVR Signal"
+  description="Local-only stage navigator for the Washington DVR process."
+>
+  <div class="container tool-page" data-pathway-navigator data-enabled={String(toolEnabled)}>
+    <header class="tool-intro">
+      <p class="eyebrow">Participant tool · Pathway Navigator</p>
+      <h1>Find the stage, the reference point, and the next useful question.</h1>
+      <p>
+        The DVR process is not perfectly linear. This Navigator keeps waiting-list branches,
+        additional assessment, IPE review, appeals, and different closure routes visible instead of forcing every case into one path.
+      </p>
+    </header>
+
+    {toolEnabled ? (
+      <ToolStatus
+        state="available"
+        title="Pathway Navigator is available"
+        message={`Sources last reviewed ${review.reviewed_on}. The tool shows stage context and questions but does not automatically classify legal violations.`}
+      />
+    ) : (
+      <ToolStatus
+        state="review"
+        title="Implementation preview; legal activation requires maintainer approval"
+        message="The reviewed stage model is implemented, but participant-facing pathway outputs remain disabled until V1B-06 is explicitly approved."
+      />
+    )}
+
+    <form class="tool-form" data-navigator-form aria-describedby="navigator-privacy">
+      <ChoiceGroup
+        legend="Where do you think your DVR case is right now?"
+        name="episode_stage"
+        options={stageOptions}
+        required={true}
+      />
+
+      <ChoiceGroup
+        legend="Has DVR told you that order of selection or a waiting list applies?"
+        name="waiting_status"
+        options={waitingOptions}
+        required={true}
+        hint="This matters because some IPE timing rules use release from a waiting list rather than the original eligibility date."
+      />
+
+      <ChoiceGroup
+        legend="What is your main question?"
+        name="main_question"
+        options={questionOptions}
+        required={true}
+      />
+
+      <p id="navigator-privacy" class="privacy-note">
+        Local-only: DVR Signal does not submit, transmit, or persist your answers.
+      </p>
+
+      <button
+        class="primary-action"
+        type="submit"
+        disabled={!toolEnabled}
+        aria-disabled={String(!toolEnabled)}
+      >
+        {toolEnabled ? "Show my pathway context" : "Activation pending maintainer approval"}
+      </button>
+    </form>
+
+    <section class="result-region" data-result-region hidden aria-live="polite">
+      <div data-needs-information hidden>
+        <ToolStatus
+          state="review"
+          title="Current stage is uncertain"
+          message="That uncertainty is preserved. The generated questions ask DVR to identify the stage and the document or decision supporting it."
+        />
+      </div>
+
+      {Object.entries(review.stages).map(([stage, data]) => (
+        <div data-stage={stage} hidden>
+          <section class="stage-card">
+            <p class="eyebrow">Healthy/reference baseline</p>
+            <h2>{stage === "ipe_review" ? "IPE review / amendment" : stage}</h2>
+            <p>{data.reference}</p>
+            {data.textual_timeframe && (
+              <p><strong>Textual timeframe:</strong> {data.textual_timeframe}</p>
+            )}
+            <p><strong>Sources:</strong> {data.citations.join("; ")}</p>
+            <p class="calculation-note">
+              DVR Signal does not calculate an exact stage deadline here.
+            </p>
+          </section>
+        </div>
+      ))}
+
+      <div class="draft-wrap">
+        <EditableDraft
+          id="navigator-questions-draft"
+          label="Editable questions for DVR"
+          filename="dvr-stage-questions.txt"
+        />
+      </div>
+
+      <section class="handoffs" aria-labelledby="handoffs-title">
+        <h2 id="handoffs-title">More specific tools</h2>
+
+        <div data-handoff="records" hidden>
+          <a class="handoff-card" href={review.handoffs.records}>
+            <strong>Get My DVR Records</strong>
+            <span>Use when missing records make it hard to tell what DVR decided or what stage the case is in.</span>
+          </a>
+        </div>
+
+        <div data-handoff="accommodations" hidden>
+          <a class="handoff-card" href={review.handoffs.accommodations}>
+            <strong>Accommodation Builder</strong>
+            <span>Use for disability-related communication, meeting, access, or policy-modification barriers.</span>
+          </a>
+        </div>
+
+        <div data-handoff="decisions" hidden>
+          <a class="handoff-card" href={review.handoffs.decisions}>
+            <strong>Written Decision + Deadline Checker</strong>
+            <span>Use when a request was denied or you need to organize a time-sensitive written decision / hearing question.</span>
+          </a>
+        </div>
+
+        <div data-handoff="challenge" hidden>
+          <a class="handoff-card" href={review.handoffs.challenge}>
+            <strong>Challenge a DVR Decision</strong>
+            <span>Compare CAP, informal review, mediation, fair hearing, and complaint routes without assuming they toll deadlines.</span>
+          </a>
+        </div>
+      </section>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  import {
+    buildNavigatorQuestions,
+    routeNavigator,
+    type NavigatorAnswers,
+    type NavigatorQuestion,
+    type NavigatorStage,
+  } from "../../lib/pathway-navigator";
+
+  const root = document.querySelector<HTMLElement>("[data-pathway-navigator]");
+  const form = root?.querySelector<HTMLFormElement>("[data-navigator-form]");
+  const resultRegion = root?.querySelector<HTMLElement>("[data-result-region]");
+  const needsInformation = root?.querySelector<HTMLElement>("[data-needs-information]");
+  const stageNodes = Array.from(root?.querySelectorAll<HTMLElement>("[data-stage]") ?? []);
+  const handoffNodes = Array.from(root?.querySelectorAll<HTMLElement>("[data-handoff]") ?? []);
+  const draft = root?.querySelector<HTMLTextAreaElement>("#navigator-questions-draft");
+  const toolEnabled = root?.dataset.enabled === "true";
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!toolEnabled || !form || !resultRegion || !needsInformation) return;
+
+    const data = new FormData(form);
+    const answers: NavigatorAnswers = {
+      stage: String(data.get("episode_stage")) as NavigatorStage,
+      waitingStatus: String(data.get("waiting_status")) as NavigatorAnswers["waitingStatus"],
+      mainQuestion: String(data.get("main_question")) as NavigatorQuestion,
+    };
+
+    const result = routeNavigator(answers, toolEnabled);
+
+    needsInformation.hidden = result.applicability !== "needs_information";
+
+    for (const node of stageNodes) {
+      node.hidden = node.dataset.stage !== result.stage;
+    }
+
+    for (const node of handoffNodes) {
+      const handoff = node.dataset.handoff;
+      node.hidden = !handoff || !result.handoffs.includes(handoff as never);
+    }
+
+    if (draft) draft.value = buildNavigatorQuestions(result.stage);
+
+    resultRegion.hidden = false;
+    resultRegion.scrollIntoView({ block: "start" });
+  });
+</script>
+
+<style>
+  .tool-page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 60rem;
+  }
+
+  .tool-intro,
+  .tool-form,
+  .result-region {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .tool-intro h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+
+  .tool-intro p {
+    margin: 0;
+  }
+
+  .privacy-note,
+  .calculation-note {
+    color: var(--color-neutral);
+  }
+
+  .primary-action {
+    min-height: 2.9rem;
+    justify-self: start;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--color-ink);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .primary-action:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .stage-card {
+    padding: var(--space-6);
+    border-inline-start: 0.45rem solid var(--color-healthy);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .stage-card h2 {
+    margin-top: 0;
+    text-transform: capitalize;
+  }
+
+  .handoffs {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .handoff-card {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 35%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+    text-decoration: none;
+  }
+</style>
