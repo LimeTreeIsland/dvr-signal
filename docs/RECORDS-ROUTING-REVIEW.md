@@ -1,6 +1,6 @@
 # V1B-01 Records law and destination review
 
-Status: source review complete; executable legal outputs remain disabled pending maintainer approval.
+Status: approved for Records Router activation by the maintainer on 2026-09-27. Exact calendar due-date calculation remains disabled pending separate business-day counting review.
 
 Reviewed: 2026-09-27  
 Jurisdiction: Washington State DVR / DSHS  
@@ -132,6 +132,6 @@ Do **not** calculate a calendar due date until a reviewed Washington business-da
   https://www.dshs.wa.gov/contact-department-social-and-health-services
 - DVR Customer Services Manual, supplied edition dated 2026-05-29, Chapter 1 records guidance.
 
-## Maintainer approval gate
+## Maintainer approval
 
-This review memo records research findings only. It does **not** by itself approve or enable an executable legal rule. Before the Records Router can emit legal routing/timing outputs, the maintainer must explicitly approve the corresponding rule/data changes in a PR or issue.
+The maintainer approved this review and activation of the Records Router on 2026-09-27. Approval covers the reviewed routing distinctions, contact information, limitations, correction workflow, and textual five-business-day timing statements. Exact calendar due-date calculation remains disabled pending separate review and tests for Washington business-day counting.
