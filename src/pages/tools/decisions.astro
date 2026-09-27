@@ -1,0 +1,439 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ChoiceGroup from "../../components/ChoiceGroup.astro";
+import FormField from "../../components/FormField.astro";
+import TextAreaField from "../../components/TextAreaField.astro";
+import ToolStatus from "../../components/ToolStatus.astro";
+import EditableDraft from "../../components/EditableDraft.astro";
+import { readJsonSubset } from "../../lib/foundation-data";
+
+interface ToolConfig {
+  enabled: boolean;
+  status: "scaffold" | "review" | "active";
+}
+
+interface ReviewData {
+  reviewed_on: string;
+  status: string;
+  clocks: {
+    written_denial_response: {
+      exact_calculation_enabled: boolean;
+      citation: string;
+    };
+    fair_hearing_filing: {
+      exact_calculation_proposed: boolean;
+      citation: string;
+    };
+    hearing_after_request: {
+      citation: string;
+      participant_filing_deadline: boolean;
+    };
+    written_hearing_decision: {
+      citation: string;
+      participant_filing_deadline: boolean;
+    };
+  };
+  routes: {
+    fair_hearing: {
+      destination: string;
+      online_form: string;
+      phone: string[];
+      filing_note: string;
+    };
+    mediation: {
+      text: string;
+      tolling_claim_allowed: boolean;
+    };
+  };
+  continuation_of_services: {
+    citation: string;
+    automated_applicability_decision: boolean;
+  };
+}
+
+const tool = await readJsonSubset<ToolConfig>(
+  new URL("../../../tools/decisions.yaml", import.meta.url),
+);
+const review = await readJsonSubset<ReviewData>(
+  new URL("../../../data/washington/written-decision-deadline-review.yaml", import.meta.url),
+);
+const toolEnabled = tool.enabled && tool.status === "active";
+
+const modeOptions = [
+  {
+    value: "written_response",
+    label: "DVR denied something, but I need the written reasons / appeal rights",
+    description: "Checks the WAC 388-891A-0211 written-response requirement without calculating the ten-working-day date.",
+  },
+  {
+    value: "fair_hearing_deadline",
+    label: "I have a DVR decision and want to check the fair-hearing filing deadline",
+    description: "Exact calculation requires the date DVR issued the decision.",
+  },
+  {
+    value: "hearing_requested",
+    label: "I already requested a fair hearing",
+    description: "Shows the hearing and written-decision procedural timeframes and continuation-of-services safeguard.",
+  },
+];
+
+const yesNoOptions = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
+  { value: "unsure", label: "I am not sure" },
+];
+---
+
+<BaseLayout
+  title="Written Decision + Deadline Checker — DVR Signal"
+  description="Local-only Washington DVR written-decision and fair-hearing deadline checker."
+>
+  <div class="container tool-page" data-decision-checker data-enabled={String(toolEnabled)}>
+    <header class="tool-intro">
+      <p class="eyebrow">Participant tool · Written Decision + Deadline Checker</p>
+      <h1>Use the right date for the right clock.</h1>
+      <p>
+        This checker separates the DVR written-denial response rule from the fair-hearing filing deadline.
+        It does not substitute a received date for an issue date and does not assume mediation extends a filing deadline.
+      </p>
+    </header>
+
+    {toolEnabled ? (
+      <ToolStatus
+        state="available"
+        title="Written Decision + Deadline Checker is available"
+        message={`Sources last reviewed ${review.reviewed_on}. Calculations are limited to clocks with approved counting rules.`}
+      />
+    ) : (
+      <ToolStatus
+        state="review"
+        title="Implementation preview; deadline activation requires maintainer approval"
+        message="The reviewed rules and calculator implementation are present, but participant-facing legal outputs remain disabled until the review is explicitly approved."
+      />
+    )}
+
+    <form class="tool-form" data-decision-form aria-describedby="decision-privacy">
+      <ChoiceGroup
+        legend="What are you trying to check?"
+        name="mode"
+        options={modeOptions}
+        required={true}
+      />
+
+      <TextAreaField
+        id="decision-description"
+        name="decision_description"
+        label="What did you ask DVR for, or what decision are you concerned about?"
+        required={true}
+        hint="Describe the service, accommodation, decision, change, or termination in your own words."
+      />
+
+      <div data-written-response-fields hidden>
+        <FormField
+          id="request-received-date"
+          name="request_received_date"
+          label="Date DVR received your request (optional)"
+          type="date"
+          hint="The checker will not calculate the ten-working-day date from this yet."
+        />
+        <ChoiceGroup
+          legend="Did you receive a written response with reasons and appeal rights?"
+          name="written_response_received"
+          options={yesNoOptions}
+        />
+      </div>
+
+      <div data-fair-hearing-fields hidden>
+        <FormField
+          id="decision-issue-date"
+          name="decision_issue_date"
+          label="Date DVR issued the decision"
+          type="date"
+          hint="Use the issue date on the DVR decision. Do not substitute the date you received it."
+        />
+        <TextAreaField
+          id="disagreement-reason"
+          name="disagreement_reason"
+          label="Why do you disagree with the decision?"
+          rows={4}
+          hint="This becomes part of the editable hearing-request summary."
+        />
+      </div>
+
+      <div data-hearing-requested-fields hidden>
+        <FormField
+          id="hearing-request-date"
+          name="hearing_request_date"
+          label="Date OAH received your hearing request (optional)"
+          type="date"
+          hint="Used only to organize the timeline. Exact 60-day scheduling calculations are not activated."
+        />
+      </div>
+
+      <p id="decision-privacy" class="privacy-note">
+        Local-only: DVR Signal does not submit, transmit, or persist your answers.
+      </p>
+
+      <button
+        class="primary-action"
+        type="submit"
+        disabled={!toolEnabled}
+        aria-disabled={String(!toolEnabled)}
+      >
+        {toolEnabled ? "Check my situation" : "Activation pending maintainer approval"}
+      </button>
+    </form>
+
+    <section class="result-region" data-result-region hidden aria-live="polite">
+      <div data-written-result hidden>
+        <section class="source-card">
+          <h2>Written denial-response rule</h2>
+          <p>
+            WAC 388-891A-0211 applies when a DVR counselor makes a decision to deny a covered request.
+            DVR Signal states the ten-working-day rule but does not calculate the exact date because the counting method has not been separately approved.
+          </p>
+        </section>
+        <EditableDraft
+          id="written-response-draft"
+          label="Editable request for written reasons / appeal rights"
+          filename="dvr-written-response-request.txt"
+        />
+      </div>
+
+      <div data-deadline-result hidden>
+        <section class="deadline-card">
+          <p class="eyebrow">Fair-hearing filing deadline</p>
+          <h2 data-deadline-date></h2>
+          <dl>
+            <div><dt>Decision issue date</dt><dd data-issue-date></dd></div>
+            <div><dt>45th calendar day</dt><dd data-unadjusted-date></dd></div>
+            <div><dt>Weekend / legal-holiday adjustment</dt><dd data-adjustment></dd></div>
+            <div><dt>Filing cutoff</dt><dd data-cutoff></dd></div>
+          </dl>
+          <p>
+            Based on WAC 388-891A-0255(2), WAC 388-02-0035, and RCW 1.16.050.
+            An incorrect decision issue date produces an incorrect deadline.
+          </p>
+          <p><strong>Current OAH route:</strong> {review.routes.fair_hearing.online_form}</p>
+          <p>{review.routes.fair_hearing.filing_note}</p>
+        </section>
+        <EditableDraft
+          id="hearing-request-draft"
+          label="Editable fair-hearing request summary"
+          filename="dvr-fair-hearing-request-summary.txt"
+        />
+      </div>
+
+      <div data-date-needed hidden>
+        <ToolStatus
+          state="review"
+          title="The decision issue date is needed for an exact filing deadline"
+          message="The Washington rule anchors the 45-calendar-day period to the date DVR issued the decision. DVR Signal will not substitute the date you received the decision."
+        />
+      </div>
+
+      <div data-hearing-requested-result hidden>
+        <section class="source-card">
+          <h2>After a fair-hearing request</h2>
+          <p>
+            WAC 388-891A-0260 and 34 CFR 361.57(e)(1) describe a 60-day hearing timeframe with stated exceptions.
+            DVR Signal does not present that as a participant filing deadline.
+          </p>
+          <p>
+            WAC 388-891A-0270 and 34 CFR 361.57(e)(3)(ii) describe a written hearing decision within 30 days after the hearing.
+          </p>
+          <p>
+            WAC 388-891A-0295 also contains a continuation-of-agreed-services safeguard after a fair hearing is requested, with stated exceptions.
+            The tool does not automatically determine whether a disputed service qualifies.
+          </p>
+        </section>
+      </div>
+
+      <aside class="timing-note">
+        <h2>Mediation does not automatically extend this filing deadline</h2>
+        <p>{review.routes.mediation.text}</p>
+      </aside>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  import {
+    buildFairHearingSummary,
+    buildWrittenResponseDraft,
+    calculateFairHearingDeadline,
+  } from "../../lib/deadline-checker";
+
+  const root = document.querySelector<HTMLElement>("[data-decision-checker]");
+  const form = root?.querySelector<HTMLFormElement>("[data-decision-form]");
+  const writtenFields = root?.querySelector<HTMLElement>("[data-written-response-fields]");
+  const fairFields = root?.querySelector<HTMLElement>("[data-fair-hearing-fields]");
+  const requestedFields = root?.querySelector<HTMLElement>("[data-hearing-requested-fields]");
+  const resultRegion = root?.querySelector<HTMLElement>("[data-result-region]");
+  const writtenResult = root?.querySelector<HTMLElement>("[data-written-result]");
+  const deadlineResult = root?.querySelector<HTMLElement>("[data-deadline-result]");
+  const dateNeeded = root?.querySelector<HTMLElement>("[data-date-needed]");
+  const requestedResult = root?.querySelector<HTMLElement>("[data-hearing-requested-result]");
+  const writtenDraft = root?.querySelector<HTMLTextAreaElement>("#written-response-draft");
+  const hearingDraft = root?.querySelector<HTMLTextAreaElement>("#hearing-request-draft");
+  const toolEnabled = root?.dataset.enabled === "true";
+
+  const updateMode = () => {
+    if (!form) return;
+    const mode = new FormData(form).get("mode");
+    if (writtenFields) writtenFields.hidden = mode !== "written_response";
+    if (fairFields) fairFields.hidden = mode !== "fair_hearing_deadline";
+    if (requestedFields) requestedFields.hidden = mode !== "hearing_requested";
+  };
+
+  form?.addEventListener("change", updateMode);
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!toolEnabled || !form || !resultRegion || !writtenResult || !deadlineResult || !dateNeeded || !requestedResult) return;
+
+    const data = new FormData(form);
+    const mode = String(data.get("mode") || "");
+    const description = String(data.get("decision_description") || "");
+
+    writtenResult.hidden = true;
+    deadlineResult.hidden = true;
+    dateNeeded.hidden = true;
+    requestedResult.hidden = true;
+
+    if (mode === "written_response") {
+      writtenResult.hidden = false;
+      if (writtenDraft) {
+        writtenDraft.value = buildWrittenResponseDraft(
+          description,
+          String(data.get("request_received_date") || "") || undefined,
+        );
+      }
+    } else if (mode === "fair_hearing_deadline") {
+      const issueDate = String(data.get("decision_issue_date") || "");
+      if (!issueDate) {
+        dateNeeded.hidden = false;
+      } else {
+        const result = calculateFairHearingDeadline(issueDate);
+        const deadlineDate = root.querySelector<HTMLElement>("[data-deadline-date]");
+        const issue = root.querySelector<HTMLElement>("[data-issue-date]");
+        const unadjusted = root.querySelector<HTMLElement>("[data-unadjusted-date]");
+        const adjustment = root.querySelector<HTMLElement>("[data-adjustment]");
+        const cutoff = root.querySelector<HTMLElement>("[data-cutoff]");
+        if (deadlineDate) deadlineDate.textContent = result.deadlineDate;
+        if (issue) issue.textContent = result.issueDate;
+        if (unadjusted) unadjusted.textContent = result.unadjustedDate;
+        if (adjustment) adjustment.textContent = result.adjusted ? "Moved to the next business day" : "No adjustment";
+        if (cutoff) cutoff.textContent = result.cutoff;
+        deadlineResult.hidden = false;
+        if (hearingDraft) {
+          hearingDraft.value = buildFairHearingSummary(
+            description,
+            String(data.get("disagreement_reason") || ""),
+            issueDate,
+          );
+        }
+      }
+    } else if (mode === "hearing_requested") {
+      requestedResult.hidden = false;
+    }
+
+    resultRegion.hidden = false;
+    resultRegion.scrollIntoView({ block: "start" });
+  });
+</script>
+
+<style>
+  .tool-page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 58rem;
+  }
+
+  .tool-intro {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tool-intro h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+
+  .tool-intro p {
+    margin: 0;
+  }
+
+  .tool-form {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-4);
+  }
+
+  .privacy-note {
+    margin: 0;
+    color: var(--color-neutral);
+    font-size: 0.95rem;
+  }
+
+  .primary-action {
+    min-height: 2.9rem;
+    justify-self: start;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--color-ink);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .primary-action:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .result-region {
+    display: grid;
+    gap: var(--space-8);
+    padding-block: var(--space-4) var(--space-12);
+  }
+
+  .source-card,
+  .deadline-card,
+  .timing-note {
+    padding: var(--space-6);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .source-card {
+    border-inline-start: 0.45rem solid var(--color-healthy);
+  }
+
+  .deadline-card {
+    border-inline-start: 0.45rem solid var(--color-warning);
+  }
+
+  .timing-note {
+    border-inline-start: 0.45rem solid var(--color-review);
+  }
+
+  dl {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  dl div {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0;
+  }
+</style>
