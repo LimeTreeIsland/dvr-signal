@@ -1,0 +1,210 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ToolStatus from "../../components/ToolStatus.astro";
+import { readJsonSubset } from "../../lib/foundation-data";
+
+interface SurveyQuestion {
+  id: string;
+  question: string;
+  type: string;
+  options?: string[];
+  show_when?: string;
+}
+
+interface SurveySection {
+  id: string;
+  title: string;
+  core: SurveyQuestion[];
+}
+
+interface SurveyPreview {
+  id: string;
+  version: string;
+  status: string;
+  collection_enabled: boolean;
+  target_minutes: string;
+  consent: {
+    id: string;
+    text: string;
+    required_affirmation: string;
+  };
+  sections: SurveySection[];
+}
+
+const survey = await readJsonSubset<SurveyPreview>(
+  new URL("../../../data/survey/survey-v1-preview.json", import.meta.url),
+);
+---
+
+<BaseLayout
+  title="Anonymous Survey Preview — DVR Signal"
+  description="Preview of the proposed DVR Signal anonymous participant-experience survey. Collection is not active."
+>
+  <div class="container page">
+    <header class="intro">
+      <p class="eyebrow">V1 survey instrument · preview only</p>
+      <h1>Anonymous participant-experience survey</h1>
+      <p>
+        This page shows the proposed question structure so the survey can be reviewed before any data collection is activated.
+      </p>
+    </header>
+
+    <ToolStatus
+      state="review"
+      title="Collection is not active"
+      message={`Instrument ${survey.version}. Target core burden: ${survey.target_minutes} minutes. No answers can be submitted from this preview.`}
+    />
+
+    <section class="consent-card" aria-labelledby="consent-title">
+      <p class="eyebrow">Proposed consent gate</p>
+      <h2 id="consent-title">{survey.consent.id}</h2>
+      <p>{survey.consent.text}</p>
+      <p class="affirmation"><strong>Required affirmation:</strong> {survey.consent.required_affirmation}</p>
+    </section>
+
+    <section aria-labelledby="questions-title">
+      <p class="eyebrow">Question map</p>
+      <h2 id="questions-title">Core questions and conditional follow-ups</h2>
+      <p class="muted">
+        Conditional questions appear only when their trigger applies. “Unknown,” “unsure,” and “not applicable”
+        remain distinct rather than being treated as “no.”
+      </p>
+
+      <div class="section-list">
+        {survey.sections.map((section) => (
+          <article class="survey-section">
+            <h3>{section.title}</h3>
+            <ol>
+              {section.core.map((item) => (
+                <li>
+                  <div class="question-head">
+                    <code>{item.id}</code>
+                    {item.show_when && <span class="branch">Conditional: {item.show_when}</span>}
+                  </div>
+                  <p>{item.question}</p>
+                  {item.options && (
+                    <p class="options"><strong>Options:</strong> {item.options.join(" · ")}</p>
+                  )}
+                  {!item.options && (
+                    <p class="options"><strong>Input:</strong> {item.type.replaceAll("_", " ")}</p>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <aside class="privacy-panel">
+      <h2>V1 privacy boundary under review</h2>
+      <p>
+        The proposed V1 research table excludes names, contact information, case numbers, staff names,
+        diagnoses, medical narratives, addresses, document uploads, exact-day dates, and free-text narratives.
+        Optional contact or verification signup would use a separate unlinked system.
+      </p>
+      <p>
+        Public findings would describe voluntary <strong>DVR Signal survey respondents</strong>, not all Washington DVR clients.
+      </p>
+    </aside>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 64rem;
+  }
+
+  .intro {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .intro h1 {
+    margin: 0;
+    max-width: 18ch;
+    font-size: clamp(2.2rem, 6vw, 4.25rem);
+  }
+
+  .intro p {
+    margin: 0;
+  }
+
+  .consent-card,
+  .survey-section,
+  .privacy-panel {
+    padding: var(--space-6);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .consent-card {
+    border-inline-start: 0.45rem solid var(--color-review);
+  }
+
+  .affirmation {
+    padding: var(--space-4);
+    background: var(--color-paper);
+    border-radius: calc(var(--radius) * 0.75);
+  }
+
+  .section-list {
+    display: grid;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+  }
+
+  .survey-section {
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 28%, transparent);
+  }
+
+  .survey-section h3 {
+    margin-top: 0;
+  }
+
+  .survey-section ol {
+    display: grid;
+    gap: var(--space-5);
+    padding-left: 1.5rem;
+  }
+
+  .survey-section li {
+    padding-left: var(--space-2);
+  }
+
+  .survey-section li p {
+    margin-block: var(--space-2);
+  }
+
+  .question-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  code {
+    font-weight: 800;
+  }
+
+  .branch {
+    padding: 0.2rem 0.45rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-review) 35%, white);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .options,
+  .muted {
+    color: var(--color-neutral);
+    font-size: 0.94rem;
+  }
+
+  .privacy-panel {
+    border-inline-start: 0.45rem solid var(--color-healthy);
+    margin-bottom: var(--space-12);
+  }
+</style>
