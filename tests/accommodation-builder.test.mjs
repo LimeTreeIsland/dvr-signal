@@ -6,13 +6,23 @@ const engine = await readFile("src/lib/accommodation-builder.ts", "utf8");
 const page = await readFile("src/pages/tools/accommodations.astro", "utf8");
 const tool = JSON.parse(await readFile("tools/accommodations.yaml", "utf8"));
 const review = JSON.parse(await readFile("data/washington/accommodation-review.yaml", "utf8"));
+const rules = JSON.parse(await readFile("data/washington/procedural-rules.yaml", "utf8")).rules;
 
-test("Accommodation Builder remains fail-closed pending maintainer approval", () => {
-  assert.equal(tool.enabled, false);
-  assert.notEqual(tool.status, "active");
-  assert.equal(review.status, "review_complete_maintainer_approval_pending");
-  assert.match(engine, /unavailable_pending_review/);
-  assert.match(page, /Activation pending maintainer approval/);
+test("Accommodation Builder is active only after recorded maintainer approval", () => {
+  assert.equal(tool.enabled, true);
+  assert.equal(tool.status, "active");
+  assert.equal(review.status, "approved_for_activation");
+  assert.equal(review.exact_deadline_calculation_enabled, false);
+  assert.match(review.approval_reference, /maintainer approval recorded 2026-09-27/);
+
+  for (const ruleId of tool.rule_ids) {
+    const rule = rules.find((item) => item.id === ruleId);
+    assert.ok(rule, `missing rule: ${ruleId}`);
+    assert.equal(rule.enabled, true, `disabled active-tool rule: ${ruleId}`);
+    assert.equal(rule.review_status, "approved");
+    assert.equal(rule.source_status, "live_text_checked");
+    assert.match(rule.approval_reference, /maintainer approval recorded 2026-09-27/);
+  }
 });
 
 test("builder starts from barrier and requested change without forcing diagnosis", () => {
