@@ -88,7 +88,7 @@ export function routeChallenge(
 
   if (
     answers.writtenDecisionStatus === "yes" &&
-    (answers.problemType === "specific_decision" || answers.problemType === "unsure_or_multiple")
+    answers.problemType === "specific_decision"
   ) {
     showDeadlineWarning = true;
   }
