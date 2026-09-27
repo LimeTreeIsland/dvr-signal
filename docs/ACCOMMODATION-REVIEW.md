@@ -1,6 +1,6 @@
 # V1B-03 Accommodation Builder source and scope review
 
-Status: source review complete; participant-facing accommodation outputs remain disabled pending maintainer approval.
+Status: approved for Accommodation Builder activation by the maintainer on 2026-09-27. Exact deadline calculation remains disabled.
 
 Reviewed: 2026-09-27  
 Jurisdiction: Washington State DVR / DSHS  
@@ -152,6 +152,6 @@ The generated text should be editable and local-only.
   https://oah.wa.gov/resources/forms/accommodation-request
   https://oah.wa.gov/resources/accessibility/equal-access-nondiscrimination
 
-## Maintainer approval gate
+## Maintainer approval
 
-This review records source findings and proposed tool scope only. It does **not** activate accommodation legal outputs. The maintainer must approve this review before the tool can be marked active.
+The maintainer approved this review and activation of the Accommodation Builder on 2026-09-27. Approval covers the reviewed DVR effective-communication route, DVR accommodation/modification route, separate OAH accommodation route, barrier-first input model, current reviewed contacts, and the limited WAC 388-891A-0211 denial-response language. Exact deadline calculation remains disabled.
