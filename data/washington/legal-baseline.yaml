@@ -1,0 +1,80 @@
+{
+  "version": "0.1.0",
+  "status": "pending_review",
+  "stages": [
+    {
+      "id": "application",
+      "label": "Application",
+      "summary": "Recognize application and establish needed information.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.41(b)",
+      "status": "pending_review",
+      "timeframe": null
+    },
+    {
+      "id": "eligibility",
+      "label": "Eligibility",
+      "summary": "Determine individual eligibility and priority with applicable safeguards.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.41(b); 361.42",
+      "status": "pending_review",
+      "timeframe": null
+    },
+    {
+      "id": "assessment",
+      "label": "Assessment",
+      "summary": "Use existing information and obtain needed additional assessment.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.45(b), (f)",
+      "status": "pending_review",
+      "timeframe": null
+    },
+    {
+      "id": "ipe",
+      "label": "IPE",
+      "summary": "Develop individualized agreed plan; signatures, copy and review.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.45; 361.46",
+      "status": "pending_review",
+      "timeframe": null
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "summary": "Deliver services according to the individualized plan.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.45(a); 361.46; 361.48",
+      "status": "pending_review",
+      "timeframe": null
+    },
+    {
+      "id": "employment",
+      "label": "Employment",
+      "summary": "Assess outcome and ongoing support needs.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.56",
+      "status": "pending_review",
+      "timeframe": null
+    },
+    {
+      "id": "closure",
+      "label": "Closure",
+      "summary": "Distinguish employment closure and other closure routes.",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.43; 361.44; 361.56",
+      "status": "pending_review",
+      "timeframe": null
+    }
+  ],
+  "branches": [
+    "order_of_selection_waiting",
+    "additional_assessment",
+    "ipe_annual_review",
+    "ipe_amendment",
+    "appeal",
+    "ineligibility",
+    "withdrawal",
+    "other_closure"
+  ],
+  "public_real_case_overlays": false
+}

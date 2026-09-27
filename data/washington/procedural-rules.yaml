@@ -1,0 +1,143 @@
+{
+  "version": "0.1.0",
+  "rules": [
+    {
+      "id": "WA-WRITTEN-RESPONSE-01",
+      "authority_id": "WAC-891A",
+      "citation": "WAC 388-891A-0211(1)-(2)",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A-0211",
+      "summary": "Covered denial response: clock anchored to receipt of request; oral and written response; reasons/appeal rights or explanation of additional time and supplemental information.",
+      "trigger_event": "request_received_by_dvr",
+      "required_inputs": [
+        "covered_request",
+        "request_received_date",
+        "denial_decision",
+        "supplemental_information_response"
+      ],
+      "exceptions": [
+        "Review applicability and supplemental-information explanation under subsection (2)(b)."
+      ],
+      "timeframe": {
+        "amount": 10,
+        "unit": "working_days",
+        "counting_rule_status": "pending_review"
+      },
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-26",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": null,
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-ELIGIBILITY-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.41(b); 361.42",
+      "url": "https://www.ecfr.gov/current/title-34/section-361.41",
+      "summary": "Eligibility timing research lead; verify the application trigger, exceptional-circumstances extension and trial-work provisions.",
+      "trigger_event": "qualifying_application",
+      "required_inputs": [
+        "application_date",
+        "application_criteria",
+        "extension_status",
+        "trial_work_status"
+      ],
+      "exceptions": [
+        "Exceptional circumstances with agreement; trial-work exploration; verify full text."
+      ],
+      "timeframe": null,
+      "source_status": "pending",
+      "source_checked_on": null,
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": null,
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-IPE-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.45(a), (e)",
+      "url": "https://www.ecfr.gov/current/title-34/section-361.45",
+      "summary": "IPE development framework includes an agreed extension to a specific completion date; resolve order-of-selection applicability.",
+      "trigger_event": "eligibility_determination_subject_to_applicability",
+      "required_inputs": [
+        "eligibility_date",
+        "order_of_selection_status",
+        "service_release_date",
+        "extension_agreement",
+        "extended_date"
+      ],
+      "exceptions": [
+        "Agreed extension to a specific date; review order-of-selection applicability."
+      ],
+      "timeframe": null,
+      "source_status": "snapshot_text_checked",
+      "source_checked_on": "2026-09-26",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": null,
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-IPE-REVIEW-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.45(d)(5)",
+      "url": "https://www.ecfr.gov/current/title-34/section-361.45",
+      "summary": "Review the IPE at least annually with the individual or representative to assess progress.",
+      "trigger_event": "ipe_review_cycle",
+      "required_inputs": [
+        "ipe_date",
+        "last_review_date",
+        "review_participation"
+      ],
+      "exceptions": [
+        "Verify current text and Washington implementation."
+      ],
+      "timeframe": null,
+      "source_status": "snapshot_text_checked",
+      "source_checked_on": "2026-09-26",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": null,
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    },
+    {
+      "id": "FED-RECORDS-01",
+      "authority_id": "CFR-361",
+      "citation": "34 CFR 361.38(c)(1)-(4)",
+      "url": "https://www.ecfr.gov/current/title-34/section-361.38",
+      "summary": "Written requests for own service record and requests to amend inaccurate/misleading information require distinct routing from PRA requests.",
+      "trigger_event": "written_request_for_own_record",
+      "required_inputs": [
+        "record_scope",
+        "requester_authority",
+        "requested_format"
+      ],
+      "exceptions": [
+        "Potentially harmful information via chosen third party; originating-agency conditions; verify applicable Washington rules."
+      ],
+      "timeframe": null,
+      "source_status": "snapshot_text_checked",
+      "source_checked_on": "2026-09-26",
+      "version": "0.1.0",
+      "jurisdiction": "US-WA",
+      "review_status": "pending_review",
+      "last_reviewed": null,
+      "reviewer": null,
+      "approval_reference": null,
+      "enabled": false
+    }
+  ]
+}

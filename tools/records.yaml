@@ -1,0 +1,24 @@
+{
+  "id": "records",
+  "title": "Get My DVR Records",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "enabled": false,
+  "input_fields": [
+    "scope",
+    "format",
+    "date_range_optional"
+  ],
+  "output_routes": [
+    "case_record",
+    "public_records",
+    "both",
+    "unsure"
+  ],
+  "rule_ids": [
+    "FED-RECORDS-01"
+  ],
+  "storage": "memory_only",
+  "transmit_answers": false,
+  "requires_verified_contacts": true
+}
