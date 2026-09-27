@@ -1,0 +1,19 @@
+{
+  "id": "accommodations",
+  "title": "Accommodation Builder",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "enabled": false,
+  "input_fields": [
+    "barrier",
+    "requested_change",
+    "communication_preference"
+  ],
+  "output_routes": [
+    "editable_accommodation_request"
+  ],
+  "rule_ids": [],
+  "storage": "memory_only",
+  "transmit_answers": false,
+  "requires_verified_contacts": true
+}

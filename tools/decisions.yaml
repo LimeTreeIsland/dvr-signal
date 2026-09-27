@@ -1,0 +1,23 @@
+{
+  "id": "decisions",
+  "title": "Written Decision + Deadline Checker",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "enabled": false,
+  "input_fields": [
+    "request_type",
+    "request_received_date",
+    "response_status",
+    "notice_details"
+  ],
+  "output_routes": [
+    "written_decision_request",
+    "deadline_unavailable_until_review"
+  ],
+  "rule_ids": [
+    "WA-WRITTEN-RESPONSE-01"
+  ],
+  "storage": "memory_only",
+  "transmit_answers": false,
+  "requires_verified_contacts": true
+}

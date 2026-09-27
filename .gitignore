@@ -141,3 +141,22 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# DVR Signal: generated output and private working material
+.astro/
+.wrangler/
+__pycache__/
+.DS_Store
+*.pem
+*.key
+credentials*.json
+service-account*.json
+/private/
+/raw-data/
+/survey-responses/
+/contact-lists/
+/case-records/
+/evidence/
+/uploads/
+/project_sources/
+/tmp/

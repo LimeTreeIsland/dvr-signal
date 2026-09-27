@@ -1,0 +1,24 @@
+{
+  "id": "navigator",
+  "title": "Pathway Navigator",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "enabled": false,
+  "input_fields": [
+    "episode_stage",
+    "waiting_status",
+    "main_question"
+  ],
+  "output_routes": [
+    "stage_questions",
+    "baseline_context"
+  ],
+  "rule_ids": [
+    "FED-ELIGIBILITY-01",
+    "FED-IPE-01",
+    "FED-IPE-REVIEW-01"
+  ],
+  "storage": "memory_only",
+  "transmit_answers": false,
+  "requires_verified_contacts": true
+}

@@ -1,0 +1,77 @@
+{
+  "version": "0.1.0",
+  "authorities": [
+    {
+      "id": "CFR-361",
+      "type": "federal_regulation",
+      "citation": "34 CFR Part 361",
+      "url": "https://www.ecfr.gov/current/title-34/subtitle-B/chapter-III/part-361",
+      "verification_status": "snapshot_partially_checked",
+      "notes": "Supplied snapshot dated 2026-09-24; selected IPE and record-access sections inspected; live eCFR unavailable."
+    },
+    {
+      "id": "WAC-891A",
+      "type": "state_regulation",
+      "citation": "WAC 388-891A",
+      "url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-891A",
+      "verification_status": "partially_live_checked",
+      "notes": "Only 388-891A-0211 live-checked 2026-09-26; chapter-wide review pending. Supplied PDF certified 2023."
+    },
+    {
+      "id": "RCW-7429",
+      "type": "state_statute",
+      "citation": "Chapter 74.29 RCW",
+      "url": "https://app.leg.wa.gov/rcw/default.aspx?cite=74.29",
+      "verification_status": "pending",
+      "notes": "Supplied PDF; current pinpoint review pending."
+    },
+    {
+      "id": "RCW-3405",
+      "type": "state_statute",
+      "citation": "Chapter 34.05 RCW",
+      "url": "https://app.leg.wa.gov/rcw/default.aspx?cite=34.05",
+      "verification_status": "pending",
+      "notes": "Administrative Procedure Act; not the Public Records Act."
+    },
+    {
+      "id": "RCW-4256",
+      "type": "state_statute",
+      "citation": "Chapter 42.56 RCW",
+      "url": "https://app.leg.wa.gov/rcw/default.aspx?cite=42.56",
+      "verification_status": "pending",
+      "notes": "Missing from supplied PDFs; official current review needed before PRA routing."
+    },
+    {
+      "id": "DVR-MANUAL",
+      "type": "agency_policy",
+      "citation": "DVR Customer Services Manual",
+      "url": "https://www.dshs.wa.gov/dvr",
+      "verification_status": "pending",
+      "notes": "Entry point only; resolve current manual URL, edition and sections before reliance."
+    },
+    {
+      "id": "DVR-PLAN",
+      "type": "agency_policy",
+      "citation": "DVR State Plan",
+      "url": "https://www.dshs.wa.gov/dvr",
+      "verification_status": "pending",
+      "notes": "Supplied 2024-2027 amended plan; verify edition and current operational status separately."
+    },
+    {
+      "id": "ADA-TITLE-II",
+      "type": "federal_regulation",
+      "citation": "28 CFR Part 35",
+      "url": "https://www.ecfr.gov/current/title-28/chapter-I/part-35",
+      "verification_status": "pending",
+      "notes": "Supplied regulations; pinpoint and current verification pending."
+    },
+    {
+      "id": "SECTION-504",
+      "type": "federal_statute",
+      "citation": "29 USC 794",
+      "url": "https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section794&num=0&edition=prelim",
+      "verification_status": "pending",
+      "notes": "Supplied DOL summary is guidance; verify statute and applicable agency regulations separately."
+    }
+  ]
+}
