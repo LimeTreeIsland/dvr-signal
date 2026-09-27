@@ -1,0 +1,105 @@
+---
+interface Option {
+  value: string;
+  label: string;
+  description?: string;
+}
+
+interface Props {
+  legend: string;
+  name: string;
+  options: Option[];
+  hint?: string;
+  required?: boolean;
+}
+
+const { legend, name, options, hint, required = false } = Astro.props;
+const hintId = hint ? `${name}-hint` : undefined;
+---
+
+<fieldset class="choice-group" aria-describedby={hintId}>
+  <legend>
+    {legend}
+    {required && <span class="required" aria-hidden="true"> *</span>}
+  </legend>
+  {hint && <p id={hintId} class="hint">{hint}</p>}
+  <div class="choices">
+    {options.map((option, index) => (
+      <label class="choice">
+        <input
+          type="radio"
+          name={name}
+          value={option.value}
+          required={required && index === 0}
+        />
+        <span>
+          <strong>{option.label}</strong>
+          {option.description && <small>{option.description}</small>}
+        </span>
+      </label>
+    ))}
+  </div>
+</fieldset>
+
+<style>
+  .choice-group {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    padding: 0;
+    font-weight: 700;
+  }
+
+  .required {
+    color: var(--color-serious);
+  }
+
+  .hint {
+    margin: 0;
+    color: var(--color-neutral);
+    font-size: 0.95rem;
+  }
+
+  .choices {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .choice {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    align-items: start;
+    min-height: 3.25rem;
+    padding: var(--space-4);
+    border: 2px solid color-mix(in srgb, var(--color-neutral) 32%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .choice:has(input:checked) {
+    border-color: var(--color-healthy);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-healthy) 22%, transparent);
+  }
+
+  input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.15rem;
+    accent-color: var(--color-ink);
+  }
+
+  small {
+    display: block;
+    margin-top: var(--space-1);
+    color: var(--color-neutral);
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+</style>
