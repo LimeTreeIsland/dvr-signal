@@ -22,7 +22,14 @@ interface ReviewData {
     };
     fair_hearing_filing: {
       exact_calculation_proposed: boolean;
+      exact_calculation_enabled: boolean;
       citation: string;
+      source_archive_gate: {
+        required: boolean;
+        status: string;
+        required_files: string[];
+        note: string;
+      };
     };
     hearing_after_request: {
       citation: string;
@@ -46,8 +53,21 @@ interface ReviewData {
     };
   };
   continuation_of_services: {
-    citation: string;
-    automated_applicability_decision: boolean;
+    state: {
+      citation: string;
+      trigger: string;
+      scope: string[];
+      exceptions: string[];
+      automated_applicability_decision: boolean;
+    };
+    federal: {
+      citation: string;
+      triggers: string[];
+      scope: string[];
+      exceptions: string[];
+      automated_applicability_decision: boolean;
+    };
+    do_not_collapse_state_and_federal_scopes: boolean;
   };
 }
 
@@ -58,6 +78,8 @@ const review = await readJsonSubset<ReviewData>(
   new URL("../../../data/washington/written-decision-deadline-review.yaml", import.meta.url),
 );
 const toolEnabled = tool.enabled && tool.status === "active";
+const exactFairHearingCalculationEnabled =
+  toolEnabled && review.clocks.fair_hearing_filing.exact_calculation_enabled;
 
 const modeOptions = [
   {
@@ -68,7 +90,7 @@ const modeOptions = [
   {
     value: "fair_hearing_deadline",
     label: "I have a DVR decision and want to check the fair-hearing filing deadline",
-    description: "Exact calculation requires the date DVR issued the decision.",
+    description: "The rule is anchored to the date DVR issued the decision. Exact calculation remains source-archive gated.",
   },
   {
     value: "hearing_requested",
@@ -88,7 +110,12 @@ const yesNoOptions = [
   title="Written Decision + Deadline Checker — DVR Signal"
   description="Local-only Washington DVR written-decision and fair-hearing deadline checker."
 >
-  <div class="container tool-page" data-decision-checker data-enabled={String(toolEnabled)}>
+  <div
+    class="container tool-page"
+    data-decision-checker
+    data-enabled={String(toolEnabled)}
+    data-deadline-calculation-enabled={String(exactFairHearingCalculationEnabled)}
+  >
     <header class="tool-intro">
       <p class="eyebrow">Participant tool · Written Decision + Deadline Checker</p>
       <h1>Use the right date for the right clock.</h1>
@@ -200,6 +227,14 @@ const yesNoOptions = [
         />
       </div>
 
+      <div data-calculator-blocked hidden>
+        <ToolStatus
+          state="review"
+          title="Exact 45-day calculation is not yet production-enabled"
+          message="WAC 388-02 and RCW 1.16 were live-reviewed, but DVR Signal requires their current primary-source PDFs in the repository legal corpus before this calculator can emit an exact date."
+        />
+      </div>
+
       <div data-deadline-result hidden>
         <section class="deadline-card">
           <p class="eyebrow">Fair-hearing filing deadline</p>
@@ -236,15 +271,21 @@ const yesNoOptions = [
         <section class="source-card">
           <h2>After a fair-hearing request</h2>
           <p>
-            WAC 388-891A-0260 and 34 CFR 361.57(e)(1) describe a 60-day hearing timeframe with stated exceptions.
-            DVR Signal does not present that as a participant filing deadline.
+            WAC 388-891A-0260 describes a 60-day Washington hearing timeframe after OAH receives the written request, subject to a later date requested by the participant or DVR when OAH finds reasonable cause.
           </p>
           <p>
-            WAC 388-891A-0270 and 34 CFR 361.57(e)(3)(ii) describe a written hearing decision within 30 days after the hearing.
+            34 CFR 361.57(e)(1) separately requires the hearing within 60 days of the request for review unless informal resolution resolves the dispute before day 60, a mediation agreement resolves it before day 60, or the parties agree to a specific extension. Mere participation in mediation is not treated as an exception.
           </p>
           <p>
-            WAC 388-891A-0295 also contains a continuation-of-agreed-services safeguard after a fair hearing is requested, with stated exceptions.
-            The tool does not automatically determine whether a disputed service qualifies.
+            WAC 388-891A-0270 and 34 CFR 361.57(e)(3)(ii) describe the written hearing decision/report within 30 days of completion of the hearing.
+          </p>
+          <h3>Washington continuation protection</h3>
+          <p>
+            WAC 388-891A-0295 applies after a fair hearing is requested and addresses agreed-upon services, subject to its stated exception. DVR Signal does not automatically decide whether a disputed service is an agreed-upon service.
+          </p>
+          <h3>Federal continuation protection</h3>
+          <p>
+            34 CFR 361.57(b)(4) separately protects VR services being provided—including evaluation and assessment services and IPE development—while specified review processes are pending, subject to its own exceptions. The state and federal protections are not treated as identical.
           </p>
         </section>
       </div>
@@ -271,12 +312,15 @@ const yesNoOptions = [
   const requestedFields = root?.querySelector<HTMLElement>("[data-hearing-requested-fields]");
   const resultRegion = root?.querySelector<HTMLElement>("[data-result-region]");
   const writtenResult = root?.querySelector<HTMLElement>("[data-written-result]");
+  const calculatorBlocked = root?.querySelector<HTMLElement>("[data-calculator-blocked]");
   const deadlineResult = root?.querySelector<HTMLElement>("[data-deadline-result]");
   const dateNeeded = root?.querySelector<HTMLElement>("[data-date-needed]");
   const requestedResult = root?.querySelector<HTMLElement>("[data-hearing-requested-result]");
   const writtenDraft = root?.querySelector<HTMLTextAreaElement>("#written-response-draft");
   const hearingDraft = root?.querySelector<HTMLTextAreaElement>("#hearing-request-draft");
   const toolEnabled = root?.dataset.enabled === "true";
+  const exactFairHearingCalculationEnabled =
+    root?.dataset.deadlineCalculationEnabled === "true";
 
   const updateMode = () => {
     if (!form) return;
@@ -290,13 +334,14 @@ const yesNoOptions = [
 
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!toolEnabled || !form || !resultRegion || !writtenResult || !deadlineResult || !dateNeeded || !requestedResult) return;
+    if (!toolEnabled || !form || !resultRegion || !writtenResult || !calculatorBlocked || !deadlineResult || !dateNeeded || !requestedResult) return;
 
     const data = new FormData(form);
     const mode = String(data.get("mode") || "");
     const description = String(data.get("decision_description") || "");
 
     writtenResult.hidden = true;
+    calculatorBlocked.hidden = true;
     deadlineResult.hidden = true;
     dateNeeded.hidden = true;
     requestedResult.hidden = true;
@@ -313,6 +358,8 @@ const yesNoOptions = [
       const issueDate = String(data.get("decision_issue_date") || "");
       if (!issueDate) {
         dateNeeded.hidden = false;
+      } else if (!exactFairHearingCalculationEnabled) {
+        calculatorBlocked.hidden = false;
       } else {
         const result = calculateFairHearingDeadline(issueDate);
         const deadlineDate = root.querySelector<HTMLElement>("[data-deadline-date]");
