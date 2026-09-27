@@ -1,0 +1,470 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ChoiceGroup from "../../components/ChoiceGroup.astro";
+import FormField from "../../components/FormField.astro";
+import TextAreaField from "../../components/TextAreaField.astro";
+import ToolStatus from "../../components/ToolStatus.astro";
+import EditableDraft from "../../components/EditableDraft.astro";
+import { readJsonSubset } from "../../lib/foundation-data";
+
+interface ToolConfig {
+  enabled: boolean;
+  status: "scaffold" | "review" | "active";
+}
+
+interface ReviewData {
+  reviewed_on: string;
+  status: string;
+  route_compatibility: {
+    multiple_routes_allowed: boolean;
+    informal_resolution_required_before_hearing: boolean;
+    mediation_tolls_hearing_deadline: boolean;
+    cap_is_independent_of_dvr: boolean;
+  };
+  routes: {
+    informal_dvr: {
+      current_guidance_contacts: string[];
+    };
+    cap: {
+      current_contacts: {
+        phone_text: string;
+        website: string;
+        email_guidance_only: string;
+      };
+    };
+    mediation: {
+      voluntary: boolean;
+      can_request_with_fair_hearing: boolean;
+    };
+    fair_hearing: {
+      filing_deadline_rule: string;
+      deadline_calculation_delegated_to: string;
+    };
+    general_complaint: {
+      current_contacts: string[];
+    };
+    discrimination_complaint: {
+      current_contacts: {
+        phone: string;
+        fax: string;
+        email: string;
+      };
+    };
+  };
+  handoffs: {
+    deadline_checker: string;
+    accommodation_builder: string;
+    records_router: string;
+  };
+}
+
+const tool = await readJsonSubset<ToolConfig>(
+  new URL("../../../tools/challenge.yaml", import.meta.url),
+);
+const review = await readJsonSubset<ReviewData>(
+  new URL("../../../data/washington/challenge-decision-review.yaml", import.meta.url),
+);
+const toolEnabled = tool.enabled && tool.status === "active";
+
+const problemOptions = [
+  {
+    value: "specific_decision",
+    label: "A specific DVR decision about services, eligibility, an IPE, closure, or another VR-service issue",
+    description: "This can involve informal resolution, CAP, mediation, and/or fair hearing.",
+  },
+  {
+    value: "general_complaint",
+    label: "A general complaint about staff, communication, or process",
+    description: "Current DVR guidance distinguishes general complaints from fair-hearing challenges.",
+  },
+  {
+    value: "discrimination",
+    label: "Possible discrimination",
+    description: "This is routed separately from review of the underlying DVR service decision.",
+  },
+  {
+    value: "rule_barrier",
+    label: "A DVR rule itself appears to be the barrier",
+    description: "An exception-to-rule request may exist, but it is not treated as a substitute for appeal rights.",
+  },
+  {
+    value: "unsure_or_multiple",
+    label: "I am not sure, or more than one applies",
+    description: "The tool will preserve uncertainty instead of forcing a legal classification.",
+  },
+];
+
+const yesNoOptions = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
+  { value: "unsure", label: "I am not sure" },
+];
+
+const outcomeOptions = [
+  { value: "compare_routes", label: "Compare the available routes" },
+  { value: "written_explanation", label: "Ask DVR for a written explanation / internal review" },
+  { value: "advocacy_help", label: "Ask CAP for advocacy help" },
+  { value: "mediation", label: "Request mediation" },
+  { value: "fair_hearing", label: "Prepare for a fair hearing" },
+  { value: "complaint_review", label: "File or organize a complaint" },
+];
+---
+
+<BaseLayout
+  title="Challenge a DVR Decision — DVR Signal"
+  description="Local-only route comparison and draft builder for Washington DVR disputes."
+>
+  <div class="container tool-page" data-challenge-tool data-enabled={String(toolEnabled)}>
+    <header class="tool-intro">
+      <p class="eyebrow">Participant tool · Challenge a DVR Decision</p>
+      <h1>Compare routes without giving up options.</h1>
+      <p>
+        Washington DVR rules allow more than one dispute-resolution route in some situations.
+        This tool organizes those routes without ranking them, predicting outcomes, or automatically submitting anything.
+      </p>
+    </header>
+
+    {toolEnabled ? (
+      <ToolStatus
+        state="available"
+        title="Challenge a DVR Decision is available"
+        message={`Sources last reviewed ${review.reviewed_on}. Route cards distinguish regulations from current agency guidance.`}
+      />
+    ) : (
+      <ToolStatus
+        state="review"
+        title="Implementation preview; legal activation requires maintainer approval"
+        message="The reviewed route model and local-only drafts are implemented, but participant-facing legal routing remains disabled until the V1B-05 review is explicitly approved."
+      />
+    )}
+
+    <form class="tool-form" data-challenge-form aria-describedby="challenge-privacy">
+      <ChoiceGroup
+        legend="What kind of problem are you trying to address?"
+        name="problem_type"
+        options={problemOptions}
+        required={true}
+      />
+
+      <ChoiceGroup
+        legend="Do you already have a written DVR decision?"
+        name="written_decision_status"
+        options={yesNoOptions}
+        required={true}
+      />
+
+      <ChoiceGroup
+        legend="What would you like help organizing?"
+        name="desired_outcome"
+        options={outcomeOptions}
+        required={true}
+        hint="This does not limit you to one route. It only helps prioritize the output."
+      />
+
+      <TextAreaField
+        id="decision-description"
+        name="decision_description"
+        label="Describe the decision or concern (optional)"
+        rows={5}
+        hint="Keep this factual. You can edit every generated draft before using it."
+      />
+
+      <FormField
+        id="decision-issue-date"
+        name="decision_issue_date"
+        label="DVR decision issue date (optional)"
+        type="date"
+        hint="If a fair hearing might matter, use the issue date on the DVR decision—not the date you happened to receive it."
+      />
+
+      <ChoiceGroup
+        legend="Have you already requested a fair hearing?"
+        name="hearing_requested_status"
+        options={yesNoOptions}
+        required={true}
+      />
+
+      <p id="challenge-privacy" class="privacy-note">
+        Local-only: DVR Signal does not submit, transmit, or persist your answers.
+      </p>
+
+      <button
+        class="primary-action"
+        type="submit"
+        disabled={!toolEnabled}
+        aria-disabled={String(!toolEnabled)}
+      >
+        {toolEnabled ? "Compare my routes" : "Activation pending maintainer approval"}
+      </button>
+    </form>
+
+    <section class="result-region" data-result-region hidden aria-live="polite">
+      <div data-needs-information hidden>
+        <ToolStatus
+          state="review"
+          title="More than one route may be relevant"
+          message="DVR Signal is preserving the uncertainty rather than deciding whether your concern is a service-decision challenge, general complaint, discrimination issue, or more than one."
+        />
+      </div>
+
+      <aside class="deadline-warning" data-deadline-warning hidden>
+        <h2>Preserve the fair-hearing deadline separately</h2>
+        <p>
+          Informal resolution, CAP assistance, case review, or mediation should not be assumed to extend the fair-hearing filing period.
+          If you may want a fair hearing, check the decision issue date and deadline separately.
+        </p>
+        <a href={review.handoffs.deadline_checker}>Open the Written Decision + Deadline Checker</a>
+      </aside>
+
+      <div data-route="informal_dvr" hidden>
+        <section class="route-card">
+          <p class="route-type">Regulation + current agency guidance</p>
+          <h2>Informal DVR assistance / case review</h2>
+          <p>
+            WAC 388-891A-0215 allows assistance from the DVR counselor, supervisor, director/designee, or CAP.
+            Current DVR guidance also describes a case-review route. This route is not treated as tolling the fair-hearing deadline.
+          </p>
+          <p><strong>Current guidance:</strong> {review.routes.informal_dvr.current_guidance_contacts.join(" · ")}</p>
+        </section>
+        <EditableDraft id="informal-dvr-draft" label="Editable DVR review request" filename="dvr-review-request.txt" />
+      </div>
+
+      <div data-route="cap" hidden>
+        <section class="route-card">
+          <p class="route-type">State regulation + federal notice right</p>
+          <h2>Client Assistance Program (CAP)</h2>
+          <p>
+            CAP is independent of DVR. Washington rules say CAP may provide information and advocacy, attempt informal resolution,
+            and may represent a participant in mediation or a fair hearing. CAP services are available at no cost under the WAC.
+          </p>
+          <p>
+            <strong>Current contacts:</strong>
+            {review.routes.cap.current_contacts.phone_text} ·
+            {review.routes.cap.current_contacts.email_guidance_only} ·
+            {review.routes.cap.current_contacts.website}
+          </p>
+        </section>
+        <EditableDraft id="cap-draft" label="Editable CAP outreach" filename="cap-outreach.txt" />
+      </div>
+
+      <div data-route="mediation" hidden>
+        <section class="route-card">
+          <p class="route-type">State + federal regulation</p>
+          <h2>Mediation</h2>
+          <p>
+            Mediation is voluntary. Washington permits mediation and a fair hearing to be requested at the same time.
+            Mere participation in mediation is not presented as pausing or extending the hearing filing deadline.
+          </p>
+        </section>
+        <EditableDraft id="mediation-draft" label="Editable mediation request" filename="dvr-mediation-request.txt" />
+      </div>
+
+      <div data-route="fair_hearing" hidden>
+        <section class="route-card">
+          <p class="route-type">State + federal regulation</p>
+          <h2>Fair hearing</h2>
+          <p>
+            A fair hearing is conducted by an OAH administrative law judge. WAC 388-891A-0255 requires a written request to OAH
+            and sets the filing rule at 45 calendar days from the date the DVR counselor issues the decision.
+          </p>
+          <p>
+            Deadline arithmetic is intentionally handled by the separate deadline tool so this route comparison does not silently duplicate or diverge from that logic.
+          </p>
+          <a href={review.handoffs.deadline_checker}>Check the issue date and deadline</a>
+        </section>
+        <EditableDraft id="fair-hearing-draft" label="Editable fair-hearing request summary" filename="dvr-fair-hearing-summary.txt" />
+      </div>
+
+      <div data-route="general_complaint" hidden>
+        <section class="route-card">
+          <p class="route-type">Current agency guidance</p>
+          <h2>General complaint / constituent concern</h2>
+          <p>
+            Current DVR guidance distinguishes general complaints about DVR or staff from fair hearings about specific service decisions.
+            A complaint does not automatically replace or preserve a separate fair-hearing right.
+          </p>
+          <p><strong>Current guidance:</strong> {review.routes.general_complaint.current_contacts.join(" · ")}</p>
+        </section>
+        <EditableDraft id="complaint-draft" label="Editable complaint summary" filename="dvr-complaint-summary.txt" />
+      </div>
+
+      <div data-route="discrimination_complaint" hidden>
+        <section class="route-card">
+          <p class="route-type">Current agency guidance</p>
+          <h2>DSHS discrimination complaint</h2>
+          <p>
+            This is a separate complaint route. DVR Signal does not decide whether discrimination occurred.
+          </p>
+          <p>
+            <strong>Current contacts:</strong>
+            {review.routes.discrimination_complaint.current_contacts.phone} ·
+            {review.routes.discrimination_complaint.current_contacts.fax} ·
+            {review.routes.discrimination_complaint.current_contacts.email}
+          </p>
+        </section>
+        <EditableDraft id="discrimination-draft" label="Editable discrimination complaint summary" filename="dshs-discrimination-complaint.txt" />
+      </div>
+
+      <div data-route="exception_to_rule_note" hidden>
+        <ToolStatus
+          state="review"
+          title="Exception-to-rule requests are a separate process"
+          message="Current DVR guidance describes an exception-to-rule route, but V1B-05 does not treat it as a substitute for mediation or fair-hearing rights. The underlying exception-to-rule legal logic requires its own review before automation."
+        />
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  import {
+    buildCapDraft,
+    buildComplaintDraft,
+    buildDiscriminationDraft,
+    buildFairHearingSummary,
+    buildInformalDvrDraft,
+    buildMediationDraft,
+    routeChallenge,
+    type ChallengeAnswers,
+    type ChallengeOutcome,
+    type ChallengeProblemType,
+  } from "../../lib/challenge-router";
+
+  const root = document.querySelector<HTMLElement>("[data-challenge-tool]");
+  const form = root?.querySelector<HTMLFormElement>("[data-challenge-form]");
+  const resultRegion = root?.querySelector<HTMLElement>("[data-result-region]");
+  const needsInformation = root?.querySelector<HTMLElement>("[data-needs-information]");
+  const deadlineWarning = root?.querySelector<HTMLElement>("[data-deadline-warning]");
+  const routeNodes = Array.from(root?.querySelectorAll<HTMLElement>("[data-route]") ?? []);
+  const toolEnabled = root?.dataset.enabled === "true";
+
+  const getDraft = (id: string) =>
+    root?.querySelector<HTMLTextAreaElement>(id);
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!toolEnabled || !form || !resultRegion || !needsInformation || !deadlineWarning) return;
+
+    const data = new FormData(form);
+    const answers: ChallengeAnswers = {
+      problemType: String(data.get("problem_type")) as ChallengeProblemType,
+      writtenDecisionStatus: String(data.get("written_decision_status")) as "yes" | "no" | "unsure",
+      desiredOutcome: String(data.get("desired_outcome")) as ChallengeOutcome,
+      decisionDescription: String(data.get("decision_description") || "") || undefined,
+      decisionIssueDate: String(data.get("decision_issue_date") || "") || undefined,
+      hearingRequestedStatus: String(data.get("hearing_requested_status")) as "yes" | "no" | "unsure",
+    };
+
+    const result = routeChallenge(answers, toolEnabled);
+
+    needsInformation.hidden = result.applicability !== "needs_information";
+    deadlineWarning.hidden = !result.showDeadlineWarning;
+
+    for (const node of routeNodes) {
+      const route = node.dataset.route;
+      node.hidden = !route || !result.routes.includes(route as never);
+    }
+
+    const informalDraft = getDraft("#informal-dvr-draft");
+    const capDraft = getDraft("#cap-draft");
+    const mediationDraft = getDraft("#mediation-draft");
+    const hearingDraft = getDraft("#fair-hearing-draft");
+    const complaintDraft = getDraft("#complaint-draft");
+    const discriminationDraft = getDraft("#discrimination-draft");
+
+    if (informalDraft) informalDraft.value = buildInformalDvrDraft(answers);
+    if (capDraft) capDraft.value = buildCapDraft(answers);
+    if (mediationDraft) mediationDraft.value = buildMediationDraft(answers);
+    if (hearingDraft) hearingDraft.value = buildFairHearingSummary(answers);
+    if (complaintDraft) complaintDraft.value = buildComplaintDraft(answers);
+    if (discriminationDraft) discriminationDraft.value = buildDiscriminationDraft(answers);
+
+    resultRegion.hidden = false;
+    resultRegion.scrollIntoView({ block: "start" });
+  });
+</script>
+
+<style>
+  .tool-page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 60rem;
+  }
+
+  .tool-intro {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tool-intro h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+
+  .tool-intro p {
+    margin: 0;
+  }
+
+  .tool-form,
+  .result-region {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .privacy-note {
+    margin: 0;
+    color: var(--color-neutral);
+    font-size: 0.95rem;
+  }
+
+  .primary-action {
+    min-height: 2.9rem;
+    justify-self: start;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--color-ink);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .primary-action:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .result-region {
+    padding-block: var(--space-4) var(--space-12);
+    scroll-margin-top: var(--space-8);
+  }
+
+  .route-card,
+  .deadline-warning {
+    padding: var(--space-6);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .route-card {
+    margin-bottom: var(--space-4);
+    border-inline-start: 0.45rem solid var(--color-healthy);
+  }
+
+  .deadline-warning {
+    border-inline-start: 0.45rem solid var(--color-warning);
+  }
+
+  .route-card h2,
+  .deadline-warning h2 {
+    margin-top: 0;
+  }
+
+  .route-type {
+    margin: 0 0 var(--space-2);
+    color: var(--color-neutral);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+</style>
