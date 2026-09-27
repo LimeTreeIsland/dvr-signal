@@ -1,0 +1,54 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "jurisdiction": "US-WA",
+  "routes": {
+    "case_record": {
+      "label": "My DVR case-service record",
+      "destination_type": "dvr_counselor_or_office",
+      "participant_destination": "Submit to DVR, such as the participant's DVR counselor or DVR office.",
+      "timing_text": "DVR provides access or copies within five business days, or sends written notice explaining the delay and the date access or copies will be provided.",
+      "timing_is_production_deadline": true,
+      "citations": [
+        "WAC 388-891A-0140",
+        "34 CFR 361.38(c)(1)-(3)"
+      ],
+      "limitations": [
+        "Potentially harmful information may be released through a participant-chosen third party.",
+        "Originating-agency or provider release conditions may control some records.",
+        "Court-appointed representative rules apply when applicable."
+      ]
+    },
+    "public_records": {
+      "label": "Policies, agency emails, contracts, or other public records",
+      "destination_type": "dshs_public_records_officer",
+      "participant_destination": "DSHSPublicDisclosure@dshs.wa.gov",
+      "timing_text": "DSHS must provide an allowed initial response within five business days.",
+      "timing_is_production_deadline": false,
+      "citations": [
+        "RCW 42.56.520",
+        "WAC 388-01-060",
+        "WAC 388-01-090"
+      ],
+      "limitations": [
+        "Exempt material may be redacted or withheld under applicable law.",
+        "The five-business-day PRA rule is an initial-response deadline, not a production deadline."
+      ]
+    },
+    "correction": {
+      "label": "Correct inaccurate or misleading case-record information",
+      "destination_type": "dvr",
+      "participant_destination": "Submit the correction request to DVR.",
+      "timing_text": null,
+      "timing_is_production_deadline": false,
+      "citations": [
+        "WAC 388-891A-0120",
+        "34 CFR 361.38(c)(4)"
+      ],
+      "limitations": [
+        "If DVR declines to amend, Washington's rule provides for notice, documentation of the decision, and placement of the participant's written summary in the record."
+      ]
+    }
+  }
+}
