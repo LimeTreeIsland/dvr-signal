@@ -1,0 +1,94 @@
+{
+  "version": "0.1.0",
+  "reviewed_on": "2026-09-27",
+  "status": "review_complete_maintainer_approval_pending",
+  "jurisdiction": "US-WA",
+  "route_compatibility": {
+    "multiple_routes_allowed": true,
+    "informal_resolution_required_before_hearing": false,
+    "mediation_tolls_hearing_deadline": false,
+    "cap_is_independent_of_dvr": true
+  },
+  "routes": {
+    "informal_dvr": {
+      "authority_type": "state_regulation_plus_agency_guidance",
+      "citations": [
+        "WAC 388-891A-0215(1)(a)",
+        "DVR Resolving Concerns"
+      ],
+      "can_coexist_with_hearing": true,
+      "deadline_tolling_claim_allowed": false,
+      "current_guidance_contacts": [
+        "DVR counselor",
+        "VR supervisor",
+        "Regional Administrator",
+        "Fair Hearing and Constituent Affairs Administrator: 1-800-637-5627"
+      ]
+    },
+    "cap": {
+      "authority_type": "state_regulation",
+      "citations": [
+        "WAC 388-891A-0215(1)(a)",
+        "WAC 388-891A-0220",
+        "34 CFR 361.57(b)(1)(v)"
+      ],
+      "independent_of_dvr": true,
+      "cost_to_participant": "no_cost_under_WAC",
+      "current_contacts": {
+        "phone_text": "206-849-2939",
+        "website": "https://www.washingtoncap.org/",
+        "email_guidance_only": "washingtoncap2@gmail.com"
+      }
+    },
+    "mediation": {
+      "authority_type": "state_and_federal_regulation",
+      "citations": [
+        "WAC 388-891A-0225",
+        "WAC 388-891A-0230",
+        "34 CFR 361.57(d)"
+      ],
+      "voluntary": true,
+      "can_request_with_fair_hearing": true,
+      "deadline_tolling_claim_allowed": false
+    },
+    "fair_hearing": {
+      "authority_type": "state_and_federal_regulation",
+      "citations": [
+        "WAC 388-891A-0250",
+        "WAC 388-891A-0255",
+        "34 CFR 361.57(a)-(e)"
+      ],
+      "written_request_required_by_wac": true,
+      "filing_deadline_rule": "45 calendar days from DVR counselor decision issue date",
+      "deadline_calculation_delegated_to": "Written Decision + Deadline Checker"
+    },
+    "general_complaint": {
+      "authority_type": "agency_guidance",
+      "citations": [
+        "DVR Resolving Concerns"
+      ],
+      "fair_hearing_equivalence_claim_allowed": false,
+      "current_contacts": [
+        "DSHS complaint system",
+        "Fair Hearing and Constituent Affairs Administrator: 1-800-637-5627"
+      ]
+    },
+    "discrimination_complaint": {
+      "authority_type": "agency_guidance",
+      "citations": [
+        "DVR Resolving Concerns"
+      ],
+      "discrimination_finding_allowed": false,
+      "current_contacts": {
+        "phone": "1-800-737-0617 option 5",
+        "fax": "360-902-7540",
+        "email": "IRAUComplaints@DSHS.WA.Gov"
+      }
+    }
+  },
+  "handoffs": {
+    "deadline_checker": "/tools/decisions/",
+    "accommodation_builder": "/tools/accommodations/",
+    "records_router": "/tools/records/"
+  }
+}
