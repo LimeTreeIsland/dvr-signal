@@ -1,0 +1,120 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ChoiceGroup from "../../components/ChoiceGroup.astro";
+import ToolStatus from "../../components/ToolStatus.astro";
+
+const scopeOptions = [
+  {
+    value: "case_record",
+    label: "My DVR case-service record",
+    description: "Information DVR maintains in your individual case file.",
+  },
+  {
+    value: "public_records",
+    label: "Policies, internal correspondence, or other agency records",
+    description: "This may involve a different records route than access to your own case-service record.",
+  },
+  {
+    value: "both",
+    label: "Both",
+    description: "You may need more than one request route.",
+  },
+  {
+    value: "unsure",
+    label: "I am not sure",
+    description: "The finished tool will help distinguish the routes without assuming what you need.",
+  },
+];
+---
+
+<BaseLayout
+  title="Get My DVR Records — DVR Signal"
+  description="Records Router preview for DVR Signal. Legal routing remains disabled pending source review."
+>
+  <div class="container tool-page">
+    <header class="tool-intro">
+      <p class="eyebrow">Participant tool · preview</p>
+      <h1>Get My DVR Records</h1>
+      <p>
+        This page is the interaction shell for the Records Router. It currently
+        demonstrates the accessible form pattern only. It does not yet provide a
+        legal route, deadline, destination, or generated request.
+      </p>
+    </header>
+
+    <ToolStatus
+      state="review"
+      title="Records routing is not activated yet"
+      message="Current official records authorities and contact destinations must be reviewed and approved before this tool can generate guidance."
+    />
+
+    <form class="tool-form" aria-describedby="records-preview-note">
+      <ChoiceGroup
+        legend="What are you trying to get?"
+        name="scope"
+        options={scopeOptions}
+        required={true}
+        hint="Choose the closest match. This preview does not send or store your answer."
+      />
+
+      <p id="records-preview-note" class="privacy-note">
+        Preview only: answers stay in this page and are not submitted anywhere.
+      </p>
+
+      <button type="button" disabled aria-disabled="true">
+        Continue after legal review
+      </button>
+    </form>
+  </div>
+</BaseLayout>
+
+<style>
+  .tool-page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 52rem;
+  }
+
+  .tool-intro {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .tool-intro h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+  }
+
+  .tool-intro p {
+    margin: 0;
+  }
+
+  .tool-form {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-4) var(--space-12);
+  }
+
+  .privacy-note {
+    margin: 0;
+    color: var(--color-neutral);
+    font-size: 0.95rem;
+  }
+
+  button {
+    min-height: 2.9rem;
+    justify-self: start;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--color-neutral);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+</style>
