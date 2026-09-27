@@ -1,7 +1,40 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ChoiceGroup from "../../components/ChoiceGroup.astro";
+import FormField from "../../components/FormField.astro";
 import ToolStatus from "../../components/ToolStatus.astro";
+import EditableDraft from "../../components/EditableDraft.astro";
+import { readJsonSubset } from "../../lib/foundation-data";
+
+interface ToolConfig {
+  enabled: boolean;
+  status: "scaffold" | "review" | "active";
+}
+
+interface ReviewData {
+  reviewed_on: string;
+  status: string;
+  routes: {
+    case_record: {
+      participant_destination: string;
+      timing_text: string;
+      citations: string[];
+    };
+    public_records: {
+      participant_destination: string;
+      timing_text: string;
+      citations: string[];
+    };
+  };
+}
+
+const tool = await readJsonSubset<ToolConfig>(
+  new URL("../../../tools/records.yaml", import.meta.url),
+);
+const review = await readJsonSubset<ReviewData>(
+  new URL("../../../data/washington/records-routing-review.yaml", import.meta.url),
+);
+const toolEnabled = tool.enabled && tool.status === "active";
 
 const scopeOptions = [
   {
@@ -11,68 +44,211 @@ const scopeOptions = [
   },
   {
     value: "public_records",
-    label: "Policies, internal correspondence, or other agency records",
-    description: "This may involve a different records route than access to your own case-service record.",
+    label: "Policies, internal correspondence, contracts, or other agency records",
+    description: "Agency records that are different from access to your own case-service record.",
   },
   {
     value: "both",
     label: "Both",
-    description: "You may need more than one request route.",
+    description: "The finished router can create two separate drafts so the legal routes stay distinct.",
   },
   {
     value: "unsure",
     label: "I am not sure",
-    description: "The finished tool will help distinguish the routes without assuming what you need.",
+    description: "The router can explain the distinction without treating uncertainty as a no.",
+  },
+];
+
+const formatOptions = [
+  {
+    value: "electronic",
+    label: "Electronic copies",
+    description: "Request copies that can be delivered electronically when available.",
+  },
+  {
+    value: "inspect",
+    label: "Inspect or review the records",
+    description: "Ask to review records rather than receive a copy.",
   },
 ];
 ---
 
 <BaseLayout
   title="Get My DVR Records — DVR Signal"
-  description="Records Router preview for DVR Signal. Legal routing remains disabled pending source review."
+  description="Local-only Washington DVR Records Router."
 >
-  <div class="container tool-page">
+  <div class="container tool-page" data-records-router data-enabled={String(toolEnabled)}>
     <header class="tool-intro">
-      <p class="eyebrow">Participant tool · preview</p>
+      <p class="eyebrow">Participant tool · Records Router</p>
       <h1>Get My DVR Records</h1>
       <p>
-        This page is the interaction shell for the Records Router. It currently
-        demonstrates the accessible form pattern only. It does not yet provide a
-        legal route, deadline, destination, or generated request.
+        This tool distinguishes a request for your own DVR case-service record from a
+        Public Records Act request for agency records. Answers stay in your browser and
+        are not sent to DVR Signal.
       </p>
     </header>
 
-    <ToolStatus
-      state="review"
-      title="Records routing is not activated yet"
-      message="Current official records authorities and contact destinations must be reviewed and approved before this tool can generate guidance."
-    />
+    {toolEnabled ? (
+      <ToolStatus
+        state="available"
+        title="Records routing is available"
+        message={`Sources last reviewed ${review.reviewed_on}. The tool creates editable drafts and does not submit them for you.`}
+      />
+    ) : (
+      <ToolStatus
+        state="review"
+        title="Implementation complete; legal activation still requires maintainer approval"
+        message="The routing engine, source review, drafts, and tests are implemented, but executable legal guidance remains fail-closed until the reviewed rule and tool configuration are explicitly approved."
+      />
+    )}
 
-    <form class="tool-form" aria-describedby="records-preview-note">
+    <form class="tool-form" data-records-form aria-describedby="privacy-note">
       <ChoiceGroup
         legend="What are you trying to get?"
         name="scope"
         options={scopeOptions}
         required={true}
-        hint="Choose the closest match. This preview does not send or store your answer."
+        hint="Choose the closest match."
       />
 
-      <p id="records-preview-note" class="privacy-note">
-        Preview only: answers stay in this page and are not submitted anywhere.
+      <ChoiceGroup
+        legend="How would you like access?"
+        name="format"
+        options={formatOptions}
+        required={true}
+      />
+
+      <div class="date-grid">
+        <FormField
+          id="date-start"
+          name="date_start"
+          label="Start date (optional)"
+          type="date"
+          hint="Leave blank if you do not want to limit the request by date."
+        />
+        <FormField
+          id="date-end"
+          name="date_end"
+          label="End date (optional)"
+          type="date"
+        />
+      </div>
+
+      <p id="privacy-note" class="privacy-note">
+        Local-only: this page does not submit, transmit, or persist your answers.
       </p>
 
-      <button type="button" disabled aria-disabled="true">
-        Continue after legal review
+      <button
+        class="primary-action"
+        type="submit"
+        disabled={!toolEnabled}
+        aria-disabled={String(!toolEnabled)}
+      >
+        {toolEnabled ? "Build my draft" : "Activation pending maintainer approval"}
       </button>
     </form>
+
+    <section class="result-region" data-result-region hidden aria-live="polite">
+      <div data-needs-information hidden>
+        <ToolStatus
+          state="review"
+          title="A little more information is needed"
+          message="Choose whether you mainly want your own DVR case file, agency records such as policies or emails, or both. The tool will not guess."
+        />
+      </div>
+
+      <div data-case-result hidden>
+        <section class="source-card" aria-labelledby="case-route-title">
+          <h2 id="case-route-title">Your DVR case-service record</h2>
+          <p><strong>Destination:</strong> {review.routes.case_record.participant_destination}</p>
+          <p><strong>Timing:</strong> {review.routes.case_record.timing_text}</p>
+          <p><strong>Sources:</strong> {review.routes.case_record.citations.join("; ")}</p>
+        </section>
+        <EditableDraft
+          id="case-record-draft"
+          label="Editable case-service-record request"
+          filename="dvr-case-service-record-request.txt"
+        />
+      </div>
+
+      <div data-public-result hidden>
+        <section class="source-card" aria-labelledby="pra-route-title">
+          <h2 id="pra-route-title">DSHS/DVR public records</h2>
+          <p><strong>Destination:</strong> {review.routes.public_records.participant_destination}</p>
+          <p><strong>Timing:</strong> {review.routes.public_records.timing_text}</p>
+          <p><strong>Sources:</strong> {review.routes.public_records.citations.join("; ")}</p>
+        </section>
+        <EditableDraft
+          id="public-records-draft"
+          label="Editable Public Records Act request"
+          filename="dshs-dvr-public-records-request.txt"
+        />
+      </div>
+    </section>
   </div>
 </BaseLayout>
+
+<script>
+  import {
+    buildCaseRecordDraft,
+    buildPublicRecordsDraft,
+    routeRecordsRequest,
+    type RecordsAnswers,
+    type RecordsFormat,
+    type RecordsScope,
+  } from "../../lib/records-router";
+
+  const root = document.querySelector<HTMLElement>("[data-records-router]");
+  const form = root?.querySelector<HTMLFormElement>("[data-records-form]");
+  const resultRegion = root?.querySelector<HTMLElement>("[data-result-region]");
+  const caseResult = root?.querySelector<HTMLElement>("[data-case-result]");
+  const publicResult = root?.querySelector<HTMLElement>("[data-public-result]");
+  const needsInformation = root?.querySelector<HTMLElement>("[data-needs-information]");
+  const caseDraft = root?.querySelector<HTMLTextAreaElement>("#case-record-draft");
+  const publicDraft = root?.querySelector<HTMLTextAreaElement>("#public-records-draft");
+  const toolEnabled = root?.dataset.enabled === "true";
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!toolEnabled || !resultRegion || !caseResult || !publicResult || !needsInformation) return;
+
+    const data = new FormData(form);
+    const answers: RecordsAnswers = {
+      scope: String(data.get("scope")) as RecordsScope,
+      format: String(data.get("format")) as RecordsFormat,
+      dateStart: String(data.get("date_start") || "") || undefined,
+      dateEnd: String(data.get("date_end") || "") || undefined,
+    };
+
+    const result = routeRecordsRequest(answers, toolEnabled);
+
+    caseResult.hidden = true;
+    publicResult.hidden = true;
+    needsInformation.hidden = true;
+
+    if (result.applicability === "needs_information") {
+      needsInformation.hidden = false;
+    } else if (result.applicability === "applicable") {
+      if (result.routes.includes("case_record")) {
+        caseResult.hidden = false;
+        if (caseDraft) caseDraft.value = buildCaseRecordDraft(answers);
+      }
+      if (result.routes.includes("public_records")) {
+        publicResult.hidden = false;
+        if (publicDraft) publicDraft.value = buildPublicRecordsDraft(answers);
+      }
+    }
+
+    resultRegion.hidden = false;
+    resultRegion.scrollIntoView({ block: "start" });
+  });
+</script>
 
 <style>
   .tool-page {
     display: grid;
     gap: var(--space-8);
-    max-width: 52rem;
+    max-width: 56rem;
   }
 
   .tool-intro {
@@ -92,7 +268,12 @@ const scopeOptions = [
   .tool-form {
     display: grid;
     gap: var(--space-6);
-    padding-block: var(--space-4) var(--space-12);
+    padding-block: var(--space-4);
+  }
+
+  .date-grid {
+    display: grid;
+    gap: var(--space-4);
   }
 
   .privacy-note {
@@ -101,20 +282,45 @@ const scopeOptions = [
     font-size: 0.95rem;
   }
 
-  button {
+  .primary-action {
     min-height: 2.9rem;
     justify-self: start;
     padding: 0.7rem 1rem;
     border: 0;
     border-radius: 0.5rem;
-    background: var(--color-neutral);
+    background: var(--color-ink);
     color: #fff;
     font: inherit;
     font-weight: 700;
   }
 
-  button:disabled {
+  .primary-action:disabled {
     cursor: not-allowed;
-    opacity: 0.65;
+    opacity: 0.55;
+  }
+
+  .result-region {
+    display: grid;
+    gap: var(--space-8);
+    padding-block: var(--space-4) var(--space-12);
+    scroll-margin-top: var(--space-8);
+  }
+
+  .source-card {
+    margin-bottom: var(--space-4);
+    padding: var(--space-6);
+    border-inline-start: 0.45rem solid var(--color-healthy);
+    background: #fff;
+    border-radius: var(--radius);
+  }
+
+  .source-card h2 {
+    margin-top: 0;
+  }
+
+  @media (min-width: 42rem) {
+    .date-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 </style>
