@@ -16,7 +16,6 @@
   "output_routes": [
     "written_decision_request",
     "fair_hearing_deadline",
-    "deadline_date_needed",
     "post_hearing_request_timeline"
   ],
   "rule_ids": [
