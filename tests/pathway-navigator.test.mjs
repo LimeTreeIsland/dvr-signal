@@ -7,11 +7,11 @@ const page = await readFile("src/pages/tools/navigator.astro", "utf8");
 const tool = JSON.parse(await readFile("tools/navigator.yaml", "utf8"));
 const review = JSON.parse(await readFile("data/washington/pathway-navigator-review.yaml", "utf8"));
 
-test("Pathway Navigator remains fail-closed pending maintainer approval", () => {
-  assert.equal(tool.enabled, false);
-  assert.notEqual(tool.status, "active");
-  assert.equal(review.status, "review_complete_maintainer_approval_pending");
-  assert.match(page, /Activation pending maintainer approval/);
+test("Pathway Navigator is active only after recorded maintainer approval", () => {
+  assert.equal(tool.enabled, true);
+  assert.equal(tool.status, "active");
+  assert.equal(review.status, "approved_for_activation");
+  assert.match(review.approval_reference, /maintainer approval recorded 2026-09-27/);
   assert.match(engine, /unavailable_pending_review/);
 });
 
@@ -59,4 +59,19 @@ test("Navigator contains no network or persistent-storage primitive", () => {
   for (const term of forbiddenTerms) {
     assert.equal(combined.includes(term), false, `unexpected primitive: ${term}`);
   }
+});
+
+
+test("Navigator rule dependencies are approved and exact eligibility/IPE calculations remain disabled", async () => {
+  const rules = JSON.parse(await readFile("data/washington/procedural-rules.yaml", "utf8")).rules;
+  for (const ruleId of tool.rule_ids) {
+    const rule = rules.find((item) => item.id === ruleId);
+    assert.ok(rule, `missing rule: ${ruleId}`);
+    assert.equal(rule.enabled, true, `disabled Navigator dependency: ${ruleId}`);
+    assert.equal(rule.review_status, "approved");
+    assert.equal(rule.source_status, "live_text_checked");
+  }
+  assert.equal(review.deadline_calculation_enabled, false);
+  assert.equal(review.stages.eligibility.exact_calculation_enabled, false);
+  assert.equal(review.stages.ipe.exact_calculation_enabled, false);
 });
