@@ -102,6 +102,6 @@ test("Issue Ranking includes the approved bottleneck hero artwork with source fr
   assert.match(page, /fetchpriority="high"/);
   assert.match(page, /Conceptual systems visualization/);
   assert.match(page, /Comprehensive Statewide Needs Assessment 2022–2025/);
-  assert.match(page, /not a statement that DVR has formally adopted this exact staffing architecture/);
+  assert.match(page, /not a statement that DVR has formally\s+adopted this exact staffing architecture/);
   assert.match(page, /generalist counselor at left.*specialist pathways at right/);
 });
