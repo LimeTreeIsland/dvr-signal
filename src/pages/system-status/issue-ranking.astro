@@ -48,6 +48,35 @@ const groupedSources = (sourceIds: string[]) => {
   title="DVR Issue Pressure Index — DVR Signal"
   description="Source-backed factual indicators for tracked Washington DVR system issues, with snapshots, evidence details, and comparable trends where available."
 >
+  <figure class="bottleneck-hero" aria-labelledby="bottleneck-hero-caption">
+    <a
+      class="bottleneck-hero-image-link"
+      href="/images/dvr-generalist-bottleneck-specialist-pathways.webp"
+      aria-label="Open the generalist bottleneck versus specialist pathways graphic at full size"
+    >
+      <img
+        src="/images/dvr-generalist-bottleneck-specialist-pathways.webp"
+        width="1200"
+        height="514"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        alt="Conceptual split-screen DVR workflow: assessment, planning, benefits, accessibility, independent-living, self-employment, training, and employment needs converge on an overloaded generalist counselor at left, while the same needs route through specialist pathways at right."
+      />
+    </a>
+    <figcaption id="bottleneck-hero-caption">
+      <strong>Conceptual systems visualization.</strong>
+      Washington DVR’s
+      <a href="https://www.dshs.wa.gov/sites/default/files/dvr/Comprehensive-Statewide-Needs-Assessment.pdf">
+        Comprehensive Statewide Needs Assessment 2022–2025
+      </a>
+      recommends increased counselor staffing, caseload caps, backfill plans, triage systems,
+      and consideration of industry-specialist coaches. The specialist pathways illustrated
+      here are a DVR Signal systems-design comparison, not a statement that DVR has formally
+      adopted this exact staffing architecture.
+    </figcaption>
+  </figure>
+
   <div class="container issue-page">
     <header class="hero-block">
       <p class="eyebrow">System status · Issue ranking</p>
@@ -324,6 +353,72 @@ const groupedSources = (sourceIds: string[]) => {
 </BaseLayout>
 
 <style>
+  .bottleneck-hero {
+    width: min(120rem, calc(100% - 1rem));
+    margin: 0 auto clamp(2.25rem, 5vw, 4.5rem);
+    padding: clamp(0.35rem, 1vw, 0.85rem);
+    border-radius: 0 0 calc(var(--radius) + 0.65rem) calc(var(--radius) + 0.65rem);
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--color-warning) 8%, transparent), transparent 38%),
+      linear-gradient(270deg, color-mix(in srgb, var(--color-healthy) 10%, transparent), transparent 38%),
+      var(--color-ink);
+    box-shadow: 0 1.25rem 3.25rem color-mix(in srgb, var(--color-ink) 20%, transparent);
+  }
+
+  .bottleneck-hero-image-link {
+    display: block;
+    overflow: hidden;
+    border-radius: calc(var(--radius) + 0.3rem);
+    background: #0c1013;
+  }
+
+  .bottleneck-hero-image-link:focus-visible {
+    outline: 4px solid var(--color-review);
+    outline-offset: 4px;
+  }
+
+  .bottleneck-hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1200 / 514;
+    object-fit: contain;
+  }
+
+  .bottleneck-hero figcaption {
+    max-width: 94rem;
+    margin: clamp(0.85rem, 2vw, 1.35rem) auto 0;
+    padding-inline: clamp(0.35rem, 2vw, 1rem);
+    color: color-mix(in srgb, var(--color-paper) 80%, var(--color-neutral));
+    font-size: clamp(0.78rem, 1.4vw, 0.92rem);
+    line-height: 1.55;
+  }
+
+  .bottleneck-hero figcaption strong {
+    color: var(--color-paper);
+  }
+
+  .bottleneck-hero figcaption a {
+    color: color-mix(in srgb, var(--color-healthy) 78%, white);
+    font-weight: 750;
+  }
+
+  @media (max-width: 48rem) {
+    .bottleneck-hero {
+      width: 100%;
+      border-radius: 0;
+      padding-inline: 0;
+    }
+
+    .bottleneck-hero-image-link {
+      border-radius: 0;
+    }
+
+    .bottleneck-hero figcaption {
+      padding-inline: var(--space-4);
+    }
+  }
+
   .issue-page {
     display: grid;
     gap: var(--space-12);

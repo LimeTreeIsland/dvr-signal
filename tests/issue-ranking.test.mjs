@@ -9,6 +9,7 @@ const h2 = JSON.parse(await readFile("data/metrics/issue-snapshots/2026-H2.json"
 const page = await readFile("src/pages/system-status/issue-ranking.astro", "utf8");
 const sparkline = await readFile("src/components/IssueSparkline.astro", "utf8");
 const header = await readFile("src/components/SiteHeader.astro", "utf8");
+const heroArtwork = await readFile("public/images/dvr-generalist-bottleneck-specialist-pathways.webp");
 
 test("issue page publishes factual indicators rather than a composite political ranking", () => {
   assert.equal(data.publication_status, "factual_indicators");
@@ -90,4 +91,17 @@ test("visual implementation includes mobile and reduced-motion rules", () => {
   assert.match(page, /@media \(max-width: 40rem\)/);
   assert.match(page, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(page, /min-height: 2\.75rem/);
+});
+
+
+test("Issue Ranking includes the approved bottleneck hero artwork with source framing", () => {
+  assert.ok(heroArtwork.length > 100000);
+  assert.equal(heroArtwork.subarray(0, 4).toString("ascii"), "RIFF");
+  assert.match(page, /dvr-generalist-bottleneck-specialist-pathways\.webp/);
+  assert.match(page, /loading="eager"/);
+  assert.match(page, /fetchpriority="high"/);
+  assert.match(page, /Conceptual systems visualization/);
+  assert.match(page, /Comprehensive Statewide Needs Assessment 2022–2025/);
+  assert.match(page, /not a statement that DVR has formally\s+adopted this exact staffing architecture/);
+  assert.match(page, /generalist counselor at left.*specialist pathways at right/);
 });
