@@ -30,6 +30,18 @@ export interface SnapshotChange {
   label: string;
 }
 
+function hasComparableNumbers(
+  prior: SnapshotIndicator,
+  current: SnapshotIndicator,
+): prior is SnapshotIndicator & { value: number } {
+  return (
+    current.comparison_key !== null &&
+    prior.comparison_key === current.comparison_key &&
+    current.value !== null &&
+    prior.value !== null
+  );
+}
+
 export function compareSnapshots(previous: IssueSnapshot, current: IssueSnapshot): SnapshotChange[] {
   const changes: SnapshotChange[] = [];
   const previousSources = new Set(previous.source_ids);
@@ -67,13 +79,7 @@ export function compareSnapshots(previous: IssueSnapshot, current: IssueSnapshot
       continue;
     }
 
-    const comparable =
-      item.comparison_key !== null &&
-      prior.comparison_key === item.comparison_key &&
-      item.value !== null &&
-      prior.value !== null;
-
-    if (!comparable) continue;
+    if (!hasComparableNumbers(prior, item) || item.value === null) continue;
 
     if (item.value > prior.value) {
       changes.push({

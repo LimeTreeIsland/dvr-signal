@@ -5,6 +5,9 @@ PROJECT, ARCHITECTURE, LEGAL-BASELINE, PROCEDURAL-RULES, DATA-DICTIONARY,
 PRIVACY-MODEL, DESIGN-SYSTEM, and TOOL-SAFETY. Read GITHUB-PERMISSIONS.md
 before changing automation or access. The repository carries project memory.
 
+For Issue Ranking / System Status work, also read:
+ISSUE-RANKING-SPEC.md and TINYFISH-SOURCE-MONITOR.md.
+
 ## Scope and authority
 
 - Implement one bounded issue at a time. Preserve the five-tool Phase 1 scope.
@@ -18,6 +21,11 @@ before changing automation or access. The repository carries project memory.
 - Pending rules must fail closed: no deadline or legal classification output.
 - Read source text and exceptions before activating a rule. Cite pinpoint sections
   and preserve the source date, retrieval date, review status, and reviewer.
+- For government/public-policy status pages, prefer source-backed factual measures
+  over agent-authored composite rankings or political evaluations. Do not silently
+  convert factual indicators into an overall government-performance score.
+- Preserve source conflicts. An agent must not select one conflicting official
+  figure merely because it is newer, larger, smaller, or visually convenient.
 
 ## Privacy and integrity
 
@@ -44,7 +52,20 @@ before changing automation or access. The repository carries project memory.
   and reduced-motion checks before launch. Do not claim audits not performed.
 - Run `node scripts/validate-foundation.mjs` for foundation edits. Add meaningful
   rule, privacy, accessibility, typecheck, lint, and build gates with implementation.
+- Run `npm run validate:issue-status` for Issue Ranking data/source/snapshot edits.
 - Never weaken checks merely to get a passing run. Report what was tested.
+
+## Source-monitor boundaries
+
+- The allowlist in `sources/issue-ranking-watch.json` is the only URL set automated
+  source monitoring may fetch.
+- Source monitoring detects change and prepares candidate evidence only.
+- It must never automatically change legal interpretation, status meaning, privacy
+  policy, participant suppression, issue definitions, or public conclusions.
+- TinyFish may fetch and extract changed public sources for candidate review, but a
+  candidate extraction is not an approved evidence update.
+- Scheduled GitHub workflows stay read-only and produce review artifacts. They do
+  not commit, merge, publish, or grant themselves broader permissions.
 
 ## Change delivery
 

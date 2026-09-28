@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DVR Signal source-monitor candidate report",
+  "type": "object",
+  "required": ["generated_at", "manifest_version", "candidate_only", "sources", "summary"],
+  "properties": {
+    "candidate_only": {"const": true},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "url",
+          "issue_ids",
+          "fetch_status",
+          "changed",
+          "change_state",
+          "sha256",
+          "etag",
+          "last_modified",
+          "content_length"
+        ],
+        "properties": {
+          "change_state": {
+            "enum": ["baseline_established", "unchanged", "changed", "fetch_error"]
+          }
+        }
+      }
+    }
+  }
+}

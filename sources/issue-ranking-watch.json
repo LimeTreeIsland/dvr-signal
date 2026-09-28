@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "policy": {
+    "candidate_only": true,
+    "may_change_public_conclusions": false,
+    "allowed_source_layers": ["dvr_dshs", "federal_oversight"],
+    "notes": "Monitoring detects source changes. A changed source requires TinyFish/Codex extraction, evidence review, validation, and maintainer review before any public indicator changes."
+  },
+  "sources": [
+    {
+      "source_id": "DVR_STATE_PLAN_PAGE_2026",
+      "url": "https://www.dshs.wa.gov/dvr/dvr-state-plan",
+      "issue_ids": ["resource-capacity", "counselor-workload", "staff-continuity", "funding-pressure", "communication-reliability", "staffing-pipeline", "accessibility"],
+      "priority": "high"
+    },
+    {
+      "source_id": "DVR_STATE_PLAN_FINAL_2026",
+      "url": "https://live-dshs-dshs2.pantheonsite.io/sites/default/files/2026-08/DVRStatePlan2026-2028.pdf",
+      "issue_ids": ["resource-capacity", "counselor-workload", "staff-continuity", "funding-pressure", "communication-reliability", "staffing-pipeline", "accessibility"],
+      "priority": "high"
+    },
+    {
+      "source_id": "DVR_OOS_CURRENT",
+      "url": "https://www.dshs.wa.gov/order-selection-information",
+      "issue_ids": ["resource-capacity", "funding-pressure"],
+      "priority": "high"
+    },
+    {
+      "source_id": "DVR_CSNA_2025",
+      "url": "https://www.dshs.wa.gov/sites/default/files/dvr/Comprehensive-Statewide-Needs-Assessment.pdf",
+      "issue_ids": ["counselor-workload", "staff-continuity", "communication-reliability", "staffing-pipeline", "accessibility"],
+      "priority": "medium"
+    },
+    {
+      "source_id": "DVR_STRATEGIC_GOALS_2026",
+      "url": "https://www.dshs.wa.gov/office-of-the-secretary/vr-strategic-goals",
+      "issue_ids": ["communication-reliability", "accessibility"],
+      "priority": "medium"
+    },
+    {
+      "source_id": "FED_ECFR_361_36",
+      "url": "https://www.ecfr.gov/current/title-34/subtitle-B/chapter-III/part-361/subpart-B/section-361.36",
+      "issue_ids": ["resource-capacity"],
+      "priority": "high"
+    },
+    {
+      "source_id": "FED_RSA_VR_PROGRAM",
+      "url": "https://rsa.ed.gov/about/programs/vocational-rehabilitation-state-grants",
+      "issue_ids": ["funding-pressure"],
+      "priority": "medium"
+    }
+  ]
+}

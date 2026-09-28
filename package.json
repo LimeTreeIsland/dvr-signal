@@ -14,7 +14,10 @@
     "typecheck": "tsc --noEmit",
     "lint": "node scripts/lint-app.mjs",
     "test": "node --test tests/*.test.mjs",
-    "validate": "npm run typecheck && npm run lint && npm test && npm run build"
+    "validate:issue-status": "node scripts/validate-issue-status-data.mjs",
+    "source:watch": "node scripts/source-watch.mjs",
+    "snapshot:diff": "node scripts/compare-issue-snapshots.mjs",
+    "validate": "npm run typecheck && npm run lint && npm test && npm run validate:issue-status && npm run build"
   },
   "dependencies": {
     "astro": "5.13.4"
