@@ -1,7 +1,7 @@
 {
   "version": "0.3.0",
   "reviewed_on": "2026-09-27",
-  "calculator_gate": "approved_for_exact_45_day_calculation",
+  "calculator_gate": "source_archive_complete_activation_approved",
   "required_sources": [
     {
       "authority_id": "WAC-388-02",
