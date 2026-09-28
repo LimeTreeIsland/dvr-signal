@@ -1,9 +1,9 @@
 {
   "id": "navigator",
   "title": "Pathway Navigator",
-  "version": "0.2.0",
-  "status": "scaffold",
-  "enabled": false,
+  "version": "0.3.0",
+  "status": "active",
+  "enabled": true,
   "input_fields": [
     "episode_stage",
     "application_status",
