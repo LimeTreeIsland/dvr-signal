@@ -1,0 +1,84 @@
+{
+  "snapshot_id": "2026-H2",
+  "label": "Jul-Dec 2026",
+  "period_start": "2026-07-01",
+  "period_end": "2026-12-31",
+  "created_at": "2026-09-27",
+  "snapshot_type": "current_partial_period",
+  "methodology_version": "factual-indicators-1.0.0",
+  "source_registry_version": "1.0.0",
+  "source_ids": [
+    "DVR_STATE_PLAN_PAGE_2026",
+    "DVR_STATE_PLAN_FINAL_2026",
+    "DVR_STATE_PLAN_DRAFT_2026",
+    "DVR_OOS_CURRENT",
+    "DVR_CSNA_2025",
+    "DVR_STRATEGIC_GOALS_2026",
+    "FED_ECFR_361_36",
+    "FED_RSA_VR_PROGRAM"
+  ],
+  "indicators": [
+    {
+      "issue_id": "resource-capacity",
+      "comparison_key": "closed_priority_categories",
+      "value": 5,
+      "display": "5 of 5 priority categories closed",
+      "data_state": "observed",
+      "source_ids": ["DVR_OOS_CURRENT"]
+    },
+    {
+      "issue_id": "counselor-workload",
+      "comparison_key": null,
+      "value": null,
+      "display": "Source conflict: 64% current final plan; 40% 2026 draft",
+      "data_state": "source_conflict",
+      "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+    },
+    {
+      "issue_id": "staff-continuity",
+      "comparison_key": "csna_one_counselor_share",
+      "value": 43,
+      "display": "43.0% of 682 respondents reported one counselor",
+      "data_state": "new_evidence",
+      "source_ids": ["DVR_CSNA_2025"]
+    },
+    {
+      "issue_id": "funding-pressure",
+      "comparison_key": "case_service_expenditures_py2024",
+      "value": 27.4,
+      "display": "$27.4M PY2024 case-service expenditures",
+      "data_state": "latest_available_measure",
+      "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]
+    },
+    {
+      "issue_id": "communication-reliability",
+      "comparison_key": "contact_standard",
+      "value": null,
+      "display": "48-hour response standard; interactions documented within 10 days",
+      "data_state": "new_evidence",
+      "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+    },
+    {
+      "issue_id": "staffing-pipeline",
+      "comparison_key": "counselors_hired_prior_year",
+      "value": 37,
+      "display": "37 VR counselors hired in the prior year",
+      "data_state": "new_evidence",
+      "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]
+    },
+    {
+      "issue_id": "accessibility",
+      "comparison_key": "primary_language_access_share",
+      "value": 93.6,
+      "display": "93.6% reported access in primary language (n=839)",
+      "data_state": "new_evidence",
+      "source_ids": ["DVR_CSNA_2025"]
+    }
+  ],
+  "unresolved_outcomes": [
+    {
+      "issue_id": "accessibility",
+      "label": "June 2026 ADA Action Plan target result not located in the current public source set."
+    }
+  ]
+}

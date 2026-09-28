@@ -1,248 +1,261 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import IssueSparkline from "../../components/IssueSparkline.astro";
 import issueData from "../../../data/metrics/issue-ranking.json";
+import sourceRegistry from "../../../data/metrics/issue-source-registry.json";
+import snapshotH1 from "../../../data/metrics/issue-snapshots/2026-H1.json";
+import snapshotH2 from "../../../data/metrics/issue-snapshots/2026-H2.json";
 import {
-  calculatePressureScore,
-  formatMomentum,
-  statusLabel,
-  type EvidenceConfidence,
-  type IssueScores,
-  type IssueStatus,
+  evidenceStateLabel,
+  evidenceTone,
+  formatTrendLabel,
+  type IssueRecord,
 } from "../../lib/issue-ranking";
+import {
+  compareSnapshots,
+  type IssueSnapshot,
+} from "../../lib/issue-snapshots";
 
-const sourceMap = new Map(issueData.sources.map((source) => [source.id, source]));
+const issues = issueData.issues as IssueRecord[];
+const sources = sourceRegistry.sources;
+const sourceMap = new Map(sources.map((source) => [source.id, source]));
+const issueMap = new Map(issues.map((issue) => [issue.issue_id, issue]));
+const changes = compareSnapshots(snapshotH1 as IssueSnapshot, snapshotH2 as IssueSnapshot);
 
-const issues = issueData.issues.map((issue) => {
-  const scores = issue.scores as IssueScores | null;
-  const pressureScore = calculatePressureScore(scores);
-  return {
-    ...issue,
-    scores,
-    pressureScore,
-    status: issue.status as IssueStatus,
-    evidence_confidence: issue.evidence_confidence as EvidenceConfidence,
+const sourceLayerLabels: Record<string, string> = {
+  dvr_dshs: "DVR / DSHS material",
+  federal_oversight: "Federal / oversight material",
+  participant_aggregate: "DVR Signal participant aggregates",
+};
+
+const groupedSources = (sourceIds: string[]) => {
+  const groups: Record<string, typeof sources> = {
+    dvr_dshs: [],
+    federal_oversight: [],
+    participant_aggregate: [],
   };
-});
 
-const scoresPublished =
-  issueData.publication_status === "published" &&
-  issues.some((issue) => issue.pressureScore !== null);
+  for (const sourceId of sourceIds) {
+    const source = sourceMap.get(sourceId);
+    if (source && groups[source.source_layer]) groups[source.source_layer].push(source);
+  }
 
-const participantPublished = issues.some(
-  (issue) => issue.participant_evidence_state === "published",
-);
+  return groups;
+};
 ---
 
 <BaseLayout
   title="DVR Issue Pressure Index — DVR Signal"
-  description="A compact, source-linked view of tracked Washington DVR system issues, current evidence status, and change over time."
+  description="Source-backed factual indicators for tracked Washington DVR system issues, with snapshots, evidence details, and comparable trends where available."
 >
-  <div class="container issue-ranking-page">
-    <header class="ranking-hero">
-      <div>
-        <p class="eyebrow">System status · Issue ranking</p>
-        <h1>DVR Issue Pressure Index</h1>
-        <p class="hero-copy">
-          A compact view of tracked system issues, their evidence, current status,
-          and change over time.
-        </p>
-      </div>
+  <div class="container issue-page">
+    <header class="hero-block">
+      <p class="eyebrow">System status · Issue ranking</p>
+      <h1>DVR Issue Pressure Index</h1>
+      <p class="hero-copy">
+        A compact factual view of tracked system issues, current official indicators,
+        evidence limits, and change over time.
+      </p>
+      <p class="method-warning">
+        DVR Signal is not publishing a composite pressure score or evaluative ranking at this stage.
+        The page uses source-backed measurements and preserves source conflicts instead of forcing them
+        into a single number.
+      </p>
 
-      <div class="snapshot-meta" aria-label="Current snapshot metadata">
-        <span><strong>Snapshot</strong> {issueData.snapshot.label}</span>
-        <span><strong>Methodology</strong> {issueData.snapshot.methodology_version}</span>
-        <span><strong>Release</strong> {issueData.publication_status.replaceAll("_", " ")}</span>
+      <div class="snapshot-meta">
+        <span><strong>Current snapshot</strong> Jul-Dec 2026</span>
+        <span><strong>Source registry</strong> v{sourceRegistry.version}</span>
+        <span><strong>Method</strong> factual indicators v1.0.0</span>
+        <span><strong>Reviewed</strong> {sourceRegistry.retrieved_date}</span>
       </div>
-
-      {!scoresPublished && (
-        <aside class="review-notice" aria-labelledby="review-notice-title">
-          <h2 id="review-notice-title">Ranking is not published yet</h2>
-          <p>
-            The interactive structure is live, but issue scores remain unassigned until
-            the scoring methodology and source-backed values receive explicit review.
-            Unscored issues are shown as <strong>Not scored</strong>, never as zero.
-          </p>
-        </aside>
-      )}
     </header>
 
-    <section class="ranking-panel" aria-labelledby="index-title">
-      <div class="section-heading">
+    <section class="change-panel" aria-labelledby="changed-title">
+      <div class="section-head">
         <div>
-          <p class="eyebrow">Current view</p>
-          <h2 id="index-title">Tracked issues</h2>
+          <p class="eyebrow">Snapshot comparison</p>
+          <h2 id="changed-title">What changed since the last review?</h2>
         </div>
-        <a class="method-link" href="#ranking-method">How ranking works</a>
+        <span class="period-chip">2026 H1 → 2026 H2</span>
       </div>
 
-      <div class="control-grid" aria-label="Issue ranking controls">
-        <fieldset>
-          <legend>Sort mode</legend>
-          <div class="segmented-control" data-sort-controls>
-            <button type="button" data-sort="pressure" aria-pressed="true" disabled={!scoresPublished}>
-              Current pressure
-            </button>
-            <button type="button" data-sort="momentum" aria-pressed="false" disabled={!scoresPublished}>
-              Improvement momentum
-            </button>
-            <button type="button" data-sort="participant_impact" aria-pressed="false" disabled={!scoresPublished}>
-              Participant impact
-            </button>
-            <button type="button" data-sort="evidence_confidence" aria-pressed="false">
-              Evidence confidence
-            </button>
-          </div>
-          {!scoresPublished && <p class="control-note">Score-dependent sorts activate after approved scoring is published.</p>}
-        </fieldset>
-
-        <fieldset>
-          <legend>Evidence source</legend>
-          <div class="segmented-control" data-evidence-controls>
-            <button type="button" data-evidence="official" aria-pressed="true">Official</button>
-            <button type="button" data-evidence="combined" aria-pressed="false" disabled={!participantPublished}>
-              Combined
-            </button>
-            <button type="button" data-evidence="participant" aria-pressed="false" disabled={!participantPublished}>
-              Participant
-            </button>
-          </div>
-          {!participantPublished && <p class="control-note">Participant mode remains unavailable until a disclosure-reviewed aggregate release exists.</p>}
-        </fieldset>
-
-        <label class="snapshot-control">
-          <span>View snapshot</span>
-          <select aria-label="View snapshot" disabled>
-            <option>{issueData.snapshot.label}</option>
-          </select>
-        </label>
+      <div class="change-grid">
+        {changes.map((change) => (
+          <article class:list={["change-card", "change-" + change.type]}>
+            <span class="change-type">{change.type.replaceAll("_", " ")}</span>
+            <strong>{change.issue_id ? issueMap.get(change.issue_id)?.title ?? change.issue_id : "Source registry"}</strong>
+            <p>{change.label}</p>
+          </article>
+        ))}
       </div>
 
-      <div class="ranking-list" data-ranking-list>
-        {issues.map((issue) => {
-          const score = issue.pressureScore;
-          const impact = issue.scores?.participant_impact ?? null;
-          const evidenceValue =
-            issue.evidence_confidence === "high" ? 4 :
-            issue.evidence_confidence === "moderate" ? 3 :
-            issue.evidence_confidence === "limited" ? 2 :
-            issue.evidence_confidence === "insufficient" ? 1 : 0;
+      <p class="snapshot-note">
+        The first historical files are retrospective reconstructions created on Sept. 27, 2026.
+        Future published snapshots are intended to be immutable contemporaneous records.
+      </p>
+    </section>
+
+    <section class="signal-board" aria-labelledby="signals-title">
+      <div class="board-head">
+        <div>
+          <p class="eyebrow">Current factual signals</p>
+          <h2 id="signals-title">Seven tracked issue domains</h2>
+        </div>
+
+        <div class="evidence-controls" aria-label="Evidence source view">
+          <button type="button" aria-pressed="true">Official</button>
+          <button type="button" disabled aria-pressed="false">Participant</button>
+          <button type="button" disabled aria-pressed="false">Combined</button>
+        </div>
+      </div>
+
+      <p class="participant-note">
+        Participant mode remains unavailable until disclosure-reviewed DVR Signal survey aggregates
+        are published. Public participant cells must meet the project suppression policy of n ≥
+        {issueData.participant_mode.public_cell_floor_n}, with differencing review, and will be labeled
+        “{issueData.participant_mode.population_label}.”
+      </p>
+
+      <div class="issue-list">
+        {issues.map((issue, index) => {
+          const tone = evidenceTone(issue.evidence_state);
+          const sourceIds = Array.from(new Set([
+            ...issue.current_indicator.source_ids,
+            ...issue.supporting_indicators.flatMap((item) => item.source_ids),
+            ...issue.trend_series.points.flatMap((point) => point.source_ids),
+          ]));
+          const groups = groupedSources(sourceIds);
 
           return (
-            <details
-              class:list={["issue-row", `status-${issue.status}`]}
-              data-issue-row
-              data-title={issue.title}
-              data-pressure={score ?? ""}
-              data-momentum={issue.momentum ?? ""}
-              data-participant-impact={impact ?? ""}
-              data-evidence-confidence={evidenceValue}
-            >
+            <details class:list={["issue-signal", "tone-" + tone]} id={issue.issue_id}>
               <summary>
-                <span class="rank" aria-label="Rank not published">—</span>
-                <span class="issue-main">
-                  <span class="issue-title-line">
+                <span class="issue-order" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <span class="issue-summary">
+                  <span class="title-row">
                     <strong>{issue.title}</strong>
-                    <span class="status-badge">
-                      <span class="status-symbol" aria-hidden="true"></span>
-                      {statusLabel(issue.status)}
-                    </span>
+                    <span class="evidence-badge">{evidenceStateLabel(issue.evidence_state)}</span>
                   </span>
 
-                  <span class="pressure-line">
-                    <span
-                      class:list={["pressure-track", score === null && "pressure-pending"]}
-                      role="img"
-                      aria-label={
-                        score === null
-                          ? `${issue.title}: pressure score not published`
-                          : `${issue.title}: pressure score ${score} of 100`
-                      }
-                    >
-                      <span
-                        class="pressure-fill"
-                        style={`--pressure: ${score ?? 0}%`}
-                      ></span>
-                    </span>
+                  <span class="indicator-label">{issue.current_indicator.label}</span>
+                  <span class="indicator-value">{issue.current_indicator.display_value}</span>
 
-                    <span class="score">
-                      {score === null ? "Not scored" : `${score}/100`}
-                    </span>
-
-                    <span class="momentum">
-                      {formatMomentum(issue.momentum)}
-                    </span>
-
-                    <span class="sparkline-placeholder">
-                      {issue.timeline.length > 1 ? "History available" : "History pending"}
-                    </span>
+                  <span class="signal-ribbon" aria-hidden="true">
+                    <span></span><span></span><span></span>
                   </span>
 
-                  <span class="issue-explanation">{issue.short_explanation}</span>
+                  <span class="trend-row">
+                    <IssueSparkline
+                      label={issue.trend_series.label}
+                      points={issue.trend_series.points}
+                      comparable={issue.trend_series.comparable}
+                    />
+                    <span class="trend-label">{formatTrendLabel(issue.trend_series)}</span>
+                  </span>
                 </span>
-                <span class="expand-label">Details</span>
+                <span class="details-label">Evidence</span>
               </summary>
 
-              <div class="issue-detail">
-                <div class="detail-grid">
+              <div class="evidence-drawer">
+                <div class="drawer-grid">
                   <section>
-                    <h3>Issue definition</h3>
+                    <p class="eyebrow">What is being measured</p>
+                    <h3>{issue.current_indicator.label}</h3>
                     <p>{issue.definition}</p>
 
-                    <h3>Score breakdown</h3>
-                    {issue.scores === null ? (
-                      <p class="pending-copy">
-                        No issue-level component values are published. This prevents a
-                        draft methodology from being mistaken for a factual ranking.
-                      </p>
-                    ) : (
-                      <dl class="score-breakdown">
-                        {Object.entries(issue.scores).map(([key, value]) => (
-                          <div>
-                            <dt>{key.replaceAll("_", " ")}</dt>
-                            <dd>{value}</dd>
-                          </div>
-                        ))}
-                      </dl>
+                    <dl class="measurement-list">
+                      <div>
+                        <dt>Latest displayed value</dt>
+                        <dd>{issue.current_indicator.display_value}</dd>
+                      </div>
+                      <div>
+                        <dt>Measurement period</dt>
+                        <dd>{issue.current_indicator.measurement_period}</dd>
+                      </div>
+                      <div>
+                        <dt>Comparable trend</dt>
+                        <dd>{formatTrendLabel(issue.trend_series)}</dd>
+                      </div>
+                    </dl>
+
+                    {issue.supporting_indicators.length > 0 && (
+                      <>
+                        <h3>Supporting indicators</h3>
+                        <ul class="support-list">
+                          {issue.supporting_indicators.map((item) => (
+                            <li><strong>{item.label}:</strong> {item.display_value}</li>
+                          ))}
+                        </ul>
+                      </>
                     )}
+
+                    {issue.source_conflicts.length > 0 && (
+                      <aside class="conflict-box">
+                        <h3>Source conflict</h3>
+                        {issue.source_conflicts.map((item) => <p>{item}</p>)}
+                      </aside>
+                    )}
+
+                    <h3>What remains unknown</h3>
+                    <ul>
+                      {issue.unknowns.map((item) => <li>{item}</li>)}
+                    </ul>
+
+                    <h3>Agency responses or planned improvements</h3>
+                    <ul>
+                      {issue.planned_improvements.map((item) => <li>{item}</li>)}
+                    </ul>
                   </section>
 
                   <section>
-                    <h3>Evidence status</h3>
-                    <dl class="evidence-meta">
-                      <div><dt>Current status</dt><dd>{issue.status_label}</dd></div>
-                      <div><dt>Momentum</dt><dd>{formatMomentum(issue.momentum)}</dd></div>
-                      <div><dt>Evidence review</dt><dd>{issue.evidence_confidence.replaceAll("_", " ")}</dd></div>
-                      <div><dt>Participant data</dt><dd>{issue.participant_evidence_state.replaceAll("_", " ")}</dd></div>
-                    </dl>
+                    <p class="eyebrow">Evidence sources</p>
+                    <h3>Source drawer</h3>
 
-                    <h3>Official source set</h3>
-                    <ul class="source-list">
-                      {issue.sources.map((sourceId) => {
-                        const source = sourceMap.get(sourceId);
-                        return source ? (
-                          <li>
-                            <a href={source.url}>{source.title}</a>
-                            <span>{source.publisher} · retrieved {source.retrieved_date}</span>
-                          </li>
-                        ) : null;
-                      })}
-                    </ul>
+                    {Object.entries(groups).map(([layer, layerSources]) => (
+                      <div class="source-group">
+                        <h4>{sourceLayerLabels[layer]}</h4>
+                        {layerSources.length > 0 ? (
+                          <ul>
+                            {layerSources.map((source) => (
+                              <li class="source-card">
+                                <div class="source-title">
+                                  <a href={source.url}>{source.title}</a>
+                                  <span>{source.status.replaceAll("_", " ")}</span>
+                                </div>
+                                <p>{source.publisher}</p>
+                                <p class="source-meta">
+                                  Type: {source.source_type.replaceAll("_", " ")}
+                                  {source.publication_date ? " · Published: " + source.publication_date : ""}
+                                  {source.effective_date ? " · Effective: " + source.effective_date : ""}
+                                  {" · Retrieved: " + sourceRegistry.retrieved_date}
+                                </p>
+                                {source.pinpoints.length > 0 && (
+                                  <details class="pinpoints">
+                                    <summary>Pinpoint propositions</summary>
+                                    <ul>
+                                      {source.pinpoints.map((pinpoint) => (
+                                        <li>
+                                          <strong>{pinpoint.locator}</strong>
+                                          <span>{pinpoint.proposition}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </details>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p class="empty-source">No source from this layer is attached to this issue.</p>
+                        )}
+                      </div>
+                    ))}
+
+                    <p class="drawer-note">
+                      A source verifies only the proposition it supports. Agency plans, participant
+                      survey results, federal rules, and future DVR Signal aggregates remain separate.
+                    </p>
                   </section>
                 </div>
-
-                {issue.timeline.length > 0 && (
-                  <section class="timeline">
-                    <h3>Relevant timeline events</h3>
-                    <ol>
-                      {issue.timeline.map((event) => (
-                        <li>
-                          <time datetime={event.date}>{event.date}</time>
-                          <span>{event.label}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
-                )}
               </div>
             </details>
           );
@@ -250,119 +263,89 @@ const participantPublished = issues.some(
       </div>
     </section>
 
-    <section class="support-grid" aria-label="Issue ranking summary">
-      <article>
-        <p class="eyebrow">Improvement</p>
-        <h2>What is improving?</h2>
-        <p>
-          No directional improvement ranking is published until the same reviewed
-          snapshot method is available for at least two comparable periods.
-        </p>
-      </article>
-      <article>
-        <p class="eyebrow">Unresolved</p>
-        <h2>What remains unresolved?</h2>
-        <p>
-          The page currently distinguishes tracked issues from verified outcomes.
-          A planned or implemented response will not be presented as a successful
-          outcome without outcome evidence.
-        </p>
-      </article>
+    <section class="history-panel" aria-labelledby="history-title">
+      <p class="eyebrow">Historical snapshots</p>
+      <h2 id="history-title">Preserve what was known at each review</h2>
+      <div class="snapshot-grid">
+        <article>
+          <strong>2025 H2</strong>
+          <span>Retrospective reconstruction</span>
+          <p>Order of Selection: all five categories closed by period end.</p>
+        </article>
+        <article>
+          <strong>2026 H1</strong>
+          <span>Retrospective reconstruction</span>
+          <p>All five categories remained the available reconstructed capacity status.</p>
+        </article>
+        <article>
+          <strong>2026 H2</strong>
+          <span>Current partial period</span>
+          <p>Current official indicators, source conflicts, and new CSNA evidence are recorded.</p>
+        </article>
+      </div>
     </section>
 
-    <section id="ranking-method" class="method-panel">
+    <section class="method-panel" aria-labelledby="method-title">
       <p class="eyebrow">Methods</p>
-      <h2>How ranking will work</h2>
-      <p>
-        The requested scoring structure is retained as a draft implementation
-        contract, not as a published assessment of Washington DVR.
-      </p>
-
+      <h2 id="method-title">How to read this page</h2>
       <div class="method-grid">
-        {Object.entries(issueData.methodology.component_maxima).map(([label, max]) => (
-          <div>
-            <strong>{label.replaceAll("_", " ")}</strong>
-            <span>up to {max} points</span>
-          </div>
-        ))}
+        <article>
+          <h3>Measurements, not verdicts</h3>
+          <p>
+            A factual indicator is not a legal finding or an overall evaluation of DVR. The page does
+            not convert unlike measures into one score.
+          </p>
+        </article>
+        <article>
+          <h3>Trends require comparability</h3>
+          <p>
+            Sparklines appear only when the source provides a comparable series. Otherwise the page
+            says “Comparable trend unavailable.”
+          </p>
+        </article>
+        <article>
+          <h3>Conflicts stay visible</h3>
+          <p>
+            When official sources disagree, DVR Signal displays the disagreement rather than silently
+            choosing the more favorable or more critical value.
+          </p>
+        </article>
+        <article>
+          <h3>Participant evidence is separate</h3>
+          <p>
+            Future participant results will describe voluntary DVR Signal survey respondents and will
+            remain subject to disclosure review and suppression.
+          </p>
+        </article>
       </div>
-
-      <p class="method-note">
-        <strong>Important:</strong> pressure score, current status color, momentum,
-        and evidence confidence are separate dimensions. Scores are structured
-        comparative estimates when approved; they are not legal findings,
-        probabilities, or measurements of an individual case.
-      </p>
-
-      <p>
-        See <a href="/methods/">DVR Signal methods</a> for the project's evidence
-        classes and voluntary-sample limitations.
-      </p>
+      <p><a href="/methods/">Read the full DVR Signal evidence methodology.</a></p>
     </section>
   </div>
 </BaseLayout>
 
-<script>
-  const list = document.querySelector<HTMLElement>("[data-ranking-list]");
-  const sortControls = document.querySelectorAll<HTMLButtonElement>("[data-sort-controls] button:not(:disabled)");
-
-  const numeric = (value: string | undefined) => {
-    if (!value) return null;
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : null;
-  };
-
-  const sortRows = (mode: string) => {
-    if (!list) return;
-
-    const rows = Array.from(list.querySelectorAll<HTMLElement>("[data-issue-row]"));
-    const attribute =
-      mode === "momentum" ? "momentum" :
-      mode === "participant_impact" ? "participantImpact" :
-      mode === "evidence_confidence" ? "evidenceConfidence" :
-      "pressure";
-
-    rows.sort((a, b) => {
-      const aValue = numeric(a.dataset[attribute]);
-      const bValue = numeric(b.dataset[attribute]);
-
-      if (aValue === null && bValue === null) {
-        return (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "");
-      }
-      if (aValue === null) return 1;
-      if (bValue === null) return -1;
-      if (aValue !== bValue) return bValue - aValue;
-      return (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "");
-    });
-
-    rows.forEach((row) => list.append(row));
-  };
-
-  sortControls.forEach((button) => {
-    button.addEventListener("click", () => {
-      sortControls.forEach((control) => control.setAttribute("aria-pressed", "false"));
-      button.setAttribute("aria-pressed", "true");
-      sortRows(button.dataset.sort ?? "pressure");
-    });
-  });
-</script>
-
 <style>
-  .issue-ranking-page {
+  .issue-page {
     display: grid;
     gap: var(--space-12);
   }
 
-  .ranking-hero {
+  .hero-block {
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-4);
     max-width: 72rem;
   }
 
-  .ranking-hero h1 {
+  .hero-block h1 {
     max-width: 18ch;
     margin: 0;
     font-size: clamp(2.5rem, 7vw, 5.5rem);
+  }
+
+  .method-warning {
+    max-width: 72ch;
+    padding: var(--space-4);
+    border-inline-start: 0.35rem solid var(--color-neutral);
+    background: #fff;
   }
 
   .snapshot-meta {
@@ -370,436 +353,481 @@ const participantPublished = issues.some(
     flex-wrap: wrap;
     gap: var(--space-2);
     color: var(--color-neutral);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
   }
 
-  .snapshot-meta span {
-    padding: 0.45rem 0.7rem;
-    border: 1px solid color-mix(in srgb, var(--color-neutral) 25%, transparent);
+  .snapshot-meta span,
+  .period-chip {
+    padding: 0.4rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 28%, transparent);
     border-radius: 999px;
     background: #fff;
   }
 
-  .review-notice {
-    padding: var(--space-6);
-    border-inline-start: 0.45rem solid var(--color-review);
-    border-radius: var(--radius);
-    background: #fff;
-  }
-
-  .review-notice h2,
-  .review-notice p {
-    margin-block: 0;
-  }
-
-  .review-notice p {
-    margin-top: var(--space-2);
-  }
-
-  .ranking-panel,
+  .change-panel,
+  .history-panel,
   .method-panel {
-    padding: clamp(1rem, 3vw, 2rem);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
     border: 1px solid color-mix(in srgb, var(--color-neutral) 28%, transparent);
-    border-radius: calc(var(--radius) + 0.25rem);
-    background: color-mix(in srgb, white 52%, var(--color-paper));
+    border-radius: calc(var(--radius) + 0.2rem);
+    background: color-mix(in srgb, white 50%, var(--color-paper));
   }
 
-  .section-heading {
+  .section-head,
+  .board-head {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     gap: var(--space-4);
+    justify-content: space-between;
     align-items: end;
-    margin-bottom: var(--space-6);
   }
 
-  .section-heading h2,
+  .section-head h2,
+  .board-head h2,
+  .history-panel h2,
   .method-panel h2 {
     margin: 0;
     font-size: clamp(1.8rem, 4vw, 3rem);
   }
 
-  .method-link {
-    min-height: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    font-weight: 750;
+  .change-grid {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
   }
 
-  .control-grid {
+  .change-card {
     display: grid;
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
+    gap: var(--space-1);
     padding: var(--space-4);
+    border-inline-start: 0.35rem solid var(--color-neutral);
     border-radius: var(--radius);
     background: #fff;
   }
 
-  fieldset {
-    min-width: 0;
+  .change-card p {
     margin: 0;
-    padding: 0;
-    border: 0;
   }
 
-  legend,
-  .snapshot-control > span {
-    display: block;
-    margin-bottom: var(--space-2);
-    font-size: 0.82rem;
-    font-weight: 800;
+  .change-new_source,
+  .change-new_evidence {
+    border-inline-start-color: var(--color-healthy);
+  }
+
+  .change-source_conflict,
+  .change-outcome_unavailable {
+    border-inline-start-color: var(--color-review);
+  }
+
+  .change-type {
     color: var(--color-neutral);
-    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 800;
     letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
-  .segmented-control {
+  .snapshot-note {
+    margin-bottom: 0;
+    color: var(--color-neutral);
+    font-size: 0.9rem;
+  }
+
+  .signal-board {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border-radius: calc(var(--radius) + 0.5rem);
+    background:
+      radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--color-healthy) 12%, transparent), transparent 28rem),
+      var(--color-ink);
+    color: var(--color-paper);
+    box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--color-ink) 18%, transparent);
+  }
+
+  .signal-board .eyebrow {
+    color: color-mix(in srgb, var(--color-healthy) 78%, white);
+  }
+
+  .evidence-controls {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
   }
 
-  .segmented-control button,
-  select {
+  .evidence-controls button {
     min-height: 2.75rem;
-    padding: 0.55rem 0.8rem;
-    border: 1px solid color-mix(in srgb, var(--color-neutral) 40%, transparent);
+    padding: 0.5rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--color-paper) 35%, transparent);
     border-radius: 999px;
+    background: transparent;
+    color: var(--color-paper);
+    font: inherit;
+    font-weight: 750;
+  }
+
+  .evidence-controls button[aria-pressed="true"] {
     background: var(--color-paper);
     color: var(--color-ink);
-    font: inherit;
-    font-weight: 700;
   }
 
-  .segmented-control button[aria-pressed="true"] {
-    background: var(--color-ink);
-    color: var(--color-paper);
-  }
-
-  .segmented-control button:disabled,
-  select:disabled {
+  .evidence-controls button:disabled {
+    opacity: 0.48;
     cursor: not-allowed;
-    opacity: 0.58;
   }
 
-  .control-note {
-    margin: var(--space-2) 0 0;
-    color: var(--color-neutral);
-    font-size: 0.82rem;
+  .participant-note {
+    margin-block: var(--space-4) var(--space-6);
+    color: color-mix(in srgb, var(--color-paper) 72%, var(--color-neutral));
+    font-size: 0.9rem;
   }
 
-  .snapshot-control {
-    align-self: start;
-  }
-
-  .ranking-list {
+  .issue-list {
     display: grid;
     gap: var(--space-3);
   }
 
-  .issue-row {
-    --status-color: var(--color-neutral);
+  .issue-signal {
+    --evidence-color: var(--color-neutral);
     overflow: clip;
-    border: 1px solid color-mix(in srgb, var(--color-neutral) 28%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-paper) 18%, transparent);
     border-radius: var(--radius);
-    background: #fff;
+    background: color-mix(in srgb, #1a1d21 94%, var(--evidence-color));
   }
 
-  .issue-row.status-healthy { --status-color: var(--color-healthy); }
-  .issue-row.status-review { --status-color: var(--color-review); }
-  .issue-row.status-warning { --status-color: var(--color-warning); }
-  .issue-row.status-serious { --status-color: var(--color-serious); }
+  .issue-signal.tone-verified {
+    --evidence-color: var(--color-healthy);
+  }
 
-  .issue-row summary {
+  .issue-signal.tone-review {
+    --evidence-color: var(--color-review);
+  }
+
+  .issue-signal summary {
     display: grid;
-    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
-    gap: var(--space-3);
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: var(--space-4);
     align-items: start;
-    min-height: 5rem;
+    min-height: 5.5rem;
     padding: var(--space-4);
     cursor: pointer;
     list-style: none;
   }
 
-  .issue-row summary::-webkit-details-marker {
+  .issue-signal summary::-webkit-details-marker {
     display: none;
   }
 
-  .issue-row summary:focus-visible {
-    outline: 3px solid var(--color-warning);
+  .issue-signal summary:focus-visible {
+    outline: 3px solid var(--color-review);
     outline-offset: -3px;
   }
 
-  .rank {
+  .issue-order {
     display: grid;
     place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
     border-radius: 50%;
-    background: var(--color-paper);
+    background: color-mix(in srgb, var(--evidence-color) 18%, transparent);
+    color: var(--color-paper);
     font-family: "Space Grotesk", Inter, sans-serif;
     font-weight: 800;
   }
 
-  .issue-main {
+  .issue-summary {
     display: grid;
     gap: var(--space-2);
     min-width: 0;
   }
 
-  .issue-title-line,
-  .pressure-line {
+  .title-row {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2) var(--space-3);
     align-items: center;
   }
 
-  .issue-title-line > strong {
+  .title-row > strong {
     font-family: "Space Grotesk", Inter, sans-serif;
-    font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
   }
 
-  .status-badge {
+  .evidence-badge {
     display: inline-flex;
-    gap: var(--space-2);
     align-items: center;
-    font-size: 0.78rem;
-    font-weight: 750;
-    color: var(--color-neutral);
-  }
-
-  .status-symbol {
-    width: 0.75rem;
-    height: 0.75rem;
-    border: 2px solid var(--color-ink);
-    border-radius: 50%;
-    background: var(--status-color);
-  }
-
-  .pressure-track {
-    position: relative;
-    flex: 1 1 18rem;
-    min-width: 10rem;
-    height: 0.9rem;
-    overflow: hidden;
+    min-height: 1.75rem;
+    padding-inline: 0.55rem;
+    border: 1px solid var(--evidence-color);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--color-neutral) 16%, white);
-  }
-
-  .pressure-fill {
-    display: block;
-    width: var(--pressure);
-    height: 100%;
-    border-radius: inherit;
-    background: var(--status-color);
-    box-shadow: 0 0 0.8rem color-mix(in srgb, var(--status-color) 22%, transparent);
-    transition: width 280ms ease;
-  }
-
-  .pressure-pending {
-    border: 1px dashed color-mix(in srgb, var(--color-neutral) 55%, transparent);
-    background:
-      repeating-linear-gradient(
-        -45deg,
-        color-mix(in srgb, var(--color-neutral) 8%, white),
-        color-mix(in srgb, var(--color-neutral) 8%, white) 0.4rem,
-        #fff 0.4rem,
-        #fff 0.8rem
-      );
-  }
-
-  .score,
-  .momentum,
-  .sparkline-placeholder {
-    color: var(--color-neutral);
-    font-size: 0.82rem;
-    white-space: nowrap;
-  }
-
-  .score {
-    font-family: "Space Grotesk", Inter, sans-serif;
+    color: color-mix(in srgb, var(--evidence-color) 75%, white);
+    font-size: 0.72rem;
     font-weight: 800;
-    color: var(--color-ink);
   }
 
-  .issue-explanation {
-    color: var(--color-neutral);
-    font-size: 0.92rem;
+  .indicator-label {
+    color: color-mix(in srgb, var(--color-paper) 68%, var(--color-neutral));
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  .expand-label {
+  .indicator-value {
+    font-family: "Space Grotesk", Inter, sans-serif;
+    font-size: clamp(1.15rem, 2.6vw, 1.65rem);
+    font-weight: 700;
+    color: var(--color-paper);
+  }
+
+  .signal-ribbon {
+    display: grid;
+    grid-template-columns: 2fr 1fr 0.5fr;
+    gap: 0.22rem;
+    height: 0.42rem;
+    max-width: 36rem;
+  }
+
+  .signal-ribbon span {
+    border-radius: 999px;
+    background: var(--evidence-color);
+  }
+
+  .signal-ribbon span:nth-child(2) {
+    opacity: 0.55;
+  }
+
+  .signal-ribbon span:nth-child(3) {
+    opacity: 0.25;
+  }
+
+  .trend-row {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+  }
+
+  .trend-row :global(figcaption),
+  .trend-row :global(.trend-unavailable) {
+    color: color-mix(in srgb, var(--color-paper) 65%, var(--color-neutral));
+  }
+
+  .trend-row :global(.guide) {
+    stroke: color-mix(in srgb, var(--color-paper) 18%, transparent);
+  }
+
+  .trend-row :global(.trend-dot) {
+    fill: var(--color-ink);
+  }
+
+  .trend-label {
+    color: color-mix(in srgb, var(--color-paper) 62%, var(--color-neutral));
+    font-size: 0.78rem;
+  }
+
+  .details-label {
     min-height: 2.75rem;
     display: inline-flex;
     align-items: center;
+    color: var(--color-paper);
     font-size: 0.82rem;
     font-weight: 800;
     text-decoration: underline;
     text-underline-offset: 0.16em;
   }
 
-  .issue-detail {
+  .evidence-drawer {
     padding: 0 var(--space-6) var(--space-6);
-    border-top: 1px solid color-mix(in srgb, var(--color-neutral) 18%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-paper) 16%, transparent);
+    background: var(--color-paper);
+    color: var(--color-ink);
   }
 
-  .detail-grid {
+  .drawer-grid {
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-8);
     padding-top: var(--space-6);
   }
 
-  .detail-grid h3,
-  .timeline h3 {
+  .drawer-grid h3 {
     margin-bottom: var(--space-2);
   }
 
-  .pending-copy {
-    padding: var(--space-4);
-    border-inline-start: 0.35rem solid var(--color-neutral);
-    background: var(--color-paper);
-  }
-
-  .score-breakdown,
-  .evidence-meta {
+  .measurement-list,
+  .source-group {
     display: grid;
     gap: var(--space-2);
   }
 
-  .score-breakdown div,
-  .evidence-meta div {
+  .measurement-list div {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(8rem, auto);
     gap: var(--space-4);
     padding-block: var(--space-2);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-neutral) 18%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-neutral) 20%, transparent);
   }
 
-  .score-breakdown dt,
-  .evidence-meta dt {
-    text-transform: capitalize;
-    font-weight: 700;
+  .measurement-list dt {
+    font-weight: 750;
   }
 
-  .score-breakdown dd,
-  .evidence-meta dd {
+  .measurement-list dd {
     margin: 0;
     text-align: right;
   }
 
-  .source-list {
+  .support-list {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .conflict-box {
+    margin-block: var(--space-6);
+    padding: var(--space-4);
+    border-inline-start: 0.4rem solid var(--color-review);
+    background: #fff6c7;
+  }
+
+  .source-group {
+    margin-bottom: var(--space-6);
+  }
+
+  .source-group h4 {
+    margin: 0;
+    font-family: "Space Grotesk", Inter, sans-serif;
+  }
+
+  .source-group > ul {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .source-card {
+    padding: var(--space-4);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 24%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .source-card p {
+    margin-block: var(--space-1);
+  }
+
+  .source-title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: space-between;
+  }
+
+  .source-title a {
+    font-weight: 800;
+  }
+
+  .source-title span {
+    color: var(--color-neutral);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .source-meta,
+  .empty-source,
+  .drawer-note {
+    color: var(--color-neutral);
+    font-size: 0.82rem;
+  }
+
+  .pinpoints {
+    margin-top: var(--space-3);
+  }
+
+  .pinpoints summary {
+    display: list-item;
+    min-height: 2.75rem;
+    padding: var(--space-2) 0;
+    cursor: pointer;
+    font-weight: 750;
+    color: var(--color-ink);
+  }
+
+  .pinpoints ul {
     display: grid;
     gap: var(--space-3);
     padding-left: 1.25rem;
   }
 
-  .source-list li {
-    padding-left: var(--space-1);
-  }
-
-  .source-list span {
+  .pinpoints li span {
     display: block;
     color: var(--color-neutral);
-    font-size: 0.82rem;
   }
 
-  .timeline {
-    margin-top: var(--space-6);
-  }
-
-  .timeline ol {
-    display: grid;
-    gap: var(--space-3);
-    padding-left: 1.3rem;
-  }
-
-  .timeline li {
-    padding-left: var(--space-2);
-  }
-
-  .timeline time {
-    display: block;
-    color: var(--color-neutral);
-    font-size: 0.82rem;
-  }
-
-  .support-grid {
+  .history-panel,
+  .method-panel {
     display: grid;
     gap: var(--space-4);
   }
 
-  .support-grid article {
-    padding: var(--space-6);
-    border-radius: var(--radius);
-    background: #fff;
-    border-inline-start: 0.4rem solid var(--color-neutral);
-  }
-
-  .support-grid h2 {
-    margin-top: 0;
-  }
-
+  .snapshot-grid,
   .method-grid {
     display: grid;
-    gap: var(--space-2);
-    margin-block: var(--space-6);
-  }
-
-  .method-grid div {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    border-radius: 0.5rem;
+  }
+
+  .snapshot-grid article,
+  .method-grid article {
+    padding: var(--space-5, 1.25rem);
+    border-radius: var(--radius);
     background: #fff;
   }
 
-  .method-grid strong {
-    text-transform: capitalize;
+  .snapshot-grid strong,
+  .snapshot-grid span {
+    display: block;
   }
 
-  .method-note {
-    padding: var(--space-4);
-    border-inline-start: 0.4rem solid var(--color-healthy);
-    background: #fff;
+  .snapshot-grid span {
+    color: var(--color-neutral);
+    font-size: 0.82rem;
   }
 
-  @media (min-width: 56rem) {
-    .control-grid {
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
-      align-items: start;
-    }
-
-    .detail-grid,
-    .support-grid {
+  @media (min-width: 48rem) {
+    .change-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .drawer-grid,
     .method-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .snapshot-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 40rem) {
-    .issue-row summary {
-      grid-template-columns: 2.25rem minmax(0, 1fr);
+    .issue-signal summary {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
     }
 
-    .expand-label {
+    .details-label {
       grid-column: 2;
     }
 
-    .pressure-line {
-      align-items: flex-start;
+    .measurement-list div {
+      grid-template-columns: 1fr;
     }
 
-    .pressure-track {
-      flex-basis: 100%;
+    .measurement-list dd {
+      text-align: left;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pressure-fill {
+    .signal-ribbon,
+    .issue-signal {
       transition: none;
     }
   }

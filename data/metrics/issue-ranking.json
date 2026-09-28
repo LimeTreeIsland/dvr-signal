@@ -1,157 +1,329 @@
 {
-  "version": "0.1.0",
-  "publication_status": "methodology_pending",
-  "snapshot": {
-    "id": "2026-H2",
-    "label": "Jul–Dec 2026",
-    "period_start": "2026-07-01",
-    "period_end": "2026-12-31",
-    "methodology_version": "pending",
-    "source_registry_version": "0.1.0"
+  "version": "0.2.0",
+  "publication_status": "factual_indicators",
+  "snapshot_id": "2026-H2",
+  "composite_ranking": {
+    "status": "not_published",
+    "reason": "DVR Signal currently publishes source-backed factual indicators rather than an evaluative composite score."
   },
-  "methodology": {
-    "status": "proposal_only",
-    "score_max": 100,
-    "component_maxima": {
-      "severity": 30,
-      "participant_impact": 25,
-      "breadth": 15,
-      "persistence": 10,
-      "evidence_strength": 10,
-      "downstream_effects": 10
-    },
-    "public_note": "Issue scoring is not yet approved for publication. Unscored issues are shown as not scored rather than zero."
+  "participant_mode": {
+    "status": "not_published",
+    "public_cell_floor_n": 10,
+    "population_label": "DVR Signal survey respondents",
+    "note": "Participant mode remains disabled until a disclosure-reviewed aggregate release exists."
   },
-  "sources": [
-    {
-      "id": "DVR_STATE_PLAN_CURRENT",
-      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
-      "title": "The DVR State Plan",
-      "source_type": "official_agency",
-      "url": "https://www.dshs.wa.gov/dvr/dvr-state-plan",
-      "retrieved_date": "2026-09-27"
-    },
-    {
-      "id": "DVR_OOS_CURRENT",
-      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
-      "title": "Order of Selection Information",
-      "source_type": "official_agency",
-      "url": "https://www.dshs.wa.gov/order-selection-information",
-      "retrieved_date": "2026-09-27"
-    },
-    {
-      "id": "DVR_CSNA_2025",
-      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
-      "title": "Comprehensive Statewide Needs Assessment",
-      "source_type": "official_agency",
-      "url": "https://www.dshs.wa.gov/sites/default/files/dvr/Comprehensive-Statewide-Needs-Assessment.pdf",
-      "retrieved_date": "2026-09-27"
-    }
-  ],
   "issues": [
     {
       "issue_id": "resource-capacity",
       "title": "Resource capacity / Order of Selection",
-      "definition": "Program capacity and the current use of Order of Selection when available resources are insufficient to serve every eligible participant.",
-      "short_explanation": "DVR's official Order of Selection page states that all priority categories closed on Dec. 8, 2025.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Current condition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_OOS_CURRENT", "DVR_STATE_PLAN_CURRENT"],
-      "timeline": [
+      "definition": "Program capacity and the current use of Order of Selection when DVR reports insufficient resources to serve all eligible participants.",
+      "evidence_state": "current_official",
+      "current_indicator": {
+        "label": "Priority categories currently closed",
+        "display_value": "5 of 5 categories closed",
+        "value": 5,
+        "max": 5,
+        "unit": "priority categories",
+        "measurement_period": "Current operational status",
+        "observation_date": "2026-09-27",
+        "source_ids": ["DVR_OOS_CURRENT", "DVR_STATE_PLAN_FINAL_2026", "FED_ECFR_361_36"]
+      },
+      "supporting_indicators": [
         {
-          "date": "2025-12-08",
-          "label": "DVR closed all priority-of-service categories under Order of Selection.",
-          "source_id": "DVR_OOS_CURRENT"
+          "label": "Closure date",
+          "display_value": "Dec. 8, 2025",
+          "source_ids": ["DVR_OOS_CURRENT"]
         }
+      ],
+      "trend_series": {
+        "label": "Priority categories closed at end of available half-year snapshots",
+        "unit": "categories",
+        "comparable": true,
+        "points": [
+          {"period": "2025-H2", "value": 5, "display": "5 of 5", "source_ids": ["DVR_OOS_CURRENT"]},
+          {"period": "2026-H1", "value": 5, "display": "5 of 5", "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_OOS_CURRENT"]},
+          {"period": "2026-H2", "value": 5, "display": "5 of 5", "source_ids": ["DVR_OOS_CURRENT"]}
+        ],
+        "note": "The historical points are retrospective reconstructions from the Dec. 2025 closure and later official sources; they are not archived webpage captures."
+      },
+      "source_conflicts": [],
+      "unknowns": [
+        "The current source set does not provide a current public count of people on the waitlist."
+      ],
+      "planned_improvements": [
+        "DVR states that participants may be released from the waitlist as resources become available."
       ]
     },
     {
       "issue_id": "counselor-workload",
       "title": "Counselor workload",
-      "definition": "Caseload size, staffing capacity, and workload conditions affecting case-carrying counselors.",
-      "short_explanation": "Official DVR planning and needs-assessment materials identify high caseloads and staffing constraints as operational concerns.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Current condition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_STATE_PLAN_CURRENT", "DVR_CSNA_2025"],
-      "timeline": []
+      "definition": "Caseload size and staffing capacity affecting case-carrying vocational rehabilitation counselors.",
+      "evidence_state": "source_conflict",
+      "current_indicator": {
+        "label": "VRC4 staff with caseloads above 100",
+        "display_value": "64% in current final plan; 40% in 2026 draft",
+        "value": null,
+        "max": 100,
+        "unit": "percent",
+        "measurement_period": "Reporting period not specified consistently",
+        "observation_date": "2026-09-27",
+        "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+      },
+      "supporting_indicators": [
+        {
+          "label": "Current final State Plan statement",
+          "display_value": "64% of VRC4 staff manage caseloads above 100",
+          "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]
+        },
+        {
+          "label": "2026 draft State Plan update",
+          "display_value": "40% of VRC4 staff manage caseloads above 100",
+          "source_ids": ["DVR_STATE_PLAN_DRAFT_2026"]
+        }
+      ],
+      "trend_series": {
+        "label": "VRC4 caseloads above 100",
+        "unit": "percent",
+        "comparable": false,
+        "points": [],
+        "note": "Comparable trend unavailable because the current final plan and its 2026 draft contain materially different percentages without a reconciled reporting-period explanation."
+      },
+      "source_conflicts": [
+        "The current final 2026-2028 State Plan text reports 64%; the 2026 draft update reports 40%. DVR Signal does not select one as the trend value without a reconciled source explanation."
+      ],
+      "unknowns": [
+        "The final plan text does not identify the measurement date for the 64% figure.",
+        "A current statewide median, P75, and P90 counselor caseload distribution is not in the source set."
+      ],
+      "planned_improvements": [
+        "DVR reports additional counselor hiring and use of Order of Selection to reduce caseload pressure."
+      ]
     },
     {
       "issue_id": "staff-continuity",
       "title": "Staff turnover and continuity",
-      "definition": "Turnover, vacancies, reassignment, and continuity of case ownership across a participant's DVR episode.",
-      "short_explanation": "Official DVR needs-assessment material identifies staffing shortages and counselor turnover as significant operational issues.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Current condition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_CSNA_2025", "DVR_STATE_PLAN_CURRENT"],
-      "timeline": []
+      "definition": "Continuity of counselor assignment, including the number of counselors participants report having during their DVR experience.",
+      "evidence_state": "current_official_research",
+      "current_indicator": {
+        "label": "Respondents reporting one DVR counselor",
+        "display_value": "43.0% of 682 respondents",
+        "value": 43,
+        "max": 100,
+        "unit": "percent",
+        "measurement_period": "CSNA 2022-2025 assessment cycle",
+        "observation_date": null,
+        "source_ids": ["DVR_CSNA_2025"]
+      },
+      "supporting_indicators": [
+        {
+          "label": "Number of counselors reported",
+          "display_value": "1: 43.0%; 2: 26.7%; 3: 15.8%; 4: 5.7%; >4: 6.6%; never: 2.2%",
+          "source_ids": ["DVR_CSNA_2025"]
+        }
+      ],
+      "trend_series": {
+        "label": "Counselor-count continuity",
+        "unit": "percent",
+        "comparable": false,
+        "points": [],
+        "note": "Comparable trend unavailable because the CSNA provides one cross-sectional distribution rather than repeated comparable periods."
+      },
+      "source_conflicts": [
+        "The CSNA narrative summary says 22% had three or more counselors, while Table 10 separately reports 15.8% with three, 5.7% with four, and 6.6% with more than four. DVR Signal preserves the table categories rather than silently reconciling the discrepancy."
+      ],
+      "unknowns": [
+        "Counselor count does not establish why a reassignment occurred and is not an administrative turnover rate.",
+        "A current statewide vacancy duration and reassignment-duration dataset is not in the public source set."
+      ],
+      "planned_improvements": [
+        "The CSNA recommends staffing, backfill, triage, and continuity strategies.",
+        "DVR reports using float VRCs for cases that cannot immediately transfer to a local counselor."
+      ]
     },
     {
       "issue_id": "funding-pressure",
-      "title": "Funding and fiscal pressure",
-      "definition": "Changes in available program resources, service costs, reimbursement, and demand that affect DVR operating capacity.",
-      "short_explanation": "DVR's public planning and Order of Selection materials connect service capacity with available resources, costs, caseloads, and demand.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Current condition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_OOS_CURRENT", "DVR_STATE_PLAN_CURRENT"],
-      "timeline": []
+      "title": "Funding and resource pressure",
+      "definition": "Available program resources, reimbursement, service costs, and caseload demand affecting DVR operating capacity.",
+      "evidence_state": "current_official",
+      "current_indicator": {
+        "label": "Case-service expenditures",
+        "display_value": "$27.4M in PY2024, up nearly 57% from $17.5M in PY2021",
+        "value": 27.4,
+        "max": null,
+        "unit": "millions of dollars",
+        "measurement_period": "PY2021 to PY2024",
+        "observation_date": null,
+        "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+      },
+      "supporting_indicators": [
+        {
+          "label": "Projected FFY2025 funding gap",
+          "display_value": "$7.5M",
+          "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+        },
+        {
+          "label": "SSA reimbursement change reported by DVR",
+          "display_value": "$3.5M less in 2024",
+          "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]
+        },
+        {
+          "label": "Federal program context",
+          "display_value": "State VR Services is a federal formula-grant program administered by RSA",
+          "source_ids": ["FED_RSA_VR_PROGRAM"]
+        }
+      ],
+      "trend_series": {
+        "label": "Case-service expenditures",
+        "unit": "millions of dollars",
+        "comparable": true,
+        "points": [
+          {"period": "PY2021", "value": 17.5, "display": "$17.5M", "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]},
+          {"period": "PY2024", "value": 27.4, "display": "$27.4M", "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]}
+        ],
+        "note": "This series measures expenditures, not federal grant cuts. The State Plan attributes the broader resource constraint to multiple factors."
+      },
+      "source_conflicts": [],
+      "unknowns": [
+        "Expenditure growth does not by itself establish that federal appropriations fell.",
+        "A complete inflation-adjusted resource-per-active-case series has not yet been assembled."
+      ],
+      "planned_improvements": [
+        "DVR reports cost-containment measures, fiscal monitoring, and use of Order of Selection."
+      ]
     },
     {
       "issue_id": "communication-reliability",
-      "title": "Communication reliability",
-      "definition": "Timeliness and continuity of participant communication, including transitions when cases are reassigned.",
-      "short_explanation": "Communication and continuity are tracked separately from workload so later data can test whether staffing conditions predict participant communication delays.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Evidence definition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_STATE_PLAN_CURRENT", "DVR_CSNA_2025"],
-      "timeline": []
+      "title": "Communication reliability and service timeliness",
+      "definition": "Participant contact standards, counselor accessibility, transfer communication, and a related customer measure of service timeliness.",
+      "evidence_state": "current_official",
+      "current_indicator": {
+        "label": "Contact standards reported by DVR",
+        "display_value": "48-hour response standard; interactions documented within 10 days",
+        "value": null,
+        "max": null,
+        "unit": null,
+        "measurement_period": "2026 State Plan update",
+        "observation_date": null,
+        "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+      },
+      "supporting_indicators": [
+        {
+          "label": "Ease reaching counselor, CSNA",
+          "display_value": "29.5% very easy; 40.2% somewhat easy; 16.4% somewhat difficult; 13.9% very difficult (n=664)",
+          "source_ids": ["DVR_CSNA_2025"]
+        },
+        {
+          "label": "Departure continuity measure",
+          "display_value": "30-day automatic email reply after counselor departure",
+          "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+        }
+      ],
+      "trend_series": {
+        "label": "Statewide share agreeing that DVR moves quickly enough",
+        "unit": "percent",
+        "comparable": true,
+        "points": [
+          {"period": "FFY24 Q3", "value": 54, "display": "54%", "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]},
+          {"period": "FFY24 Q4", "value": 55, "display": "55%", "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]},
+          {"period": "FFY25 Q1", "value": 57, "display": "57%", "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]},
+          {"period": "FFY25 Q2", "value": 59, "display": "59%", "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]}
+        ],
+        "note": "This is a related service-timeliness satisfaction series, not a measured 48-hour response-compliance rate. The source text contains an apparent calendar-year labeling inconsistency for FFY25 Q1, so DVR Signal displays the fiscal-quarter labels only."
+      },
+      "source_conflicts": [],
+      "unknowns": [
+        "No public statewide compliance percentage for the 48-hour response standard is in the source set.",
+        "The CSNA reachability measure is cross-sectional and is not the same measure as the response standard."
+      ],
+      "planned_improvements": [
+        "DVR reports float VRC coverage, automatic replies after departure, and a standardized communication protocol."
+      ]
     },
     {
       "issue_id": "staffing-pipeline",
       "title": "Qualified-staff pipeline",
-      "definition": "Recruitment, training, vacancy duration, and retention of qualified vocational rehabilitation staff.",
-      "short_explanation": "This issue tracks whether staffing shortages are being resolved through hiring, training, and retention rather than treating vacancy counts alone as an outcome.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Evidence definition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_STATE_PLAN_CURRENT", "DVR_CSNA_2025"],
-      "timeline": []
+      "definition": "Recruitment, training, vacancy coverage, and the time required for new vocational rehabilitation counselors to carry a full caseload.",
+      "evidence_state": "current_official",
+      "current_indicator": {
+        "label": "VR counselors hired",
+        "display_value": "37 hired in the prior year, according to the current final plan",
+        "value": 37,
+        "max": null,
+        "unit": "counselors",
+        "measurement_period": "Prior year as described in the 2026-2028 State Plan",
+        "observation_date": null,
+        "source_ids": ["DVR_STATE_PLAN_FINAL_2026"]
+      },
+      "supporting_indicators": [
+        {
+          "label": "2026 draft staffing action",
+          "display_value": "25 new VR counselor positions added; many reported filled",
+          "source_ids": ["DVR_STATE_PLAN_DRAFT_2026"]
+        },
+        {
+          "label": "2026 draft qualified counselor ratio",
+          "display_value": "150 qualified case-carrying counselors / 10,300 customers = stated 69:1 as of Dec. 31, 2025",
+          "source_ids": ["DVR_STATE_PLAN_DRAFT_2026"]
+        },
+        {
+          "label": "Experienced-position pipeline",
+          "display_value": "Open VRC3/VRC4 positions are often initially filled by junior counselors; new VRCs require months of training",
+          "source_ids": ["DVR_STATE_PLAN_FINAL_2026", "DVR_STATE_PLAN_DRAFT_2026"]
+        }
+      ],
+      "trend_series": {
+        "label": "Qualified staffing pipeline",
+        "unit": "staff",
+        "comparable": false,
+        "points": [],
+        "note": "Comparable trend unavailable because hiring, added positions, employed staff, and current need are different measures."
+      },
+      "source_conflicts": [],
+      "unknowns": [
+        "A current public statewide vacancy rate and median vacancy duration are not in the source set.",
+        "The final plan and draft describe staffing actions using different measures, so they are not combined into one trend."
+      ],
+      "planned_improvements": [
+        "DVR's State Plan calls for recruitment and retention strategies and caseload/fiscal forecasting."
+      ]
     },
     {
       "issue_id": "accessibility",
       "title": "Accessibility and accommodation implementation",
-      "definition": "Whether program access and requested communication or participation accommodations are implemented consistently.",
-      "short_explanation": "This domain is tracked separately from legal conclusions so future participant and agency evidence can be compared without assuming every reported barrier establishes a violation.",
-      "scores": null,
-      "status": "unknown",
-      "status_label": "Evidence definition under review",
-      "momentum": null,
-      "evidence_confidence": "pending_review",
-      "participant_evidence_state": "not_published",
-      "sources": ["DVR_STATE_PLAN_CURRENT"],
-      "timeline": []
+      "definition": "Observable access measures and implementation of accessibility, language-access, and accommodation improvements.",
+      "evidence_state": "current_official_research",
+      "current_indicator": {
+        "label": "Access to services in primary language",
+        "display_value": "93.6% yes; 6.4% no (n=839)",
+        "value": 93.6,
+        "max": 100,
+        "unit": "percent",
+        "measurement_period": "CSNA 2022-2025 assessment cycle",
+        "observation_date": null,
+        "source_ids": ["DVR_CSNA_2025"]
+      },
+      "supporting_indicators": [
+        {
+          "label": "Past ADA Action Plan target",
+          "display_value": "35% of action items completed + progress on an additional 15% by June 2026",
+          "source_ids": ["DVR_STRATEGIC_GOALS_2026"]
+        }
+      ],
+      "trend_series": {
+        "label": "Accessibility implementation",
+        "unit": "percent",
+        "comparable": false,
+        "points": [],
+        "note": "Comparable trend unavailable. The current source set contains a language-access survey result and a past ADA Action Plan target, but not a published comparable series of completed action items."
+      },
+      "source_conflicts": [],
+      "unknowns": [
+        "Primary-language access is one dimension of accessibility and does not measure all accommodation requests or outcomes.",
+        "DVR Signal has not located a current public result showing whether the June 2026 ADA Action Plan completion target was met."
+      ],
+      "planned_improvements": [
+        "The current State Plan calls for enhanced accessibility, accommodations, transportation, and service-delivery options."
+      ]
     }
   ]
 }

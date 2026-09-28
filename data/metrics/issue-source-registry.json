@@ -1,0 +1,208 @@
+{
+  "version": "1.0.0",
+  "retrieved_date": "2026-09-27",
+  "sources": [
+    {
+      "id": "DVR_STATE_PLAN_PAGE_2026",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "The DVR State Plan",
+      "source_layer": "dvr_dshs",
+      "source_type": "official_agency_page",
+      "status": "current",
+      "publication_date": null,
+      "effective_date": "2026-07-12",
+      "reporting_period": "2026-07-12 through 2028-06-30",
+      "url": "https://www.dshs.wa.gov/dvr/dvr-state-plan",
+      "document_url": "https://live-dshs-dshs2.pantheonsite.io/sites/default/files/2026-08/DVRStatePlan2026-2028.pdf",
+      "pinpoints": [
+        {
+          "locator": "DVR operates under the 2026–2028 State Plan",
+          "proposition": "The official State Plan page identifies the 2026–2028 plan as effective July 12, 2026 through June 30, 2028."
+        }
+      ]
+    },
+    {
+      "id": "DVR_STATE_PLAN_FINAL_2026",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "2026-2028 DVR State Plan Update",
+      "source_layer": "dvr_dshs",
+      "source_type": "official_agency_plan",
+      "status": "current",
+      "publication_date": null,
+      "effective_date": "2026-07-12",
+      "reporting_period": "Uses PY2021-PY2025 measures and current 2026 planning statements",
+      "url": "https://live-dshs-dshs2.pantheonsite.io/sites/default/files/2026-08/DVRStatePlan2026-2028.pdf",
+      "pinpoints": [
+        {
+          "locator": "DSHS/DVR Response to WSRC Item 1 — Counselor Change Communication",
+          "proposition": "DVR reports that high caseloads and staff turnover harmed clear, timely and consistent communication; it reports float VRC coverage, a 48-hour inquiry response standard, and 30-day automatic email replies after staff departure."
+        },
+        {
+          "locator": "Order of Selection — High staff turnover and vacancies",
+          "proposition": "The final plan states that 37 new VR counselors were hired in the prior year and that 64% of VRC4 staff manage caseloads above 100 customers."
+        },
+        {
+          "locator": "Order of Selection — Case service spending outpacing available funding",
+          "proposition": "The plan reports case-service expenditures rising from $17.5 million in PY2021 to $27.4 million in PY2024, nearly 57%, and describes a projected $7.5 million FFY2025 funding gap."
+        },
+        {
+          "locator": "Goal Three, Priority One — Progress Made",
+          "proposition": "The plan reports IPE timeliness increasing from 75.6% in Q4 PY2023 to 81.2% in Q4 PY2024 and continuing to improve in PY2025."
+        }
+      ]
+    },
+    {
+      "id": "DVR_STATE_PLAN_DRAFT_2026",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "2024-2027 State Plan Update Draft 2026",
+      "source_layer": "dvr_dshs",
+      "source_type": "official_agency_draft",
+      "status": "superseded_draft",
+      "publication_date": "2026-01-01",
+      "effective_date": null,
+      "reporting_period": "Draft update prepared for the 2026 State Plan update cycle",
+      "url": "https://www.dshs.wa.gov/sites/default/files/dvr/documents/2024-27-State-Plan-Update.pdf",
+      "pinpoints": [
+        {
+          "locator": "p. 67, lines 2540-2543",
+          "proposition": "The draft reports that 40% of VRC4 staff manage caseloads above 100 customers."
+        },
+        {
+          "locator": "p. 52, lines 1964-1972",
+          "proposition": "The draft reports float VRC coverage, 30-day automatic email replies, documentation of contacts within 10 days, and reinforcement of a 48-hour response standard."
+        },
+        {
+          "locator": "p. 66, lines 2525-2543",
+          "proposition": "The draft reports case-service expenditures increasing from $17.5 million in PY2021 to $27.4 million in PY2024 and states that 25 new VR counselor positions were added."
+        },
+        {
+          "locator": "p. 72, lines 2723-2745",
+          "proposition": "The draft personnel table reports 52 VRC3 journey staff employed versus 92 currently needed, 63 VRC4 leads employed versus 62 currently needed, and 150 qualified case-carrying counselors serving 10,300 customers as of Dec. 31, 2025, a stated ratio of 69 customers per counselor."
+        },
+        {
+          "locator": "p. 51-52, lines 1946-1972",
+          "proposition": "The draft reports IPE timeliness improving from 75.6% in Q4 PY2023 to 81.2% in Q4 PY2024."
+        }
+      ]
+    },
+    {
+      "id": "DVR_OOS_CURRENT",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "Order of Selection Information",
+      "source_layer": "dvr_dshs",
+      "source_type": "official_operational_status",
+      "status": "current",
+      "publication_date": null,
+      "effective_date": "2025-12-08",
+      "reporting_period": "Current operational status",
+      "url": "https://www.dshs.wa.gov/order-selection-information",
+      "pinpoints": [
+        {
+          "locator": "Order of Selection status and priority-category table",
+          "proposition": "DVR states that all five priority-of-service categories closed on Dec. 8, 2025; the current table lists Categories 1 through 5 as Closed."
+        }
+      ]
+    },
+    {
+      "id": "DVR_CSNA_2025",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation and San Diego State University Interwork Institute",
+      "title": "Comprehensive Statewide Needs Assessment 2022-2025",
+      "source_layer": "dvr_dshs",
+      "source_type": "official_agency_research",
+      "status": "current_research",
+      "publication_date": null,
+      "effective_date": null,
+      "reporting_period": "2022-2025 assessment cycle",
+      "url": "https://www.dshs.wa.gov/sites/default/files/dvr/Comprehensive-Statewide-Needs-Assessment.pdf",
+      "pinpoints": [
+        {
+          "locator": "p. 19-20, Table 10, lines 698-711",
+          "proposition": "Among 682 respondents, 43.0% reported one counselor, 26.7% two, 15.8% three, 5.7% four, 6.6% more than four, and 2.2% never having a DVR counselor."
+        },
+        {
+          "locator": "p. 20, Table 11, lines 712-723",
+          "proposition": "Among 664 respondents, 29.5% said reaching their counselor was very easy, 40.2% somewhat easy, 16.4% somewhat difficult, and 13.9% very difficult."
+        },
+        {
+          "locator": "p. 28, lines 1028-1032",
+          "proposition": "The CSNA summary says 43% had one counselor, 26.7% had two, and 22% had three or more; this summary does not reconcile cleanly with the Table 10 categories."
+        },
+        {
+          "locator": "p. 55, Table 51, lines 2146-2155",
+          "proposition": "Among 839 respondents, 93.6% reported being able to access services in their primary language and 6.4% reported they could not."
+        },
+        {
+          "locator": "p. 8 and p. 32, recommendations",
+          "proposition": "Recommendations include increasing counselor staffing, considering caseload caps and backfill plans, using triage systems, and considering industry-specialist coaches."
+        }
+      ]
+    },
+    {
+      "id": "DVR_STRATEGIC_GOALS_2026",
+      "publisher": "Washington State Department of Social and Health Services",
+      "title": "Vocational Rehabilitation Strategic Goals",
+      "source_layer": "dvr_dshs",
+      "source_type": "official_agency_strategy",
+      "status": "past_plan",
+      "publication_date": null,
+      "effective_date": null,
+      "reporting_period": "Targets through June 2026",
+      "url": "https://www.dshs.wa.gov/office-of-the-secretary/vr-strategic-goals",
+      "pinpoints": [
+        {
+          "locator": "Strategic Goal 3, Success Measures 3.2-3.4",
+          "proposition": "Targets included increasing satisfaction with service timeliness from 58% to 62%, increasing timely IPE completion from 80% to 90%, and completing 35% of ADA Action Plan items plus progress on an additional 15% by June 2026."
+        }
+      ]
+    },
+    {
+      "id": "FED_ECFR_361_36",
+      "publisher": "Electronic Code of Federal Regulations",
+      "title": "34 C.F.R. § 361.36 — Ability to serve all eligible individuals; order of selection for services",
+      "source_layer": "federal_oversight",
+      "source_type": "federal_regulation",
+      "status": "current_snapshot_reviewed",
+      "publication_date": null,
+      "effective_date": null,
+      "reporting_period": "eCFR snapshot reviewed through 2026-09-24",
+      "url": "https://www.ecfr.gov/current/title-34/subtitle-B/chapter-III/part-361/subpart-B/section-361.36",
+      "pinpoints": [
+        {
+          "locator": "34 C.F.R. § 361.36",
+          "proposition": "Federal regulation governs a State VR agency's order of selection when it cannot serve all eligible individuals."
+        }
+      ]
+    },
+    {
+      "id": "FED_RSA_VR_PROGRAM",
+      "publisher": "U.S. Department of Education, Rehabilitation Services Administration",
+      "title": "State Vocational Rehabilitation Services Program",
+      "source_layer": "federal_oversight",
+      "source_type": "federal_program",
+      "status": "current",
+      "publication_date": null,
+      "effective_date": null,
+      "reporting_period": "Current federal program description",
+      "url": "https://rsa.ed.gov/about/programs/vocational-rehabilitation-state-grants",
+      "pinpoints": [
+        {
+          "locator": "Program description",
+          "proposition": "RSA describes the State VR program as grants to assist States in operating statewide vocational rehabilitation programs."
+        }
+      ]
+    },
+    {
+      "id": "DVR_SIGNAL_PUBLIC_AGGREGATES",
+      "publisher": "DVR Signal",
+      "title": "Disclosure-reviewed DVR Signal participant aggregates",
+      "source_layer": "participant_aggregate",
+      "source_type": "project_aggregate",
+      "status": "not_published",
+      "publication_date": null,
+      "effective_date": null,
+      "reporting_period": null,
+      "url": "/dashboard/",
+      "pinpoints": []
+    }
+  ]
+}

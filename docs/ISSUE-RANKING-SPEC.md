@@ -1,6 +1,6 @@
 # Issue Ranking page specification
 
-Status: implementation scaffold; ranking methodology is not approved for publication.
+Status: factual-indicator implementation in progress.
 
 ## Product
 
@@ -10,118 +10,132 @@ Navigation label: **Issue ranking**
 
 Page title: **DVR Issue Pressure Index**
 
-Supporting line: **A compact view of tracked system issues, their evidence, current
-status, and change over time.**
-
 The page is a civic-tech monitoring instrument. It must not turn a planning
-document, participant report, or proposed reform into a legal finding. Public
-issue scoring remains disabled until the maintainer explicitly approves both the
-methodology and the source-backed issue values.
+document, participant report, or proposed reform into a legal finding.
 
-## Core visual contract
+## Publication rule
 
-Each issue row is prepared to render:
+The current public implementation uses **factual indicators**, not an assistant-authored
+composite political/public-policy ranking. The proposed 0-100 composite scoring model
+remains disabled. Do not publish an issue score, rank, severity winner, or color derived
+from an overall evaluative judgment unless an independently approved project methodology
+is supplied.
+
+Current page order is a stable presentation order, not a best/worst ranking.
+
+## Current issue-row anatomy
+
+Each issue row renders:
 
 ```text
-[rank] [issue name]
-[pressure bar] [score] [status label] [momentum]
-[one-line explanation] [history sparkline when available]
+[stable order] [issue name] [evidence-state label]
+[current factual indicator]
+[source-linked signal ribbon]
+[comparable sparkline when available]
+[evidence drawer]
 ```
 
-If a score is not approved, render **Not scored** rather than zero. Unknown is
-never success, failure, or a numeric zero.
+Evidence-state color describes source status, not the quality of DVR performance:
 
-Color describes the independently reviewed current status and must never be
-derived mechanically from the pressure score:
+- teal: current official source / official research measure
+- yellow: official-source conflict or review needed
+- slate: neutral / unknown
 
-- teal `#48C7B6`: improving / relatively healthy
-- yellow `#FFD84D`: needs review
-- orange `#FF7A00`: documented warning / material problem
-- coral `#FF5C42`: serious breakdown / highest concern
-- slate `#56616B`: unknown / insufficient current data
+The project-wide warning/serious colors remain available for other reviewed
+methodologies but are not used here as an unsourced government-performance grade.
 
-All color states require visible text.
+## Factual indicators
 
-## Interaction
+The initial seven domains are:
 
-Prepare controls for:
+1. Resource capacity / Order of Selection
+2. Counselor workload
+3. Staff turnover and continuity
+4. Funding and resource pressure
+5. Communication reliability and service timeliness
+6. Qualified-staff pipeline
+7. Accessibility and accommodation implementation
 
-1. Current pressure
-2. Improvement momentum
-3. Participant impact
-4. Evidence confidence
-5. Evidence source: combined / official / participant
-6. Snapshot selection
+Each issue stores:
 
-Controls depending on unapproved or unavailable data remain visible but disabled
-with an explanation. Participant mode must distinguish not collected, insufficient,
-suppressed, and published. It must never convert missing participant evidence to 0.
+- current indicator
+- supporting indicators
+- comparable trend series, if any
+- source conflicts
+- unknowns
+- agency responses or planned improvements
+- source IDs
 
-Each issue expands to show definition, score components when approved, current
-status, momentum, evidence-source types, timeline events, and source links.
+No missing value is converted to zero.
 
-## Scoring contract
+## Historical snapshots
 
-The requested draft scoring structure is retained as a proposal only:
+Initial files:
 
-- severity: up to 30
-- participant impact: up to 25
-- breadth: up to 15
-- persistence: up to 10
-- evidence strength: up to 10
-- downstream effects: up to 10
+- `2025-H2.json`
+- `2026-H1.json`
+- `2026-H2.json`
 
-The application must not assign or publish issue-level values until maintainer
-approval is recorded. When values are approved, the total is derived from
-components and never stored as an independent editable field.
+The first two are explicitly labeled retrospective reconstructions because the site did
+not publish contemporaneous snapshots at those dates. Future approved snapshots should
+be immutable contemporaneous records.
 
-Pressure, status, momentum, and evidence confidence remain separate dimensions.
+Each snapshot records its methodology and source-registry version.
 
-## Snapshot rules
+## Trends
 
-Published snapshots are immutable and include:
+A sparkline appears only when values are comparable measures. If a source supplies a
+single cross-sectional result, conflicting values, or unlike metrics, display:
 
-- snapshot ID
-- period start/end
-- methodology version
-- source-registry version
-- created date
-- issue records used
+**Comparable trend unavailable.**
 
-A later methodology version must not silently recalculate a historical snapshot.
+Do not manufacture a numeric series from narrative evidence.
 
-## Evidence
+## Evidence drawer
 
-Keep agency sources, independent/public oversight sources, and DVR Signal
-participant aggregates separate. A voluntary respondent sample is never described
-as representative of all Washington DVR participants.
+Every issue exposes three source layers:
 
-The initial scaffold uses current official Washington DVR source entry points for
-Order of Selection, the State Plan, and the Comprehensive Statewide Needs
-Assessment. Source monitoring can propose changes, but cannot change public
-scores, status colors, or conclusions without review.
+1. DVR / DSHS material
+2. Federal / oversight material
+3. DVR Signal participant aggregates
+
+Each attached source shows publisher, source type, status, dates when known, and
+pinpoint propositions. Participant aggregates remain disabled until a disclosure-reviewed
+public release exists.
+
+## Participant data
+
+When activated later:
+
+- label the population **DVR Signal survey respondents**
+- never imply statewide representativeness
+- enforce the established n >= 10 public-cell floor plus complementary/differencing review
+- distinguish not collected, not published, insufficient, suppressed, and published
+- do not combine participant reports with official evidence into an automatic legal conclusion
+
+## Source conflicts
+
+Conflicts must remain visible. Current examples include:
+
+- the final 2026-2028 State Plan text reporting 64% of VRC4 caseloads above 100;
+- the 2026 draft update reporting 40%;
+- the CSNA narrative summary versus Table 10 on the number of respondents with three
+  or more counselors.
+
+Do not silently pick one figure.
 
 ## Accessibility
 
-Target WCAG 2.2 AA:
+Target WCAG 2.2 AA and preserve:
 
-- keyboard-operable expansion and controls
+- keyboard-operable `details/summary` evidence drawers
 - visible focus
-- at least 44px interactive targets
-- text equivalents for bars and sparklines
-- no color-only meaning
+- 44px minimum interactive targets
+- text labels in addition to color
+- accessible SVG descriptions
 - reduced-motion support
-- 320 CSS pixel reflow
-- usable at 200% text zoom
+- 320 CSS-pixel reflow
+- layouts that survive 200% text zoom
 
-## Definition of done for the scaffold
-
-- route builds in Astro
-- no framework dependency added
-- page is data-driven
-- issue score is derived when components exist
-- null scores render as Not scored, never 0
-- source links are official/public
-- participant mode fails closed
-- tests cover null handling, score derivation, source references, navigation, and
-  conservative publication language
+Manual screen-reader and zoom testing remains a release gate; code structure alone is
+not a conformance claim.

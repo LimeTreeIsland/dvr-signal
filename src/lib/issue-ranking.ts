@@ -1,66 +1,76 @@
-export interface IssueScores {
-  severity: number;
-  participant_impact: number;
-  breadth: number;
-  persistence: number;
-  evidence_strength: number;
-  downstream_effects: number;
+export interface TrendPoint {
+  period: string;
+  value: number;
+  display: string;
+  source_ids: string[];
 }
 
-export type IssueStatus = "healthy" | "review" | "warning" | "serious" | "unknown";
-export type EvidenceConfidence = "high" | "moderate" | "limited" | "insufficient" | "pending_review";
-export type RankingMode = "pressure" | "momentum" | "participant_impact" | "evidence_confidence";
-
-export const SCORE_MAXIMA: IssueScores = {
-  severity: 30,
-  participant_impact: 25,
-  breadth: 15,
-  persistence: 10,
-  evidence_strength: 10,
-  downstream_effects: 10,
-};
-
-export function calculatePressureScore(scores: IssueScores | null): number | null {
-  if (scores === null) return null;
-
-  const keys = Object.keys(SCORE_MAXIMA) as Array<keyof IssueScores>;
-  for (const key of keys) {
-    const value = scores[key];
-    if (!Number.isFinite(value) || value < 0 || value > SCORE_MAXIMA[key]) {
-      throw new RangeError(`Invalid issue-ranking score component: ${key}`);
-    }
-  }
-
-  return keys.reduce((total, key) => total + scores[key], 0);
+export interface TrendSeries {
+  label: string;
+  unit: string | null;
+  comparable: boolean;
+  points: TrendPoint[];
+  note: string;
 }
 
-export function formatMomentum(momentum: number | null): string {
-  if (momentum === null) return "Trend not established";
-  if (momentum === 2) return "Clearly improving";
-  if (momentum === 1) return "Improving";
-  if (momentum === 0) return "No established directional change";
-  if (momentum === -1) return "Deteriorating";
-  return "Substantially deteriorating";
+export interface CurrentIndicator {
+  label: string;
+  display_value: string;
+  value: number | null;
+  max: number | null;
+  unit: string | null;
+  measurement_period: string;
+  observation_date: string | null;
+  source_ids: string[];
 }
 
-export function statusLabel(status: IssueStatus): string {
-  const labels: Record<IssueStatus, string> = {
-    healthy: "Improving or relatively healthy",
-    review: "Needs review",
-    warning: "Documented warning",
-    serious: "Serious current condition",
-    unknown: "Unknown or under review",
+export interface IssueRecord {
+  issue_id: string;
+  title: string;
+  definition: string;
+  evidence_state: string;
+  current_indicator: CurrentIndicator;
+  supporting_indicators: Array<{
+    label: string;
+    display_value: string;
+    source_ids: string[];
+  }>;
+  trend_series: TrendSeries;
+  source_conflicts: string[];
+  unknowns: string[];
+  planned_improvements: string[];
+}
+
+export function evidenceStateLabel(value: string): string {
+  const labels: Record<string, string> = {
+    current_official: "Current official source",
+    current_official_research: "Official research measure",
+    source_conflict: "Official-source conflict",
+    historical_official: "Historical official source",
+    needs_review: "Needs review",
   };
-  return labels[status];
+  return labels[value] ?? "Evidence state not classified";
 }
 
-export function evidenceConfidenceOrder(value: EvidenceConfidence): number {
-  const order: Record<EvidenceConfidence, number> = {
-    high: 4,
-    moderate: 3,
-    limited: 2,
-    insufficient: 1,
-    pending_review: 0,
-  };
-  return order[value];
+export function evidenceTone(value: string): "verified" | "review" | "neutral" {
+  if (value === "current_official" || value === "current_official_research") return "verified";
+  if (value === "source_conflict") return "review";
+  return "neutral";
+}
+
+export function formatTrendLabel(series: TrendSeries): string {
+  if (!series.comparable || series.points.length < 2) return "Comparable trend unavailable";
+
+  const first = series.points[0]?.value;
+  const last = series.points[series.points.length - 1]?.value;
+
+  if (first === undefined || last === undefined) return "Comparable trend unavailable";
+  if (last > first) return "Latest comparable value is higher";
+  if (last < first) return "Latest comparable value is lower";
+  return "No change across comparable values";
+}
+
+export function formatTrendValues(series: TrendSeries): string {
+  if (!series.comparable || series.points.length < 2) return "";
+  return series.points.map((point) => point.display).join(" → ");
 }

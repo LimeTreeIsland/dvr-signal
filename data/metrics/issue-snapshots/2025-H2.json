@@ -1,0 +1,22 @@
+{
+  "snapshot_id": "2025-H2",
+  "label": "Jul-Dec 2025",
+  "period_start": "2025-07-01",
+  "period_end": "2025-12-31",
+  "created_at": "2026-09-27",
+  "snapshot_type": "retrospective_reconstruction",
+  "methodology_version": "factual-indicators-1.0.0",
+  "source_registry_version": "1.0.0",
+  "source_ids": ["DVR_OOS_CURRENT"],
+  "indicators": [
+    {
+      "issue_id": "resource-capacity",
+      "comparison_key": "closed_priority_categories",
+      "value": 5,
+      "display": "5 of 5 priority categories closed by period end",
+      "data_state": "retrospective",
+      "source_ids": ["DVR_OOS_CURRENT"]
+    }
+  ],
+  "unresolved_outcomes": []
+}

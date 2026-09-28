@@ -1,79 +1,59 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://dvr-signal.example/schemas/issue-ranking.schema.json",
-  "title": "DVR Signal issue ranking release",
+  "title": "DVR Signal factual issue indicators",
   "type": "object",
-  "required": ["version", "publication_status", "snapshot", "methodology", "sources", "issues"],
+  "required": [
+    "version",
+    "publication_status",
+    "snapshot_id",
+    "composite_ranking",
+    "participant_mode",
+    "issues"
+  ],
   "properties": {
-    "version": { "type": "string" },
-    "publication_status": {
-      "enum": ["methodology_pending", "draft", "published"]
-    },
-    "snapshot": {
+    "publication_status": {"enum": ["factual_indicators", "draft"]},
+    "composite_ranking": {
       "type": "object",
-      "required": ["id", "label", "period_start", "period_end", "methodology_version", "source_registry_version"]
+      "required": ["status", "reason"]
     },
-    "methodology": {
+    "participant_mode": {
       "type": "object",
-      "required": ["status", "score_max", "component_maxima", "public_note"]
-    },
-    "sources": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "publisher", "title", "source_type", "url", "retrieved_date"]
-      }
+      "required": ["status", "public_cell_floor_n", "population_label", "note"]
     },
     "issues": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 7,
       "items": {
         "type": "object",
         "required": [
           "issue_id",
           "title",
           "definition",
-          "short_explanation",
-          "scores",
-          "status",
-          "status_label",
-          "momentum",
-          "evidence_confidence",
-          "participant_evidence_state",
-          "sources",
-          "timeline"
+          "evidence_state",
+          "current_indicator",
+          "supporting_indicators",
+          "trend_series",
+          "source_conflicts",
+          "unknowns",
+          "planned_improvements"
         ],
         "properties": {
-          "scores": {
-            "oneOf": [
-              { "type": "null" },
-              {
-                "type": "object",
-                "required": [
-                  "severity",
-                  "participant_impact",
-                  "breadth",
-                  "persistence",
-                  "evidence_strength",
-                  "downstream_effects"
-                ]
-              }
+          "current_indicator": {
+            "type": "object",
+            "required": [
+              "label",
+              "display_value",
+              "value",
+              "max",
+              "unit",
+              "measurement_period",
+              "observation_date",
+              "source_ids"
             ]
           },
-          "status": {
-            "enum": ["healthy", "review", "warning", "serious", "unknown"]
-          },
-          "momentum": {
-            "oneOf": [
-              { "type": "null" },
-              { "type": "integer", "minimum": -2, "maximum": 2 }
-            ]
-          },
-          "evidence_confidence": {
-            "enum": ["high", "moderate", "limited", "insufficient", "pending_review"]
-          },
-          "participant_evidence_state": {
-            "enum": ["not_collected", "not_published", "insufficient", "suppressed", "published"]
+          "trend_series": {
+            "type": "object",
+            "required": ["label", "unit", "comparable", "points", "note"]
           }
         }
       }
