@@ -34,12 +34,12 @@
       "exact_calculation_enabled": true,
       "source_archive_gate": {
         "required": true,
-        "status": "archived_and_verified_approved_for_calculation",
+        "status": "archived_verified_and_activation_approved",
         "required_files": [
           "sources/primary/wa/WAC-388-02-current.pdf",
           "sources/primary/wa/RCW-1.16-current.pdf"
         ],
-        "note": "The required primary-source PDFs are archived and verified, and the maintainer approved exact 45-calendar-day calculation on 2026-09-27."
+        "note": "The required current primary-source PDFs are archived and verified, and the maintainer approved exact 45-calendar-day calculation on 2026-09-27."
       }
     },
     "hearing_after_request": {
