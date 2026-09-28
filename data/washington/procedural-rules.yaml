@@ -25,7 +25,7 @@
       "review_status": "approved",
       "last_reviewed": "2026-09-27",
       "reviewer": "LimeTreeIsland",
-      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27; trigger encoding corrected by maintainer-directed V1B-04 audit",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27; trigger encoding corrected by maintainer-directed V1B-04 audit; exact working-day calculation remains disabled under PR #24 approval",
       "enabled": true
     },
     {
@@ -328,22 +328,24 @@
         "decision_issue_date"
       ],
       "exceptions": [
-        "Exact calendar calculation remains disabled until WAC 388-02 and RCW 1.16 primary-source files are archived and approved for calculator use."
+        "Exact calculation requires the decision issue date; receipt date is not substituted.",
+        "If the calculated 45th day falls on a Saturday, Sunday, or Washington legal holiday, the deadline moves to the next business day under WAC 388-02-0035.",
+        "The filing deadline ends at 5:00 p.m. under WAC 388-02-0035."
       ],
       "timeframe": {
         "amount": 45,
         "unit": "calendar_days",
-        "counting_rule_status": "source_archive_pending"
+        "counting_rule_status": "approved"
       },
       "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "WA-HEARING-TIMING-01",
@@ -361,17 +363,17 @@
       "timeframe": {
         "amount": 60,
         "unit": "days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
       "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-HEARING-TIMING-01",
@@ -391,17 +393,17 @@
       "timeframe": {
         "amount": 60,
         "unit": "days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
-      "source_status": "snapshot_text_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "WA-HEARING-DECISION-01",
@@ -417,17 +419,17 @@
       "timeframe": {
         "amount": 30,
         "unit": "calendar_days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
       "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-HEARING-DECISION-01",
@@ -443,17 +445,17 @@
       "timeframe": {
         "amount": 30,
         "unit": "calendar_days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
-      "source_status": "snapshot_text_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "WA-CONTINUATION-OF-SERVICES-01",
@@ -476,11 +478,11 @@
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-CONTINUATION-OF-SERVICES-01",
@@ -498,15 +500,15 @@
         "The State agency has evidence the services were obtained through misrepresentation, fraud, collusion, or criminal conduct."
       ],
       "timeframe": null,
-      "source_status": "snapshot_text_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
+      "review_status": "approved",
       "last_reviewed": "2026-09-27",
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #24; maintainer approval recorded 2026-09-27",
+      "enabled": true
     }
   ]
 }

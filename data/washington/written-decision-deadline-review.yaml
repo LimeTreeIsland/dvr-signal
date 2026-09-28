@@ -1,7 +1,7 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "reviewed_on": "2026-09-27",
-  "status": "review_complete_maintainer_approval_pending",
+  "status": "approved_for_activation",
   "jurisdiction": "US-WA",
   "clocks": {
     "written_denial_response": {
@@ -16,7 +16,7 @@
         "other request affecting participation in the VR program"
       ],
       "exact_calculation_enabled": false,
-      "reason": "Chapter 388-891A does not define working-day counting, and chapter 388-02 hearing-process counting is not silently imported."
+      "reason": "Exact calculation remains disabled by explicit maintainer instruction; chapter 388-891A does not supply an approved working-day counting convention for this pre-hearing response clock."
     },
     "fair_hearing_filing": {
       "citation": "WAC 388-891A-0255(2); WAC 388-02-0035; RCW 1.16.050",
@@ -31,15 +31,15 @@
         "cutoff_local_time": "17:00",
         "timezone": "America/Los_Angeles"
       },
-      "exact_calculation_enabled": false,
+      "exact_calculation_enabled": true,
       "source_archive_gate": {
         "required": true,
-        "status": "archived_and_verified_pending_activation_approval",
+        "status": "archived_verified_and_activation_approved",
         "required_files": [
           "sources/primary/wa/WAC-388-02-current.pdf",
           "sources/primary/wa/RCW-1.16-current.pdf"
         ],
-        "note": "The required current primary-source PDFs are now archived and verified. Exact calculation remains disabled until the corrected V1B-04 review and calculator activation are explicitly approved."
+        "note": "The required current primary-source PDFs are archived and verified, and the maintainer approved exact 45-calendar-day calculation on 2026-09-27."
       }
     },
     "hearing_after_request": {
@@ -118,5 +118,6 @@
       "automated_applicability_decision": false
     },
     "do_not_collapse_state_and_federal_scopes": true
-  }
+  },
+  "approval_reference": "PR #24; maintainer approval recorded 2026-09-27"
 }

@@ -1,19 +1,21 @@
 {
   "id": "decisions",
   "title": "Written Decision + Deadline Checker",
-  "version": "0.2.0",
-  "status": "scaffold",
-  "enabled": false,
+  "version": "0.3.0",
+  "status": "active",
+  "enabled": true,
   "input_fields": [
-    "request_type",
-    "request_received_date",
-    "response_status",
-    "notice_details"
+    "mode",
+    "decision_description",
+    "request_received_date_optional",
+    "written_response_received_optional",
+    "decision_issue_date_optional",
+    "disagreement_reason_optional",
+    "hearing_request_date_optional"
   ],
   "output_routes": [
     "written_decision_request",
-    "fair_hearing_rule_summary",
-    "deadline_unavailable_until_source_archive",
+    "fair_hearing_deadline",
     "post_hearing_request_timeline"
   ],
   "rule_ids": [

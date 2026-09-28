@@ -1,6 +1,6 @@
 # V1B-04 Written Decision + Deadline Checker source and scope review
 
-Status: source review corrected after regulatory encoding audit; participant-facing legal outputs and exact deadline calculations remain disabled pending maintainer approval and source-archive completion.
+Status: corrected V1B-04 review approved by the maintainer on 2026-09-27. The Written Decision + Deadline Checker and exact 45-calendar-day fair-hearing filing calculation are approved for activation using the archived WAC 388-02 and RCW 1.16 sources. Exact calculation of the WAC 388-891A-0211 ten-working-day response period remains disabled.
 
 Reviewed: 2026-09-27  
 Audit correction: 2026-09-27  
@@ -61,7 +61,7 @@ The issue date is the legal trigger. DVR Signal must not substitute the date the
 
 WAC 388-891A-0250 expressly places DVR fair hearings within the Washington Administrative Procedure Act and chapter 388-02 WAC hearing framework.
 
-### Proposed counting rule
+### Approved counting rule
 
 Live review of WAC 388-02-0035 supports the following hearing-deadline calculation:
 
@@ -72,25 +72,16 @@ Live review of WAC 388-02-0035 supports the following hearing-deadline calculati
 
 Live review of RCW 1.16.050 identifies the Washington state legal holidays and observed-holiday rules used for that adjustment.
 
-### Source-archive gate
+### Source-archive and activation gate
 
-The exact calculator is **not production-enabled yet**.
+The required current primary-source PDFs are now archived in the repository legal corpus:
 
-Before exact 45-day calculation may be activated, the repository legal corpus must contain the current primary-source files for:
+1. `sources/primary/wa/WAC-388-02-current.pdf`; and
+2. `sources/primary/wa/RCW-1.16-current.pdf`.
 
-1. WAC 388-02; and
-2. RCW 1.16.
+The relevant sections were rechecked against the encoded calculator, and the maintainer approved exact 45-calendar-day calculation on 2026-09-27.
 
-After those files are archived, the relevant sections must be rechecked against the encoded calculator and the maintainer must approve activation.
-
-Until then:
-
-```
-exact_calculation_enabled: false
-source_archive_gate: blocked_missing_primary_source_files
-```
-
-The implementation may exist in code, but the UI must fail closed and refuse to emit the calculated date.
+The calculator remains fail-closed unless both the tool and the exact-calculation flag are active. The separate WAC 388-891A-0211 ten-working-day calculator remains disabled.
 
 ## 3. Sixty-day hearing timeframe
 
@@ -228,10 +219,10 @@ Operational contact/routing data should remain separately refreshable from the l
 - Current WAC 388-891A PDF supplied to the project.
 - 34 CFR Part 361 PDF current through 2026-09-24 supplied to the project.
 
-### Live official text reviewed, repository archive still required for calculator lock
+### Archived primary sources used for the exact 45-day calculator
 
-- WAC 388-02-0010 and WAC 388-02-0035.
-- RCW 1.16.050.
+- WAC 388-02-0010 and WAC 388-02-0035, archived in `sources/primary/wa/WAC-388-02-current.pdf`.
+- RCW 1.16.050, archived in `sources/primary/wa/RCW-1.16-current.pdf`.
 
 ### Official operational guidance
 
@@ -239,13 +230,14 @@ Operational contact/routing data should remain separately refreshable from the l
 - Washington OAH How to File an Appeal.
 - Washington OAH Public Assistance Hearing Request.
 
-## Maintainer approval gate
+## Maintainer approval
 
-This corrected review records source findings and machine-encoding safeguards only. The Written Decision + Deadline Checker remains disabled.
+The maintainer approved the corrected V1B-04 review and structured rule model on 2026-09-27.
 
-A future activation requires:
+The approval expressly authorizes:
 
-1. maintainer approval of this corrected V1B-04 review;
-2. the current WAC 388-02 and RCW 1.16 primary-source files archived in the repository legal corpus;
-3. re-verification of the exact calculator against those archived primary sources; and
-4. a separate explicit decision to enable exact 45-day calculation.
+1. activation of the Written Decision + Deadline Checker;
+2. exact calculation of the 45-calendar-day fair-hearing filing deadline using the archived WAC 388-02 and RCW 1.16 primary sources; and
+3. continued disabling of exact calculation for the WAC 388-891A-0211 ten-working-day response period.
+
+The source-archive requirement is satisfied. The ten-working-day calculation remains fail-closed until separately reviewed and approved.

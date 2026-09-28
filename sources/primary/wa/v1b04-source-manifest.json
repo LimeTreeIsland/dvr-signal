@@ -1,7 +1,7 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "reviewed_on": "2026-09-27",
-  "calculator_gate": "source_archive_complete_pending_activation_approval",
+  "calculator_gate": "source_archive_complete_activation_approved",
   "required_sources": [
     {
       "authority_id": "WAC-388-02",
@@ -38,5 +38,6 @@
       "verification_note": "Archived repository PDF reviewed for Washington legal holidays and observed-holiday rules used by the V1B-04 calculator."
     }
   ],
-  "activation_requirement": "Source archive requirement is satisfied. Exact 45-day calculation remains disabled until the corrected V1B-04 review and calculator activation are explicitly approved."
+  "activation_requirement": "Satisfied for the 45-calendar-day fair-hearing calculator. The WAC 388-891A-0211 ten-working-day exact calculator remains disabled.",
+  "activation_approval_reference": "PR #24; maintainer approval recorded 2026-09-27"
 }
