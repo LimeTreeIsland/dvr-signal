@@ -1,0 +1,157 @@
+{
+  "version": "0.1.0",
+  "publication_status": "methodology_pending",
+  "snapshot": {
+    "id": "2026-H2",
+    "label": "Jul–Dec 2026",
+    "period_start": "2026-07-01",
+    "period_end": "2026-12-31",
+    "methodology_version": "pending",
+    "source_registry_version": "0.1.0"
+  },
+  "methodology": {
+    "status": "proposal_only",
+    "score_max": 100,
+    "component_maxima": {
+      "severity": 30,
+      "participant_impact": 25,
+      "breadth": 15,
+      "persistence": 10,
+      "evidence_strength": 10,
+      "downstream_effects": 10
+    },
+    "public_note": "Issue scoring is not yet approved for publication. Unscored issues are shown as not scored rather than zero."
+  },
+  "sources": [
+    {
+      "id": "DVR_STATE_PLAN_CURRENT",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "The DVR State Plan",
+      "source_type": "official_agency",
+      "url": "https://www.dshs.wa.gov/dvr/dvr-state-plan",
+      "retrieved_date": "2026-09-27"
+    },
+    {
+      "id": "DVR_OOS_CURRENT",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "Order of Selection Information",
+      "source_type": "official_agency",
+      "url": "https://www.dshs.wa.gov/order-selection-information",
+      "retrieved_date": "2026-09-27"
+    },
+    {
+      "id": "DVR_CSNA_2025",
+      "publisher": "Washington State Department of Social and Health Services, Division of Vocational Rehabilitation",
+      "title": "Comprehensive Statewide Needs Assessment",
+      "source_type": "official_agency",
+      "url": "https://www.dshs.wa.gov/sites/default/files/dvr/Comprehensive-Statewide-Needs-Assessment.pdf",
+      "retrieved_date": "2026-09-27"
+    }
+  ],
+  "issues": [
+    {
+      "issue_id": "resource-capacity",
+      "title": "Resource capacity / Order of Selection",
+      "definition": "Program capacity and the current use of Order of Selection when available resources are insufficient to serve every eligible participant.",
+      "short_explanation": "DVR's official Order of Selection page states that all priority categories closed on Dec. 8, 2025.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Current condition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_OOS_CURRENT", "DVR_STATE_PLAN_CURRENT"],
+      "timeline": [
+        {
+          "date": "2025-12-08",
+          "label": "DVR closed all priority-of-service categories under Order of Selection.",
+          "source_id": "DVR_OOS_CURRENT"
+        }
+      ]
+    },
+    {
+      "issue_id": "counselor-workload",
+      "title": "Counselor workload",
+      "definition": "Caseload size, staffing capacity, and workload conditions affecting case-carrying counselors.",
+      "short_explanation": "Official DVR planning and needs-assessment materials identify high caseloads and staffing constraints as operational concerns.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Current condition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_STATE_PLAN_CURRENT", "DVR_CSNA_2025"],
+      "timeline": []
+    },
+    {
+      "issue_id": "staff-continuity",
+      "title": "Staff turnover and continuity",
+      "definition": "Turnover, vacancies, reassignment, and continuity of case ownership across a participant's DVR episode.",
+      "short_explanation": "Official DVR needs-assessment material identifies staffing shortages and counselor turnover as significant operational issues.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Current condition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_CSNA_2025", "DVR_STATE_PLAN_CURRENT"],
+      "timeline": []
+    },
+    {
+      "issue_id": "funding-pressure",
+      "title": "Funding and fiscal pressure",
+      "definition": "Changes in available program resources, service costs, reimbursement, and demand that affect DVR operating capacity.",
+      "short_explanation": "DVR's public planning and Order of Selection materials connect service capacity with available resources, costs, caseloads, and demand.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Current condition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_OOS_CURRENT", "DVR_STATE_PLAN_CURRENT"],
+      "timeline": []
+    },
+    {
+      "issue_id": "communication-reliability",
+      "title": "Communication reliability",
+      "definition": "Timeliness and continuity of participant communication, including transitions when cases are reassigned.",
+      "short_explanation": "Communication and continuity are tracked separately from workload so later data can test whether staffing conditions predict participant communication delays.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Evidence definition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_STATE_PLAN_CURRENT", "DVR_CSNA_2025"],
+      "timeline": []
+    },
+    {
+      "issue_id": "staffing-pipeline",
+      "title": "Qualified-staff pipeline",
+      "definition": "Recruitment, training, vacancy duration, and retention of qualified vocational rehabilitation staff.",
+      "short_explanation": "This issue tracks whether staffing shortages are being resolved through hiring, training, and retention rather than treating vacancy counts alone as an outcome.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Evidence definition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_STATE_PLAN_CURRENT", "DVR_CSNA_2025"],
+      "timeline": []
+    },
+    {
+      "issue_id": "accessibility",
+      "title": "Accessibility and accommodation implementation",
+      "definition": "Whether program access and requested communication or participation accommodations are implemented consistently.",
+      "short_explanation": "This domain is tracked separately from legal conclusions so future participant and agency evidence can be compared without assuming every reported barrier establishes a violation.",
+      "scores": null,
+      "status": "unknown",
+      "status_label": "Evidence definition under review",
+      "momentum": null,
+      "evidence_confidence": "pending_review",
+      "participant_evidence_state": "not_published",
+      "sources": ["DVR_STATE_PLAN_CURRENT"],
+      "timeline": []
+    }
+  ]
+}

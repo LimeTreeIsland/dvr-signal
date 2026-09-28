@@ -1,0 +1,806 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import issueData from "../../../data/metrics/issue-ranking.json";
+import {
+  calculatePressureScore,
+  formatMomentum,
+  statusLabel,
+  type EvidenceConfidence,
+  type IssueScores,
+  type IssueStatus,
+} from "../../lib/issue-ranking";
+
+const sourceMap = new Map(issueData.sources.map((source) => [source.id, source]));
+
+const issues = issueData.issues.map((issue) => {
+  const scores = issue.scores as IssueScores | null;
+  const pressureScore = calculatePressureScore(scores);
+  return {
+    ...issue,
+    scores,
+    pressureScore,
+    status: issue.status as IssueStatus,
+    evidence_confidence: issue.evidence_confidence as EvidenceConfidence,
+  };
+});
+
+const scoresPublished =
+  issueData.publication_status === "published" &&
+  issues.some((issue) => issue.pressureScore !== null);
+
+const participantPublished = issues.some(
+  (issue) => issue.participant_evidence_state === "published",
+);
+---
+
+<BaseLayout
+  title="DVR Issue Pressure Index — DVR Signal"
+  description="A compact, source-linked view of tracked Washington DVR system issues, current evidence status, and change over time."
+>
+  <div class="container issue-ranking-page">
+    <header class="ranking-hero">
+      <div>
+        <p class="eyebrow">System status · Issue ranking</p>
+        <h1>DVR Issue Pressure Index</h1>
+        <p class="hero-copy">
+          A compact view of tracked system issues, their evidence, current status,
+          and change over time.
+        </p>
+      </div>
+
+      <div class="snapshot-meta" aria-label="Current snapshot metadata">
+        <span><strong>Snapshot</strong> {issueData.snapshot.label}</span>
+        <span><strong>Methodology</strong> {issueData.snapshot.methodology_version}</span>
+        <span><strong>Release</strong> {issueData.publication_status.replaceAll("_", " ")}</span>
+      </div>
+
+      {!scoresPublished && (
+        <aside class="review-notice" aria-labelledby="review-notice-title">
+          <h2 id="review-notice-title">Ranking is not published yet</h2>
+          <p>
+            The interactive structure is live, but issue scores remain unassigned until
+            the scoring methodology and source-backed values receive explicit review.
+            Unscored issues are shown as <strong>Not scored</strong>, never as zero.
+          </p>
+        </aside>
+      )}
+    </header>
+
+    <section class="ranking-panel" aria-labelledby="index-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Current view</p>
+          <h2 id="index-title">Tracked issues</h2>
+        </div>
+        <a class="method-link" href="#ranking-method">How ranking works</a>
+      </div>
+
+      <div class="control-grid" aria-label="Issue ranking controls">
+        <fieldset>
+          <legend>Sort mode</legend>
+          <div class="segmented-control" data-sort-controls>
+            <button type="button" data-sort="pressure" aria-pressed="true" disabled={!scoresPublished}>
+              Current pressure
+            </button>
+            <button type="button" data-sort="momentum" aria-pressed="false" disabled={!scoresPublished}>
+              Improvement momentum
+            </button>
+            <button type="button" data-sort="participant_impact" aria-pressed="false" disabled={!scoresPublished}>
+              Participant impact
+            </button>
+            <button type="button" data-sort="evidence_confidence" aria-pressed="false">
+              Evidence confidence
+            </button>
+          </div>
+          {!scoresPublished && <p class="control-note">Score-dependent sorts activate after approved scoring is published.</p>}
+        </fieldset>
+
+        <fieldset>
+          <legend>Evidence source</legend>
+          <div class="segmented-control" data-evidence-controls>
+            <button type="button" data-evidence="official" aria-pressed="true">Official</button>
+            <button type="button" data-evidence="combined" aria-pressed="false" disabled={!participantPublished}>
+              Combined
+            </button>
+            <button type="button" data-evidence="participant" aria-pressed="false" disabled={!participantPublished}>
+              Participant
+            </button>
+          </div>
+          {!participantPublished && <p class="control-note">Participant mode remains unavailable until a disclosure-reviewed aggregate release exists.</p>}
+        </fieldset>
+
+        <label class="snapshot-control">
+          <span>View snapshot</span>
+          <select aria-label="View snapshot" disabled>
+            <option>{issueData.snapshot.label}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="ranking-list" data-ranking-list>
+        {issues.map((issue) => {
+          const score = issue.pressureScore;
+          const impact = issue.scores?.participant_impact ?? null;
+          const evidenceValue =
+            issue.evidence_confidence === "high" ? 4 :
+            issue.evidence_confidence === "moderate" ? 3 :
+            issue.evidence_confidence === "limited" ? 2 :
+            issue.evidence_confidence === "insufficient" ? 1 : 0;
+
+          return (
+            <details
+              class:list={["issue-row", `status-${issue.status}`]}
+              data-issue-row
+              data-title={issue.title}
+              data-pressure={score ?? ""}
+              data-momentum={issue.momentum ?? ""}
+              data-participant-impact={impact ?? ""}
+              data-evidence-confidence={evidenceValue}
+            >
+              <summary>
+                <span class="rank" aria-label="Rank not published">—</span>
+                <span class="issue-main">
+                  <span class="issue-title-line">
+                    <strong>{issue.title}</strong>
+                    <span class="status-badge">
+                      <span class="status-symbol" aria-hidden="true"></span>
+                      {statusLabel(issue.status)}
+                    </span>
+                  </span>
+
+                  <span class="pressure-line">
+                    <span
+                      class:list={["pressure-track", score === null && "pressure-pending"]}
+                      role="img"
+                      aria-label={
+                        score === null
+                          ? `${issue.title}: pressure score not published`
+                          : `${issue.title}: pressure score ${score} of 100`
+                      }
+                    >
+                      <span
+                        class="pressure-fill"
+                        style={`--pressure: ${score ?? 0}%`}
+                      ></span>
+                    </span>
+
+                    <span class="score">
+                      {score === null ? "Not scored" : `${score}/100`}
+                    </span>
+
+                    <span class="momentum">
+                      {formatMomentum(issue.momentum)}
+                    </span>
+
+                    <span class="sparkline-placeholder">
+                      {issue.timeline.length > 1 ? "History available" : "History pending"}
+                    </span>
+                  </span>
+
+                  <span class="issue-explanation">{issue.short_explanation}</span>
+                </span>
+                <span class="expand-label">Details</span>
+              </summary>
+
+              <div class="issue-detail">
+                <div class="detail-grid">
+                  <section>
+                    <h3>Issue definition</h3>
+                    <p>{issue.definition}</p>
+
+                    <h3>Score breakdown</h3>
+                    {issue.scores === null ? (
+                      <p class="pending-copy">
+                        No issue-level component values are published. This prevents a
+                        draft methodology from being mistaken for a factual ranking.
+                      </p>
+                    ) : (
+                      <dl class="score-breakdown">
+                        {Object.entries(issue.scores).map(([key, value]) => (
+                          <div>
+                            <dt>{key.replaceAll("_", " ")}</dt>
+                            <dd>{value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
+                  </section>
+
+                  <section>
+                    <h3>Evidence status</h3>
+                    <dl class="evidence-meta">
+                      <div><dt>Current status</dt><dd>{issue.status_label}</dd></div>
+                      <div><dt>Momentum</dt><dd>{formatMomentum(issue.momentum)}</dd></div>
+                      <div><dt>Evidence review</dt><dd>{issue.evidence_confidence.replaceAll("_", " ")}</dd></div>
+                      <div><dt>Participant data</dt><dd>{issue.participant_evidence_state.replaceAll("_", " ")}</dd></div>
+                    </dl>
+
+                    <h3>Official source set</h3>
+                    <ul class="source-list">
+                      {issue.sources.map((sourceId) => {
+                        const source = sourceMap.get(sourceId);
+                        return source ? (
+                          <li>
+                            <a href={source.url}>{source.title}</a>
+                            <span>{source.publisher} · retrieved {source.retrieved_date}</span>
+                          </li>
+                        ) : null;
+                      })}
+                    </ul>
+                  </section>
+                </div>
+
+                {issue.timeline.length > 0 && (
+                  <section class="timeline">
+                    <h3>Relevant timeline events</h3>
+                    <ol>
+                      {issue.timeline.map((event) => (
+                        <li>
+                          <time datetime={event.date}>{event.date}</time>
+                          <span>{event.label}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                )}
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="support-grid" aria-label="Issue ranking summary">
+      <article>
+        <p class="eyebrow">Improvement</p>
+        <h2>What is improving?</h2>
+        <p>
+          No directional improvement ranking is published until the same reviewed
+          snapshot method is available for at least two comparable periods.
+        </p>
+      </article>
+      <article>
+        <p class="eyebrow">Unresolved</p>
+        <h2>What remains unresolved?</h2>
+        <p>
+          The page currently distinguishes tracked issues from verified outcomes.
+          A planned or implemented response will not be presented as a successful
+          outcome without outcome evidence.
+        </p>
+      </article>
+    </section>
+
+    <section id="ranking-method" class="method-panel">
+      <p class="eyebrow">Methods</p>
+      <h2>How ranking will work</h2>
+      <p>
+        The requested scoring structure is retained as a draft implementation
+        contract, not as a published assessment of Washington DVR.
+      </p>
+
+      <div class="method-grid">
+        {Object.entries(issueData.methodology.component_maxima).map(([label, max]) => (
+          <div>
+            <strong>{label.replaceAll("_", " ")}</strong>
+            <span>up to {max} points</span>
+          </div>
+        ))}
+      </div>
+
+      <p class="method-note">
+        <strong>Important:</strong> pressure score, current status color, momentum,
+        and evidence confidence are separate dimensions. Scores are structured
+        comparative estimates when approved; they are not legal findings,
+        probabilities, or measurements of an individual case.
+      </p>
+
+      <p>
+        See <a href="/methods/">DVR Signal methods</a> for the project's evidence
+        classes and voluntary-sample limitations.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const list = document.querySelector<HTMLElement>("[data-ranking-list]");
+  const sortControls = document.querySelectorAll<HTMLButtonElement>("[data-sort-controls] button:not(:disabled)");
+
+  const numeric = (value: string | undefined) => {
+    if (!value) return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+
+  const sortRows = (mode: string) => {
+    if (!list) return;
+
+    const rows = Array.from(list.querySelectorAll<HTMLElement>("[data-issue-row]"));
+    const attribute =
+      mode === "momentum" ? "momentum" :
+      mode === "participant_impact" ? "participantImpact" :
+      mode === "evidence_confidence" ? "evidenceConfidence" :
+      "pressure";
+
+    rows.sort((a, b) => {
+      const aValue = numeric(a.dataset[attribute]);
+      const bValue = numeric(b.dataset[attribute]);
+
+      if (aValue === null && bValue === null) {
+        return (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "");
+      }
+      if (aValue === null) return 1;
+      if (bValue === null) return -1;
+      if (aValue !== bValue) return bValue - aValue;
+      return (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "");
+    });
+
+    rows.forEach((row) => list.append(row));
+  };
+
+  sortControls.forEach((button) => {
+    button.addEventListener("click", () => {
+      sortControls.forEach((control) => control.setAttribute("aria-pressed", "false"));
+      button.setAttribute("aria-pressed", "true");
+      sortRows(button.dataset.sort ?? "pressure");
+    });
+  });
+</script>
+
+<style>
+  .issue-ranking-page {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .ranking-hero {
+    display: grid;
+    gap: var(--space-6);
+    max-width: 72rem;
+  }
+
+  .ranking-hero h1 {
+    max-width: 18ch;
+    margin: 0;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+  }
+
+  .snapshot-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    color: var(--color-neutral);
+    font-size: 0.9rem;
+  }
+
+  .snapshot-meta span {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 25%, transparent);
+    border-radius: 999px;
+    background: #fff;
+  }
+
+  .review-notice {
+    padding: var(--space-6);
+    border-inline-start: 0.45rem solid var(--color-review);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .review-notice h2,
+  .review-notice p {
+    margin-block: 0;
+  }
+
+  .review-notice p {
+    margin-top: var(--space-2);
+  }
+
+  .ranking-panel,
+  .method-panel {
+    padding: clamp(1rem, 3vw, 2rem);
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 28%, transparent);
+    border-radius: calc(var(--radius) + 0.25rem);
+    background: color-mix(in srgb, white 52%, var(--color-paper));
+  }
+
+  .section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-4);
+    align-items: end;
+    margin-bottom: var(--space-6);
+  }
+
+  .section-heading h2,
+  .method-panel h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+  }
+
+  .method-link {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 750;
+  }
+
+  .control-grid {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend,
+  .snapshot-control > span {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--color-neutral);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .segmented-control {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .segmented-control button,
+  select {
+    min-height: 2.75rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 40%, transparent);
+    border-radius: 999px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .segmented-control button[aria-pressed="true"] {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .segmented-control button:disabled,
+  select:disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+  }
+
+  .control-note {
+    margin: var(--space-2) 0 0;
+    color: var(--color-neutral);
+    font-size: 0.82rem;
+  }
+
+  .snapshot-control {
+    align-self: start;
+  }
+
+  .ranking-list {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .issue-row {
+    --status-color: var(--color-neutral);
+    overflow: clip;
+    border: 1px solid color-mix(in srgb, var(--color-neutral) 28%, transparent);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .issue-row.status-healthy { --status-color: var(--color-healthy); }
+  .issue-row.status-review { --status-color: var(--color-review); }
+  .issue-row.status-warning { --status-color: var(--color-warning); }
+  .issue-row.status-serious { --status-color: var(--color-serious); }
+
+  .issue-row summary {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: var(--space-3);
+    align-items: start;
+    min-height: 5rem;
+    padding: var(--space-4);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .issue-row summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .issue-row summary:focus-visible {
+    outline: 3px solid var(--color-warning);
+    outline-offset: -3px;
+  }
+
+  .rank {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--color-paper);
+    font-family: "Space Grotesk", Inter, sans-serif;
+    font-weight: 800;
+  }
+
+  .issue-main {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .issue-title-line,
+  .pressure-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    align-items: center;
+  }
+
+  .issue-title-line > strong {
+    font-family: "Space Grotesk", Inter, sans-serif;
+    font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 750;
+    color: var(--color-neutral);
+  }
+
+  .status-symbol {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 50%;
+    background: var(--status-color);
+  }
+
+  .pressure-track {
+    position: relative;
+    flex: 1 1 18rem;
+    min-width: 10rem;
+    height: 0.9rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-neutral) 16%, white);
+  }
+
+  .pressure-fill {
+    display: block;
+    width: var(--pressure);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--status-color);
+    box-shadow: 0 0 0.8rem color-mix(in srgb, var(--status-color) 22%, transparent);
+    transition: width 280ms ease;
+  }
+
+  .pressure-pending {
+    border: 1px dashed color-mix(in srgb, var(--color-neutral) 55%, transparent);
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        color-mix(in srgb, var(--color-neutral) 8%, white),
+        color-mix(in srgb, var(--color-neutral) 8%, white) 0.4rem,
+        #fff 0.4rem,
+        #fff 0.8rem
+      );
+  }
+
+  .score,
+  .momentum,
+  .sparkline-placeholder {
+    color: var(--color-neutral);
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .score {
+    font-family: "Space Grotesk", Inter, sans-serif;
+    font-weight: 800;
+    color: var(--color-ink);
+  }
+
+  .issue-explanation {
+    color: var(--color-neutral);
+    font-size: 0.92rem;
+  }
+
+  .expand-label {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .issue-detail {
+    padding: 0 var(--space-6) var(--space-6);
+    border-top: 1px solid color-mix(in srgb, var(--color-neutral) 18%, transparent);
+  }
+
+  .detail-grid {
+    display: grid;
+    gap: var(--space-6);
+    padding-top: var(--space-6);
+  }
+
+  .detail-grid h3,
+  .timeline h3 {
+    margin-bottom: var(--space-2);
+  }
+
+  .pending-copy {
+    padding: var(--space-4);
+    border-inline-start: 0.35rem solid var(--color-neutral);
+    background: var(--color-paper);
+  }
+
+  .score-breakdown,
+  .evidence-meta {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .score-breakdown div,
+  .evidence-meta div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    padding-block: var(--space-2);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-neutral) 18%, transparent);
+  }
+
+  .score-breakdown dt,
+  .evidence-meta dt {
+    text-transform: capitalize;
+    font-weight: 700;
+  }
+
+  .score-breakdown dd,
+  .evidence-meta dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  .source-list {
+    display: grid;
+    gap: var(--space-3);
+    padding-left: 1.25rem;
+  }
+
+  .source-list li {
+    padding-left: var(--space-1);
+  }
+
+  .source-list span {
+    display: block;
+    color: var(--color-neutral);
+    font-size: 0.82rem;
+  }
+
+  .timeline {
+    margin-top: var(--space-6);
+  }
+
+  .timeline ol {
+    display: grid;
+    gap: var(--space-3);
+    padding-left: 1.3rem;
+  }
+
+  .timeline li {
+    padding-left: var(--space-2);
+  }
+
+  .timeline time {
+    display: block;
+    color: var(--color-neutral);
+    font-size: 0.82rem;
+  }
+
+  .support-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .support-grid article {
+    padding: var(--space-6);
+    border-radius: var(--radius);
+    background: #fff;
+    border-inline-start: 0.4rem solid var(--color-neutral);
+  }
+
+  .support-grid h2 {
+    margin-top: 0;
+  }
+
+  .method-grid {
+    display: grid;
+    gap: var(--space-2);
+    margin-block: var(--space-6);
+  }
+
+  .method-grid div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0.5rem;
+    background: #fff;
+  }
+
+  .method-grid strong {
+    text-transform: capitalize;
+  }
+
+  .method-note {
+    padding: var(--space-4);
+    border-inline-start: 0.4rem solid var(--color-healthy);
+    background: #fff;
+  }
+
+  @media (min-width: 56rem) {
+    .control-grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+      align-items: start;
+    }
+
+    .detail-grid,
+    .support-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .method-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .issue-row summary {
+      grid-template-columns: 2.25rem minmax(0, 1fr);
+    }
+
+    .expand-label {
+      grid-column: 2;
+    }
+
+    .pressure-line {
+      align-items: flex-start;
+    }
+
+    .pressure-track {
+      flex-basis: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pressure-fill {
+      transition: none;
+    }
+  }
+</style>

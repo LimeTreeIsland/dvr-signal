@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dvr-signal.example/schemas/issue-ranking.schema.json",
+  "title": "DVR Signal issue ranking release",
+  "type": "object",
+  "required": ["version", "publication_status", "snapshot", "methodology", "sources", "issues"],
+  "properties": {
+    "version": { "type": "string" },
+    "publication_status": {
+      "enum": ["methodology_pending", "draft", "published"]
+    },
+    "snapshot": {
+      "type": "object",
+      "required": ["id", "label", "period_start", "period_end", "methodology_version", "source_registry_version"]
+    },
+    "methodology": {
+      "type": "object",
+      "required": ["status", "score_max", "component_maxima", "public_note"]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "publisher", "title", "source_type", "url", "retrieved_date"]
+      }
+    },
+    "issues": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "issue_id",
+          "title",
+          "definition",
+          "short_explanation",
+          "scores",
+          "status",
+          "status_label",
+          "momentum",
+          "evidence_confidence",
+          "participant_evidence_state",
+          "sources",
+          "timeline"
+        ],
+        "properties": {
+          "scores": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": [
+                  "severity",
+                  "participant_impact",
+                  "breadth",
+                  "persistence",
+                  "evidence_strength",
+                  "downstream_effects"
+                ]
+              }
+            ]
+          },
+          "status": {
+            "enum": ["healthy", "review", "warning", "serious", "unknown"]
+          },
+          "momentum": {
+            "oneOf": [
+              { "type": "null" },
+              { "type": "integer", "minimum": -2, "maximum": 2 }
+            ]
+          },
+          "evidence_confidence": {
+            "enum": ["high", "moderate", "limited", "insufficient", "pending_review"]
+          },
+          "participant_evidence_state": {
+            "enum": ["not_collected", "not_published", "insufficient", "suppressed", "published"]
+          }
+        }
+      }
+    }
+  }
+}
