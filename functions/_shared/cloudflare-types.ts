@@ -28,6 +28,7 @@ export interface DvrSignalEnv {
   COLLECTION_ENABLED?: string;
   CONTACT_COLLECTION_ENABLED?: string;
   AGGREGATION_ENABLED?: string;
+  PUBLIC_METRICS_ENABLED?: string;
 }
 
 export interface FunctionContext {
