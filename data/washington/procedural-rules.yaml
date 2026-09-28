@@ -33,7 +33,7 @@
       "authority_id": "CFR-361",
       "citation": "34 CFR 361.41(b); 361.42",
       "url": "https://www.ecfr.gov/current/title-34/section-361.41",
-      "summary": "Eligibility timing research lead; verify the application trigger, exceptional-circumstances extension and trial-work provisions.",
+      "summary": "Once an individual has submitted a qualifying VR application, an eligibility determination must be made within 60 days unless exceptional and unforeseen circumstances beyond the State unit's control prevent the determination and the State unit and individual agree to a specific extension, or work-situation exploration is carried out under 34 CFR 361.42(e). Exact calendar calculation is not activated in the Pathway Navigator.",
       "trigger_event": "qualifying_application",
       "required_inputs": [
         "application_date",
@@ -42,26 +42,27 @@
         "trial_work_status"
       ],
       "exceptions": [
-        "Exceptional circumstances with agreement; trial-work exploration; verify full text."
+        "Exceptional and unforeseen circumstances beyond the State unit's control, with agreement to a specific extension of time.",
+        "Exploration of abilities, capabilities, and capacity to perform in work situations under 34 CFR 361.42(e)."
       ],
       "timeframe": null,
-      "source_status": "pending",
-      "source_checked_on": null,
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
-      "last_reviewed": null,
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #26; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-IPE-01",
       "authority_id": "CFR-361",
       "citation": "34 CFR 361.45(a), (e)",
       "url": "https://www.ecfr.gov/current/title-34/section-361.45",
-      "summary": "IPE development framework includes an agreed extension to a specific completion date; resolve order-of-selection applicability.",
-      "trigger_event": "eligibility_determination_subject_to_applicability",
+      "summary": "The IPE must be developed as soon as possible and no later than 90 days after eligibility unless the State unit and eligible individual agree to extend the deadline to a specific date by which the IPE must be completed. The Pathway Navigator states this framework but does not calculate an exact due date.",
+      "trigger_event": "eligibility_determination",
       "required_inputs": [
         "eligibility_date",
         "order_of_selection_status",
@@ -70,44 +71,42 @@
         "extended_date"
       ],
       "exceptions": [
-        "Agreed extension to a specific date; review order-of-selection applicability."
+        "The State unit and eligible individual agree to extend the IPE-development deadline to a specific completion date."
       ],
       "timeframe": null,
-      "source_status": "snapshot_text_checked",
-      "source_checked_on": "2026-09-26",
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
-      "last_reviewed": null,
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #26; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-IPE-REVIEW-01",
       "authority_id": "CFR-361",
       "citation": "34 CFR 361.45(d)(5)",
       "url": "https://www.ecfr.gov/current/title-34/section-361.45",
-      "summary": "Review the IPE at least annually with the individual or representative to assess progress.",
+      "summary": "The IPE must be reviewed at least annually by a qualified vocational rehabilitation counselor and the eligible individual or representative to assess progress and determine whether amendment is needed. Exact annual-review date calculation is not activated in the Pathway Navigator.",
       "trigger_event": "ipe_review_cycle",
       "required_inputs": [
         "ipe_date",
         "last_review_date",
         "review_participation"
       ],
-      "exceptions": [
-        "Verify current text and Washington implementation."
-      ],
+      "exceptions": [],
       "timeframe": null,
-      "source_status": "snapshot_text_checked",
-      "source_checked_on": "2026-09-26",
+      "source_status": "live_text_checked",
+      "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
-      "review_status": "pending_review",
-      "last_reviewed": null,
-      "reviewer": null,
-      "approval_reference": null,
-      "enabled": false
+      "review_status": "approved",
+      "last_reviewed": "2026-09-27",
+      "reviewer": "LimeTreeIsland",
+      "approval_reference": "PR #26; maintainer approval recorded 2026-09-27",
+      "enabled": true
     },
     {
       "id": "FED-RECORDS-01",
