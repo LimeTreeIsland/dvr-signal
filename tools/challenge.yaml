@@ -1,9 +1,9 @@
 {
   "id": "challenge",
   "title": "Challenge a DVR Decision",
-  "version": "0.1.0",
-  "status": "scaffold",
-  "enabled": false,
+  "version": "0.2.0",
+  "status": "active",
+  "enabled": true,
   "input_fields": [
     "problem_type",
     "written_decision_status",
