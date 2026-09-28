@@ -1,0 +1,243 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Survey Dashboard — DVR Signal"
+  description="Disclosure-reviewed aggregate results from voluntary DVR Signal survey respondents."
+>
+  <div class="container dashboard-page">
+    <header class="dashboard-intro">
+      <p class="eyebrow">Survey dashboard</p>
+      <h1>Participant experience, shown only in disclosure-reviewed aggregates.</h1>
+      <p>
+        This dashboard describes voluntary <strong>DVR Signal survey respondents</strong>,
+        not all Washington DVR participants. Raw survey responses are never sent to this page.
+      </p>
+    </header>
+
+    <section class="status-card" data-dashboard-status aria-live="polite">
+      <h2>Loading published aggregate release…</h2>
+      <p>The dashboard only reads the public aggregate endpoint.</p>
+    </section>
+
+    <section data-dashboard-content hidden>
+      <div class="release-meta" data-release-meta></div>
+      <div class="metrics-grid" data-metrics-grid></div>
+    </section>
+
+    <noscript>
+      <section class="status-card">
+        <h2>JavaScript is required to display the aggregate dashboard.</h2>
+        <p>No raw survey data is loaded by this page.</p>
+      </section>
+    </noscript>
+  </div>
+</BaseLayout>
+
+<script>
+  interface PublicCell {
+    key: string;
+    count: number | null;
+    suppressed: boolean;
+    suppression_reason: string | null;
+  }
+
+  interface PublicMetric {
+    id: string;
+    label: string;
+    question_id: string;
+    response_mode: string;
+    eligible_n: number | null;
+    missing_n: number | null;
+    total: number | null;
+    cells: PublicCell[];
+  }
+
+  interface PublicRelease {
+    status?: string;
+    message?: string;
+    population_label?: string;
+    voluntary_sample?: boolean;
+    data_through?: string;
+    survey_version?: string;
+    metric_version?: string;
+    public_cell_floor_n?: number;
+    published_at?: string;
+    metrics?: PublicMetric[];
+  }
+
+  const status = document.querySelector<HTMLElement>("[data-dashboard-status]");
+  const content = document.querySelector<HTMLElement>("[data-dashboard-content]");
+  const releaseMeta = document.querySelector<HTMLElement>("[data-release-meta]");
+  const metricsGrid = document.querySelector<HTMLElement>("[data-metrics-grid]");
+
+  const escapeText = (value: unknown) => String(value ?? "");
+
+  async function loadDashboard() {
+    if (!status || !content || !releaseMeta || !metricsGrid) return;
+
+    try {
+      const response = await fetch("/api/public/metrics", {
+        headers: { accept: "application/json" },
+        cache: "no-store",
+      });
+      const data = await response.json() as PublicRelease;
+
+      if (!response.ok || data.status === "unavailable") {
+        status.innerHTML = "<h2>Dashboard temporarily unavailable</h2><p>The public aggregate endpoint could not be loaded.</p>";
+        return;
+      }
+
+      if (data.status === "not_published" || data.status === "no_release" || !Array.isArray(data.metrics)) {
+        status.innerHTML = `<h2>Survey metrics are not published yet</h2><p>${escapeText(data.message || "Collection or aggregate publication has not been activated.")}</p>`;
+        return;
+      }
+
+      status.hidden = true;
+      content.hidden = false;
+
+      releaseMeta.innerHTML = [
+        `<span><strong>Population:</strong> ${escapeText(data.population_label)}</span>`,
+        `<span><strong>Data through:</strong> ${escapeText(data.data_through)}</span>`,
+        `<span><strong>Survey:</strong> ${escapeText(data.survey_version)}</span>`,
+        `<span><strong>Metric version:</strong> ${escapeText(data.metric_version)}</span>`,
+        `<span><strong>Public cell floor:</strong> n ≥ ${escapeText(data.public_cell_floor_n)}</span>`,
+      ].join("");
+
+      metricsGrid.replaceChildren();
+
+      for (const metric of data.metrics) {
+        const article = document.createElement("article");
+        article.className = "metric-card";
+
+        const heading = document.createElement("h2");
+        heading.textContent = metric.label;
+        article.append(heading);
+
+        const meta = document.createElement("p");
+        meta.className = "metric-meta";
+        meta.textContent = `Question ${metric.question_id} · usable n: ${metric.eligible_n ?? "suppressed/not available"}`;
+        article.append(meta);
+
+        const list = document.createElement("dl");
+        for (const cell of metric.cells) {
+          const row = document.createElement("div");
+          const term = document.createElement("dt");
+          term.textContent = cell.key;
+          const value = document.createElement("dd");
+          value.textContent = cell.suppressed
+            ? "Suppressed — fewer than 10 survey responses or secondary suppression"
+            : String(cell.count);
+          row.append(term, value);
+          list.append(row);
+        }
+
+        article.append(list);
+        metricsGrid.append(article);
+      }
+    } catch {
+      status.innerHTML = "<h2>Dashboard temporarily unavailable</h2><p>The disclosure-reviewed aggregate feed could not be loaded.</p>";
+    }
+  }
+
+  void loadDashboard();
+</script>
+
+<style>
+  .dashboard-page {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 72rem;
+  }
+
+  .dashboard-intro {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 56rem;
+  }
+
+  .dashboard-intro h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 6vw, 4.3rem);
+  }
+
+  .dashboard-intro p {
+    margin: 0;
+  }
+
+  .status-card {
+    padding: var(--space-6);
+    border-inline-start: 0.45rem solid var(--color-review);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .status-card h2 {
+    margin-top: 0;
+  }
+
+  .release-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    color: var(--color-neutral);
+    font-size: 0.92rem;
+  }
+
+  .release-meta span {
+    padding: 0.45rem 0.65rem;
+    border-radius: 999px;
+    background: #fff;
+  }
+
+  .metrics-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .metric-card {
+    padding: var(--space-6);
+    border-inline-start: 0.45rem solid var(--color-healthy);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+
+  .metric-card h2 {
+    margin-top: 0;
+  }
+
+  .metric-meta {
+    color: var(--color-neutral);
+    font-size: 0.9rem;
+  }
+
+  .metric-card dl {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .metric-card dl div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid color-mix(in srgb, var(--color-neutral) 22%, transparent);
+  }
+
+  .metric-card dt {
+    font-weight: 650;
+  }
+
+  .metric-card dd {
+    margin: 0;
+    text-align: right;
+  }
+
+  @media (min-width: 56rem) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
