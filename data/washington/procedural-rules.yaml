@@ -25,7 +25,7 @@
       "review_status": "approved",
       "last_reviewed": "2026-09-27",
       "reviewer": "LimeTreeIsland",
-      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27; trigger encoding corrected by maintainer-directed V1B-04 audit; exact working-day calculation remains disabled by PR #24 approval",
+      "approval_reference": "PR #11; maintainer approval recorded 2026-09-27; trigger encoding corrected by maintainer-directed V1B-04 audit; exact working-day calculation remains disabled under PR #24 approval",
       "enabled": true
     },
     {
@@ -335,9 +335,9 @@
       "timeframe": {
         "amount": 45,
         "unit": "calendar_days",
-        "counting_rule_status": "archived_primary_sources_verified_and_approved"
+        "counting_rule_status": "approved"
       },
-      "source_status": "archived_primary_source_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
@@ -363,7 +363,7 @@
       "timeframe": {
         "amount": 60,
         "unit": "days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
       "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
@@ -393,9 +393,9 @@
       "timeframe": {
         "amount": 60,
         "unit": "days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
-      "source_status": "snapshot_text_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
@@ -419,7 +419,7 @@
       "timeframe": {
         "amount": 30,
         "unit": "calendar_days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
       "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
@@ -445,9 +445,9 @@
       "timeframe": {
         "amount": 30,
         "unit": "calendar_days",
-        "counting_rule_status": "not_activated"
+        "counting_rule_status": "approved"
       },
-      "source_status": "snapshot_text_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
@@ -500,7 +500,7 @@
         "The State agency has evidence the services were obtained through misrepresentation, fraud, collusion, or criminal conduct."
       ],
       "timeframe": null,
-      "source_status": "snapshot_text_checked",
+      "source_status": "live_text_checked",
       "source_checked_on": "2026-09-27",
       "version": "0.1.0",
       "jurisdiction": "US-WA",
