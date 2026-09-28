@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "reviewed_on": "2026-09-27",
-  "status": "review_complete_maintainer_approval_pending",
+  "status": "approved_for_activation",
   "jurisdiction": "US-WA",
   "deadline_calculation_enabled": false,
   "stages": {
@@ -92,5 +92,6 @@
     "accommodations": "/tools/accommodations/",
     "decisions": "/tools/decisions/",
     "challenge": "/tools/challenge/"
-  }
+  },
+  "approval_reference": "PR #26; maintainer approval recorded 2026-09-27"
 }

@@ -1,6 +1,6 @@
 # V1B-06 Pathway Navigator source and scope review
 
-Status: source review complete; participant-facing pathway outputs remain disabled pending maintainer approval.
+Status: source review approved by the maintainer on 2026-09-27; participant-facing Pathway Navigator outputs are approved for activation under the reviewed stage logic and safeguards. Exact eligibility/IPE deadline calculation remains disabled.
 
 Reviewed: 2026-09-27  
 Jurisdiction: Washington State DVR  
@@ -247,6 +247,8 @@ The Navigator must not label a participant's case "illegal," "violating," "abusi
 
 The eCFR displayed Title 34 as current through 2026-09-24.
 
-## Maintainer approval gate
+## Maintainer approval
 
-This review records stage logic and safe question/output boundaries only. It does **not** activate participant-facing Navigator outputs. The maintainer must explicitly approve the V1B-06 review before the tool can be marked active.
+The maintainer approved `docs/PATHWAY-NAVIGATOR-REVIEW.md` and `data/washington/pathway-navigator-review.yaml` on 2026-09-27 and approved activation of V1B-06 under the reviewed stage logic and safeguards.
+
+The approval expressly keeps exact eligibility and IPE deadline calculation disabled. The Navigator may state the reviewed textual timeframes and branches, preserve uncertainty, and hand off time-sensitive disputes to the more specific tools without converting incomplete facts into a violation finding.
