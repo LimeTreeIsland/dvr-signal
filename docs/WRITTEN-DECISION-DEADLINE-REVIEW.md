@@ -1,6 +1,6 @@
 # V1B-04 Written Decision + Deadline Checker source and scope review
 
-Status: source review corrected after regulatory encoding audit; participant-facing legal outputs and exact deadline calculations remain disabled pending maintainer approval and source-archive completion.
+Status: corrected V1B-04 review approved by the maintainer on 2026-09-27. The Written Decision + Deadline Checker and exact 45-calendar-day fair-hearing filing calculation are approved for activation using the archived WAC 388-02 and RCW 1.16 sources. Exact calculation of the WAC 388-891A-0211 ten-working-day response period remains disabled.
 
 Reviewed: 2026-09-27  
 Audit correction: 2026-09-27  
@@ -239,13 +239,14 @@ Operational contact/routing data should remain separately refreshable from the l
 - Washington OAH How to File an Appeal.
 - Washington OAH Public Assistance Hearing Request.
 
-## Maintainer approval gate
+## Maintainer approval
 
-This corrected review records source findings and machine-encoding safeguards only. The Written Decision + Deadline Checker remains disabled.
+The maintainer approved the corrected V1B-04 review and structured rule model on 2026-09-27.
 
-A future activation requires:
+The approval expressly authorizes:
 
-1. maintainer approval of this corrected V1B-04 review;
-2. the current WAC 388-02 and RCW 1.16 primary-source files archived in the repository legal corpus;
-3. re-verification of the exact calculator against those archived primary sources; and
-4. a separate explicit decision to enable exact 45-day calculation.
+1. activation of the Written Decision + Deadline Checker;
+2. exact calculation of the 45-calendar-day fair-hearing filing deadline using the archived WAC 388-02 and RCW 1.16 primary sources; and
+3. continued disabling of exact calculation for the WAC 388-891A-0211 ten-working-day response period.
+
+The source-archive requirement is satisfied. The ten-working-day calculation remains fail-closed until separately reviewed and approved.
