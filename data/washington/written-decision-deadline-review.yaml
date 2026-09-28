@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "reviewed_on": "2026-09-27",
   "status": "review_complete_maintainer_approval_pending",
   "jurisdiction": "US-WA",
@@ -34,12 +34,12 @@
       "exact_calculation_enabled": false,
       "source_archive_gate": {
         "required": true,
-        "status": "blocked_missing_primary_source_files",
+        "status": "archived_and_verified_pending_activation_approval",
         "required_files": [
-          "WAC 388-02 current primary-source PDF",
-          "RCW 1.16 current primary-source PDF"
+          "sources/primary/wa/WAC-388-02-current.pdf",
+          "sources/primary/wa/RCW-1.16-current.pdf"
         ],
-        "note": "Live official text was reviewed, but exact production calculation remains disabled until both current primary-source files are archived in the repository legal corpus and rechecked."
+        "note": "The required current primary-source PDFs are now archived and verified. Exact calculation remains disabled until the corrected V1B-04 review and calculator activation are explicitly approved."
       }
     },
     "hearing_after_request": {
