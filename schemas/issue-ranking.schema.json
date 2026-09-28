@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DVR Signal factual issue indicators",
+  "type": "object",
+  "required": [
+    "version",
+    "publication_status",
+    "snapshot_id",
+    "composite_ranking",
+    "participant_mode",
+    "issues"
+  ],
+  "properties": {
+    "publication_status": {"enum": ["factual_indicators", "draft"]},
+    "composite_ranking": {
+      "type": "object",
+      "required": ["status", "reason"]
+    },
+    "participant_mode": {
+      "type": "object",
+      "required": ["status", "public_cell_floor_n", "population_label", "note"]
+    },
+    "issues": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "issue_id",
+          "title",
+          "definition",
+          "evidence_state",
+          "current_indicator",
+          "supporting_indicators",
+          "trend_series",
+          "source_conflicts",
+          "unknowns",
+          "planned_improvements"
+        ],
+        "properties": {
+          "current_indicator": {
+            "type": "object",
+            "required": [
+              "label",
+              "display_value",
+              "value",
+              "max",
+              "unit",
+              "measurement_period",
+              "observation_date",
+              "source_ids"
+            ]
+          },
+          "trend_series": {
+            "type": "object",
+            "required": ["label", "unit", "comparable", "points", "note"]
+          }
+        }
+      }
+    }
+  }
+}

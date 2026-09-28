@@ -1,0 +1,83 @@
+name: Semiannual issue status review
+
+on:
+  schedule:
+    - cron: "15 17 1 1,7 *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: semiannual-issue-status-review
+  cancel-in-progress: false
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  review:
+    name: Build read-only review packet
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.16.0"
+          cache: npm
+
+      - name: Restore previous public-source fingerprints
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: .source-watch-state
+          key: issue-source-watch-state-${{ github.run_id }}
+          restore-keys: |
+            issue-source-watch-state-
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Validate application and issue-status data
+        run: |
+          npm run typecheck
+          npm run lint
+          npm test
+          npm run validate:issue-status
+          npm run build
+
+      - name: Check allowlisted public sources
+        run: npm run source:watch -- --output artifacts/issue-source-watch.json --state .source-watch-state/state.json
+
+      - name: Compare latest committed snapshots
+        run: npm run snapshot:diff -- --output artifacts/issue-snapshot-diff.json
+
+      - name: Write review instructions
+        run: |
+          mkdir -p artifacts
+          cat > artifacts/README.txt <<'EOF'
+          DVR Signal semiannual Issue Ranking review packet.
+
+          This packet is candidate review material only.
+          It does not authorize automatic changes to legal interpretations,
+          evidence classes, privacy thresholds, issue definitions, or public conclusions.
+
+          Review issue-source-watch.json with TinyFish/Codex.
+          Review issue-snapshot-diff.json for neutral changes.
+          Prepare a draft PR only for source-supported changes.
+          Preserve conflicting official values and explicit unknowns.
+          EOF
+
+      - name: Upload review packet
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: issue-status-review-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,56 @@
+name: Issue source watch
+
+on:
+  schedule:
+    - cron: "20 17 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issue-source-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    name: Check allowlisted public sources
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22.16.0"
+          cache: npm
+
+      - name: Restore previous public-source fingerprints
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: .source-watch-state
+          key: issue-source-watch-state-${{ github.run_id }}
+          restore-keys: |
+            issue-source-watch-state-
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Validate Issue Ranking data
+        run: npm run validate:issue-status
+
+      - name: Check public sources
+        run: npm run source:watch -- --output artifacts/issue-source-watch.json --state .source-watch-state/state.json
+
+      - name: Upload candidate source-watch report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: issue-source-watch-${{ github.run_id }}
+          path: artifacts/issue-source-watch.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DVR Signal issue source registry",
+  "type": "object",
+  "required": ["version", "retrieved_date", "sources"],
+  "properties": {
+    "version": {"type": "string"},
+    "retrieved_date": {"type": "string"},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "publisher",
+          "title",
+          "source_layer",
+          "source_type",
+          "status",
+          "publication_date",
+          "effective_date",
+          "reporting_period",
+          "url",
+          "pinpoints"
+        ],
+        "properties": {
+          "source_layer": {
+            "enum": ["dvr_dshs", "federal_oversight", "participant_aggregate"]
+          },
+          "pinpoints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["locator", "proposition"]
+            }
+          }
+        }
+      }
+    }
+  }
+}
