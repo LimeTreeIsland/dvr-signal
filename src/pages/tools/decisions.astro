@@ -134,8 +134,8 @@ const yesNoOptions = [
     ) : (
       <ToolStatus
         state="review"
-        title="Implementation preview; deadline activation requires maintainer approval"
-        message="The reviewed rules and calculator implementation are present, but participant-facing legal outputs remain disabled until the review is explicitly approved."
+        title="Written Decision + Deadline Checker activation unavailable"
+        message="This tool is data-gated. It becomes available only when the reviewed rule configuration is active."
       />
     )}
 
@@ -230,8 +230,8 @@ const yesNoOptions = [
       <div data-calculator-blocked hidden>
         <ToolStatus
           state="review"
-          title="Exact 45-day calculation is not yet production-enabled"
-          message="WAC 388-02 and RCW 1.16 were live-reviewed, but DVR Signal requires their current primary-source PDFs in the repository legal corpus before this calculator can emit an exact date."
+          title="Exact 45-day calculation is unavailable"
+          message="Exact calculation is available only when the reviewed calculator gate is enabled. DVR Signal will not emit a calculated date from an unapproved rule state."
         />
       </div>
 
