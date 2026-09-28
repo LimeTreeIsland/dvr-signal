@@ -1,29 +1,42 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "reviewed_on": "2026-09-27",
-  "calculator_gate": "blocked",
+  "calculator_gate": "source_archive_complete_pending_activation_approval",
   "required_sources": [
     {
       "authority_id": "WAC-388-02",
       "citation": "WAC 388-02",
       "official_pdf_url": "https://app.leg.wa.gov/wac/default.aspx?cite=388-02&full=true&pdf=true",
       "expected_repository_file": "sources/primary/wa/WAC-388-02-current.pdf",
-      "archive_status": "missing",
+      "archive_status": "archived_and_verified",
       "sections_required_for_v1b04": [
         "388-02-0010",
         "388-02-0035"
-      ]
+      ],
+      "repository_blob_sha": "78dd60b77ecf96d9020db445084d034e7de66698",
+      "repository_size_bytes": 386690,
+      "verified_sections": [
+        "388-02-0010",
+        "388-02-0035"
+      ],
+      "verification_note": "Archived repository PDF reviewed against the V1B-04 counting-method requirements."
     },
     {
       "authority_id": "RCW-1.16",
       "citation": "Chapter 1.16 RCW",
       "official_pdf_url": "https://app.leg.wa.gov/RCW/default.aspx?cite=1.16&full=true&pdf=true",
       "expected_repository_file": "sources/primary/wa/RCW-1.16-current.pdf",
-      "archive_status": "missing",
+      "archive_status": "archived_and_verified",
       "sections_required_for_v1b04": [
         "1.16.050"
-      ]
+      ],
+      "repository_blob_sha": "f1b93899040fd7ae0759576d9f59865c8d11f830",
+      "repository_size_bytes": 197055,
+      "verified_sections": [
+        "1.16.050"
+      ],
+      "verification_note": "Archived repository PDF reviewed for Washington legal holidays and observed-holiday rules used by the V1B-04 calculator."
     }
   ],
-  "activation_requirement": "Both archive_status values must be archived_and_verified before exact 45-day calculation can be enabled."
+  "activation_requirement": "Source archive requirement is satisfied. Exact 45-day calculation remains disabled until the corrected V1B-04 review and calculator activation are explicitly approved."
 }

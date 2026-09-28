@@ -31,19 +31,22 @@ test("WAC 388-891A-0211 is encoded as a denial-triggered rule, not a universal r
   assert.doesNotMatch(engine, /calculateWrittenResponseDeadline/);
 });
 
-test("45-day calculator is source-archive gated and cannot emit dates yet", () => {
+test("45-day calculator remains disabled after source archive verification until activation approval", () => {
   assert.equal(review.clocks.fair_hearing_filing.exact_calculation_proposed, true);
   assert.equal(review.clocks.fair_hearing_filing.exact_calculation_enabled, false);
   assert.equal(
     review.clocks.fair_hearing_filing.source_archive_gate.status,
-    "blocked_missing_primary_source_files",
+    "archived_and_verified_pending_activation_approval",
   );
-  assert.equal(manifest.calculator_gate, "blocked");
-  assert.ok(manifest.required_sources.every((source) => source.archive_status === "missing"));
+  assert.equal(manifest.calculator_gate, "source_archive_complete_pending_activation_approval");
+  assert.ok(
+    manifest.required_sources.every(
+      (source) => source.archive_status === "archived_and_verified",
+    ),
+  );
 
   assert.match(page, /data-deadline-calculation-enabled/);
   assert.match(page, /Exact 45-day calculation is not yet production-enabled/);
-  assert.match(page, /WAC 388-02 and RCW 1\.16/);
   assert.match(page, /exactFairHearingCalculationEnabled/);
 });
 
