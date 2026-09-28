@@ -1,6 +1,6 @@
 # V1B-05 Challenge a DVR Decision source and scope review
 
-Status: source review complete; participant-facing challenge-route outputs remain disabled pending maintainer approval.
+Status: source review approved by the maintainer on 2026-09-27; participant-facing Challenge a DVR Decision outputs are approved for activation under the reviewed route model and safeguards.
 
 Reviewed: 2026-09-27  
 Jurisdiction: Washington State DVR / DSHS / OAH  
@@ -226,6 +226,8 @@ This is intentionally conservative and avoids unsupported tolling claims.
 - DVR "Resolving Concerns" page; current DSHS public guidance checked 2026-09-27.
 - Chapter 388-02 WAC current primary-source PDF supplied to the project, used only for hearing-process context; specific DVR program rules control where more specific.
 
-## Maintainer approval gate
+## Maintainer approval
 
-This review records source findings and proposed tool scope only. It does **not** activate participant-facing challenge-route legal outputs. The maintainer must explicitly approve this review before V1B-05 can be marked active.
+The maintainer approved `docs/CHALLENGE-DECISION-REVIEW.md` and `data/washington/challenge-decision-review.yaml` on 2026-09-27 and approved activation of V1B-05 under the reviewed routes and safeguards.
+
+The activation preserves all guardrails in this review, including multiple-route support, no forced informal exhaustion, no automatic tolling claim, CAP independence, separate complaint/discrimination routing, no merits prediction, and no automatic submission.
