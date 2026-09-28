@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "reviewed_on": "2026-09-27",
-  "status": "review_complete_maintainer_approval_pending",
+  "status": "approved_for_activation",
   "jurisdiction": "US-WA",
   "route_compatibility": {
     "multiple_routes_allowed": true,
@@ -90,5 +90,6 @@
     "deadline_checker": "/tools/decisions/",
     "accommodation_builder": "/tools/accommodations/",
     "records_router": "/tools/records/"
-  }
+  },
+  "approval_reference": "PR #25; maintainer approval recorded 2026-09-27"
 }
