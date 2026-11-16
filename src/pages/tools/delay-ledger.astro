@@ -132,6 +132,18 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     notice.textContent = "Local timeline cleared from page memory.";
   });
   date.addEventListener("change", render);
+  // Keep a loaded current-day clock accurate when the tab remains open overnight.
+  // A manually selected historical as-of date is never overwritten.
+  let automaticDate = date.value;
+  window.setInterval(() => {
+    const now = new Date();
+    const currentDay = [now.getFullYear(), pad(now.getMonth() + 1), pad(now.getDate())].join("-");
+    if (date.value === automaticDate && currentDay !== automaticDate) {
+      date.value = currentDay;
+      automaticDate = currentDay;
+      render();
+    }
+  }, 60_000);
   exportButton.addEventListener("click", () => {
     if (!ledger) return;
     const summary = { caution: "Participant-entered elapsed-day calculation, not a legal finding.", as_of: date.value, ...summarizeLedger(ledger, date.value), events: ledger.events };
